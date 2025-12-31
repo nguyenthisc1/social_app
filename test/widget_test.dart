@@ -7,10 +7,27 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:social_app/main.dart';
+import 'package:social_app/core/core.dart';
 
 void main() {
+  setUpAll(() async {
+    // Initialize dependencies before running tests
+    TestWidgetsFlutterBinding.ensureInitialized();
+    
+    // Set up SharedPreferences for testing
+    SharedPreferences.setMockInitialValues({});
+    
+    await InjectionContainer.init();
+  });
+
+  tearDownAll(() async {
+    // Clean up after tests
+    await InjectionContainer.reset();
+  });
+
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
