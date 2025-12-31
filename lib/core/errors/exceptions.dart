@@ -1,63 +1,49 @@
-/// Custom exceptions for the application
-class ServerException implements Exception {
+abstract class AppException implements Exception {
   final String message;
   final int? statusCode;
+  final dynamic data;
 
-  ServerException({
-    required this.message,
-    this.statusCode,
-  });
+  const AppException({required this.message, this.statusCode, this.data});
 
   @override
-  String toString() => 'ServerException: $message (Status: $statusCode)';
+  String toString() =>
+      '$runtimeType(message: $message, statusCode: $statusCode)';
 }
 
-class CacheException implements Exception {
-  final String message;
-
-  CacheException({required this.message});
-
-  @override
-  String toString() => 'CacheException: $message';
+class ServerException extends AppException {
+  const ServerException({required super.message, super.statusCode, super.data});
 }
 
-class NetworkException implements Exception {
-  final String message;
-
-  NetworkException({required this.message});
-
-  @override
-  String toString() => 'NetworkException: $message';
+class NetworkException extends AppException {
+  const NetworkException({super.message = 'No internet connection'})
+    : super(statusCode: null);
 }
 
-class ValidationException implements Exception {
-  final String message;
+class CacheException extends AppException {
+  const CacheException({required super.message}) : super(statusCode: null);
+}
+
+class ValidationException extends AppException {
   final Map<String, dynamic>? errors;
 
-  ValidationException({
-    required this.message,
+  const ValidationException({
+    required super.message,
     this.errors,
+    super.statusCode = 422,
+    super.data,
   });
-
-  @override
-  String toString() => 'ValidationException: $message';
 }
 
-class UnauthorizedException implements Exception {
-  final String message;
-
-  UnauthorizedException({this.message = 'Unauthorized access'});
-
-  @override
-  String toString() => 'UnauthorizedException: $message';
+class UnauthorizedException extends AppException {
+  const UnauthorizedException({
+    super.message = 'Unauthorized access',
+    super.statusCode = 401,
+  });
 }
 
-class NotFoundException implements Exception {
-  final String message;
-
-  NotFoundException({this.message = 'Resource not found'});
-
-  @override
-  String toString() => 'NotFoundException: $message';
+class NotFoundException extends AppException {
+  const NotFoundException({
+    super.message = 'Resource not found',
+    super.statusCode = 404,
+  });
 }
-
