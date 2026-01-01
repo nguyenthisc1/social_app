@@ -37,7 +37,7 @@ class ApiClient {
   }
 
   /// Generic HTTP request
-  Future<Map<String, dynamic>?> request({
+  Future<Map<String, dynamic>> request({
     required String method,
     required String endpoint,
     Map<String, dynamic>? body,

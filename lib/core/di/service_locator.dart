@@ -7,6 +7,18 @@ import '../network/network.dart';
 import '../theme/theme.dart';
 import '../utils/constants.dart';
 
+// Auth imports
+import '../../features/auth/data/datasources/auth_remote_data_source.dart';
+import '../../features/auth/data/datasources/auth_local_data_source.dart';
+import '../../features/auth/data/repositories/auth_repository_impl.dart';
+import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../features/auth/domain/usecases/login_usecase.dart';
+import '../../features/auth/domain/usecases/register_usecase.dart';
+import '../../features/auth/domain/usecases/logout_usecase.dart';
+import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
+import '../../features/auth/domain/usecases/check_auth_status_usecase.dart';
+import '../../features/auth/presentation/bloc/auth_bloc.dart';
+
 /// Service locator instance
 final sl = GetIt.instance;
 
@@ -50,51 +62,54 @@ Future<void> initializeDependencies() async {
   // ============================================================================
   // Data Sources
   // ============================================================================
-  // Register your remote and local data sources here
-  // Example:
-  // sl.registerLazySingleton<UserRemoteDataSource>(
-  //   () => UserRemoteDataSourceImpl(apiClient: sl()),
-  // );
-  //
-  // sl.registerLazySingleton<UserLocalDataSource>(
-  //   () => UserLocalDataSourceImpl(sharedPreferences: sl()),
-  // );
+  
+  // Auth Data Sources
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(apiClient: sl()),
+  );
+
+  sl.registerLazySingleton<AuthLocalDataSource>(
+    () => AuthLocalDataSourceImpl(sharedPreferences: sl()),
+  );
 
   // ============================================================================
   // Repositories
   // ============================================================================
-  // Register your repositories here
-  // Example:
-  // sl.registerLazySingleton<UserRepository>(
-  //   () => UserRepositoryImpl(
-  //     remoteDataSource: sl(),
-  //     localDataSource: sl(),
-  //     networkInfo: sl(),
-  //   ),
-  // );
+  
+  // Auth Repository
+  sl.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
 
   // ============================================================================
   // Use Cases
   // ============================================================================
-  // Register your use cases here
-  // Example:
-  // sl.registerLazySingleton(() => GetUserProfile(sl()));
-  // sl.registerLazySingleton(() => UpdateUserProfile(sl()));
+  
+  // Auth Use Cases
+  sl.registerLazySingleton(() => LoginUseCase(sl()));
+  sl.registerLazySingleton(() => RegisterUseCase(sl()));
+  sl.registerLazySingleton(() => LogoutUseCase(sl()));
+  sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
+  sl.registerLazySingleton(() => CheckAuthStatusUseCase(sl()));
 
   // ============================================================================
   // State Management (BLoC/Cubit/Provider)
   // ============================================================================
-  // Register your state management here
-  // Example with BLoC:
-  // sl.registerFactory(
-  //   () => AuthBloc(
-  //     loginUseCase: sl(),
-  //     logoutUseCase: sl(),
-  //   ),
-  // );
-  //
-  // Example with Provider/ChangeNotifier:
-  // sl.registerFactory(() => PostProvider(repository: sl()));
+  
+  // Auth BLoC
+  sl.registerFactory(
+    () => AuthBloc(
+      loginUseCase: sl(),
+      registerUseCase: sl(),
+      logoutUseCase: sl(),
+      getCurrentUserUseCase: sl(),
+      checkAuthStatusUseCase: sl(),
+    ),
+  );
 }
 
 /// Reset all dependencies (useful for testing)

@@ -1,12 +1,12 @@
 class BaseResponse<T> {
   final bool success;
-  final String? message;
+  final String message;
   final T? data;
   final Map<String, dynamic>? errors;
 
-  const BaseResponse({
+  BaseResponse({
     required this.success,
-    this.message,
+    required this.message,
     this.data,
     this.errors,
   });
@@ -16,9 +16,11 @@ class BaseResponse<T> {
     T Function(dynamic json)? fromJsonT,
   ) {
     return BaseResponse<T>(
-      success: json['success'] ?? false,
-      message: json['message']?.toString(),
-      data: fromJsonT != null ? fromJsonT(json['data']) : json['data'],
+      success: json['success'] as bool,
+      message: json['message'] as String,
+      data: json['data'] != null && fromJsonT != null
+          ? fromJsonT(json['data'])
+          : null,
       errors: json['errors'] as Map<String, dynamic>?,
     );
   }
