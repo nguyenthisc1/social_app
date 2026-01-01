@@ -53,34 +53,35 @@ class ApiEndpoints {
   static const String resetPassword = '/auth/reset-password';
 
   // User
-  static const String profile = '/users/profile';
-  static const String updateProfile = '/users/profile';
-  static const String getUserById = '/users'; // + /{id}
-  static const String followUser = '/users'; // + /{id}/follow
-  static const String unfollowUser = '/users'; // + /{id}/unfollow
-  static const String followers = '/users'; // + /{id}/followers
-  static const String following = '/users'; // + /{id}/following
+  static const String profile = '/user/profile';
+  static const String updateProfile = '/user/profile';
+  static const String getUserById = '/user'; // + /{id}
+  static const String followUser = '/user'; // + /{id}/follow
+  static const String unfollowUser = '/user'; // + /{id}/unfollow
+  static const String followers = '/user'; // + /{id}/followers
+  static const String following = '/user'; // + /{id}/following
 
   // Posts
-  static const String posts = '/posts';
-  static const String createPost = '/posts';
-  static const String getPost = '/posts'; // + /{id}
-  static const String updatePost = '/posts'; // + /{id}
-  static const String deletePost = '/posts'; // + /{id}
-  static const String likePost = '/posts'; // + /{id}/like
-  static const String unlikePost = '/posts'; // + /{id}/unlike
-  static const String feed = '/posts/feed';
+  static const String posts = '/post';
+  static const String createPost = '/post';
+  static const String getPost = '/post'; // + /{id}
+  static const String updatePost = '/post'; // + /{id}
+  static const String softdeletePost = '/post/delete'; // + /{id}
+  static const String likePost = '/post'; // + /{id}/like
+  static const String unlikePost = '/post'; // + /{id}/unlike
+  static const String feedHome = '/post/feed/home';
+  static const String postsByUser = '/post/user'; // + "viewerId"
 
   // Comments
-  static const String comments = '/comments';
-  static const String createComment = '/comments';
-  static const String getComment = '/comments'; // + /{id}
-  static const String updateComment = '/comments'; // + /{id}
-  static const String deleteComment = '/comments'; // + /{id}
+  static const String comments = '/comment';
+  static const String createComment = '/comment';
+  static const String getComment = '/comment'; // + /{id}
+  static const String updateComment = '/comment'; // + /{id}
+  static const String deleteComment = '/comment'; // + /{id}
 
   // Notifications
-  static const String notifications = '/notifications';
-  static const String markAsRead = '/notifications'; // + /{id}/read
-  static const String markAllAsRead = '/notifications/read-all';
+  static const String notifications = '/notification';
+  static const String markAsRead = '/notification'; // + /{id}/read
+  static const String markAllAsRead = '/notification/read-all';
 }
 
