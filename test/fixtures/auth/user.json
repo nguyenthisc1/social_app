@@ -1,0 +1,13 @@
+{
+  "_id": "user123",
+  "username": "testuser",
+  "email": "test@example.com",
+  "avatarUrl": "https://example.com/avatar.jpg",
+  "bio": "This is a test bio",
+  "friends": ["user456", "user789"],
+  "following": ["user456", "user789", "user101"],
+  "followers": ["user111", "user222"],
+  "isActive": true,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-02T00:00:00.000Z"
+}

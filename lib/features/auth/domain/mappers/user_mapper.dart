@@ -7,19 +7,16 @@ class UserMapper {
   static User fromModel(UserModel model) {
     return User(
       id: model.id,
-      email: model.email,
       username: model.username,
-      displayName: model.displayName,
-      bio: model.bio,
+      email: model.email,
       avatarUrl: model.avatarUrl,
-      coverImageUrl: model.coverImageUrl,
+      bio: model.bio,
+      friends: model.friends,
+      following: model.following,
+      followers: model.followers,
+      isActive: model.isActive,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
-      followersCount: model.followersCount,
-      followingCount: model.followingCount,
-      postsCount: model.postsCount,
-      isVerified: model.isVerified,
-      isPrivate: model.isPrivate,
     );
   }
 
@@ -27,19 +24,16 @@ class UserMapper {
   static UserModel toModel(User entity) {
     return UserModel(
       id: entity.id,
-      email: entity.email,
       username: entity.username,
-      displayName: entity.displayName,
-      bio: entity.bio,
+      email: entity.email,
       avatarUrl: entity.avatarUrl,
-      coverImageUrl: entity.coverImageUrl,
+      bio: entity.bio,
+      friends: entity.friends,
+      following: entity.following,
+      followers: entity.followers,
+      isActive: entity.isActive,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
-      followersCount: entity.followersCount,
-      followingCount: entity.followingCount,
-      postsCount: entity.postsCount,
-      isVerified: entity.isVerified,
-      isPrivate: entity.isPrivate,
     );
   }
 
@@ -53,4 +47,3 @@ class UserMapper {
     return entities.map((entity) => toModel(entity)).toList();
   }
 }
-

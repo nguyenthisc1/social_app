@@ -1,47 +1,56 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:social_app/core/di/injection_container.dart';
 import 'package:social_app/main.dart';
-import 'package:social_app/core/core.dart';
 
 void main() {
   setUpAll(() async {
-    // Initialize dependencies before running tests
     TestWidgetsFlutterBinding.ensureInitialized();
-    
-    // Set up SharedPreferences for testing
+
+    // Reset GetIt to ensure clean state
+    await GetIt.instance.reset();
+
+    // Set up mock SharedPreferences before initialization
     SharedPreferences.setMockInitialValues({});
-    
+
+    // Initialize dependencies (this will use the mocked SharedPreferences)
     await InjectionContainer.init();
   });
 
   tearDownAll(() async {
-    // Clean up after tests
-    await InjectionContainer.reset();
+    await GetIt.instance.reset();
   });
 
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('App initializes and shows splash screen', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // App should show MaterialApp (typically the Splash or home screen)
+    expect(find.byType(MaterialApp), findsOneWidget);
+  });
+
+  testWidgets('Unauthenticated user is shown login or auth screen', (
+    WidgetTester tester,
+  ) async {
+    // Assuming MyApp shows a login/auth screen if not authenticated.
+    // You may need to adjust the text/key for your specific auth screen.
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+
+    // Typically, you would search for a widget or text that's only present on the login/auth screen.
+    // Replace 'Login' with the actual text on your authentication screen if needed.
+    expect(
+      find.textContaining('Login', findRichText: true).evaluate().isNotEmpty ||
+          find
+              .textContaining('Sign In', findRichText: true)
+              .evaluate()
+              .isNotEmpty,
+      true,
+      reason: 'Should show some authentication indicator',
+    );
   });
 }

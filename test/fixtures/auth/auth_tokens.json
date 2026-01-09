@@ -1,0 +1,7 @@
+{
+  "access_token": "test_access_token_123",
+  "refresh_token": "test_refresh_token_456",
+  "expires_at": "2024-12-31T23:59:59.000Z",
+  "token_type": "Bearer"
+}
+

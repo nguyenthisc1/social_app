@@ -50,9 +50,7 @@ class HomeScreen extends StatelessWidget {
                             : null,
                         child: user.avatarUrl == null
                             ? Text(
-                                TextHelpers.getInitials(
-                                  user.displayName ?? user.username,
-                                ),
+                                TextHelpers.getInitials(user.username),
                                 style: AppTextStyles.displayMedium.copyWith(
                                   color: Colors.white,
                                 ),
@@ -62,10 +60,7 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 24),
 
                       // Display Name
-                      Text(
-                        user.displayName ?? user.username,
-                        style: AppTextStyles.headlineMedium,
-                      ),
+                      Text(user.username, style: AppTextStyles.headlineMedium),
                       const SizedBox(height: 8),
 
                       // Username
@@ -87,26 +82,23 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 32),
 
                       // Stats
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _StatItem(
-                            label: 'Posts',
-                            value: user.postsCount,
-                          ),
-                          const SizedBox(width: 32),
-                          _StatItem(
-                            label: 'Followers',
-                            value: user.followersCount,
-                          ),
-                          const SizedBox(width: 32),
-                          _StatItem(
-                            label: 'Following',
-                            value: user.followingCount,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 48),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     _StatItem(label: 'Posts', value: user),
+                      //     const SizedBox(width: 32),
+                      //     _StatItem(
+                      //       label: 'Followers',
+                      //       value: user.followersCount,
+                      //     ),
+                      //     const SizedBox(width: 32),
+                      //     _StatItem(
+                      //       label: 'Following',
+                      //       value: user.followingCount,
+                      //     ),
+                      //   ],
+                      // ),
+                      // const SizedBox(height: 48),
 
                       // Welcome Message
                       Card(
@@ -145,9 +137,7 @@ class HomeScreen extends StatelessWidget {
               );
             }
 
-            return const Center(
-              child: LoadingIndicator(),
-            );
+            return const Center(child: LoadingIndicator());
           },
         ),
       ),
@@ -159,10 +149,7 @@ class _StatItem extends StatelessWidget {
   final String label;
   final int value;
 
-  const _StatItem({
-    required this.label,
-    required this.value,
-  });
+  const _StatItem({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -170,9 +157,7 @@ class _StatItem extends StatelessWidget {
       children: [
         Text(
           TextHelpers.formatCount(value),
-          style: AppTextStyles.titleLarge.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: AppTextStyles.titleLarge.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
         Text(
@@ -185,4 +170,3 @@ class _StatItem extends StatelessWidget {
     );
   }
 }
-
