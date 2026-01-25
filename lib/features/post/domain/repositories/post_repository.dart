@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:social_app/core/core.dart';
-import 'package:social_app/features/post/domain/entites/post_entity.dart';
-import 'package:social_app/features/post/domain/entites/post_enum.dart';
+import 'package:social_app/features/post/domain/entities/post_entity.dart';
+import 'package:social_app/features/post/domain/entities/post_enum.dart';
 
 abstract class PostRepository {
   Future<Either<Failure, PostEntity>> createPost({

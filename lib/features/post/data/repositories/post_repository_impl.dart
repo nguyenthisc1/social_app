@@ -4,8 +4,8 @@ import 'package:social_app/core/network/base_response.dart';
 import 'package:social_app/features/post/data/datasources/post_local_data_source.dart';
 import 'package:social_app/features/post/data/datasources/post_remote_data_source.dart';
 import 'package:social_app/features/post/data/models/post_model.dart';
-import 'package:social_app/features/post/domain/entites/post_entity.dart';
-import 'package:social_app/features/post/domain/entites/post_enum.dart';
+import 'package:social_app/features/post/domain/entities/post_entity.dart';
+import 'package:social_app/features/post/domain/entities/post_enum.dart';
 import 'package:social_app/features/post/domain/mappers/post_mapper.dart';
 import 'package:social_app/features/post/domain/repositories/post_repository.dart';
 

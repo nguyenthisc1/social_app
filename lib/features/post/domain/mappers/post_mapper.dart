@@ -1,6 +1,6 @@
 import 'package:social_app/features/post/data/models/post_model.dart';
-import 'package:social_app/features/post/domain/entites/post_entity.dart';
-import 'package:social_app/features/post/domain/entites/post_enum_extension.dart';
+import 'package:social_app/features/post/domain/entities/post_entity.dart';
+import 'package:social_app/features/post/domain/entities/post_enum_extension.dart';
 
 class PostMapper {
   static PostEntity fromModel(PostModel model) {

@@ -1,4 +1,4 @@
-import 'package:social_app/features/post/domain/entites/post_enum.dart';
+import 'package:social_app/features/post/domain/entities/post_enum.dart';
 
 extension PostTypeMapper on String {
   PostType toPostType() {
