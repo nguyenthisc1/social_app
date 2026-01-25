@@ -47,7 +47,6 @@ extension PostTypeToString on PostType {
       case PostType.video:
         return 'video';
       case PostType.text:
-      default:
         return 'text';
     }
   }
@@ -61,7 +60,6 @@ extension PostVisibilityToString on PostVisibility {
       case PostVisibility.private:
         return 'private';
       case PostVisibility.public:
-      default:
         return 'public';
     }
   }
@@ -75,7 +73,6 @@ extension PostStatusToString on PostStatus {
       case PostStatus.hidden:
         return 'hidden';
       case PostStatus.reported:
-      default:
         return 'reported';
     }
   }
