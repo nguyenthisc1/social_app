@@ -6,9 +6,13 @@ import 'package:social_app/features/auth/data/datasources/auth_remote_data_sourc
 import 'package:social_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:social_app/features/comment/data/datasources/comment_remote_data_source.dart';
 import 'package:social_app/features/comment/domain/repositories/comment_repository.dart';
+import 'package:social_app/features/friendship/data/datasources/friendship_remote_data_source.dart';
+import 'package:social_app/features/friendship/domain/repositories/friendship_repository.dart';
 import 'package:social_app/features/post/data/datasources/post_local_data_source.dart';
 import 'package:social_app/features/post/data/datasources/post_remote_data_source.dart';
 import 'package:social_app/features/post/domain/repositories/post_repository.dart';
+import 'package:social_app/features/reaction/data/datasources/reaction_remote_data_source.dart';
+import 'package:social_app/features/reaction/domain/repositories/reaction_repository.dart';
 
 @GenerateMocks([
   // Core
@@ -28,5 +32,13 @@ import 'package:social_app/features/post/domain/repositories/post_repository.dar
   // Comment
   CommentRepository,
   CommentRemoteDataSource,
+  
+  // Reaction
+  ReactionRepository,
+  ReactionRemoteDataSource,
+  
+  // Friendship
+  FriendshipRepository,
+  FriendshipRemoteDataSource,
 ])
 void main() {}

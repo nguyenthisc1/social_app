@@ -2,8 +2,12 @@ import 'package:social_app/core/entities/author_entity.dart';
 import 'package:social_app/features/auth/domain/entities/auth_tokens.dart';
 import 'package:social_app/features/auth/domain/entities/user.dart';
 import 'package:social_app/features/comment/domain/entities/comment_entity.dart';
+import 'package:social_app/features/friendship/domain/entities/friendship_entity.dart';
+import 'package:social_app/features/friendship/domain/entities/friendship_enums.dart';
 import 'package:social_app/features/post/domain/entities/post_entity.dart';
 import 'package:social_app/features/post/domain/entities/post_enum.dart';
+import 'package:social_app/features/reaction/domain/entities/reaction_entity.dart';
+import 'package:social_app/features/reaction/domain/entities/reaction_enums.dart';
 
 /// Test fixture data for unit tests
 class TestData {
@@ -95,4 +99,74 @@ class TestData {
       authorId: 'user789',
     ),
   ];
+
+  // Reaction Test Data
+  static final testReaction = ReactionEntity(
+    id: 'reaction123',
+    userId: 'user123',
+    targetType: ReactionTargetType.post,
+    targetId: 'post123',
+    type: ReactionType.like,
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
+  );
+
+  static const testReactionResponse = ReactionResponseEntity(
+    action: ReactionAction.created,
+  );
+
+  static const testReactionSummary = [
+    ReactionSummaryEntity(type: ReactionType.like, count: 10),
+    ReactionSummaryEntity(type: ReactionType.love, count: 5),
+    ReactionSummaryEntity(type: ReactionType.haha, count: 3),
+  ];
+
+  // Friendship Test Data
+  static final testFriendship = FriendshipEntity(
+    id: 'friendship123',
+    requesterId: 'user123',
+    receiverId: 'user456',
+    status: FriendshipStatus.pending,
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
+  );
+
+  static final testFriendRequest = FriendRequestEntity(
+    id: 'friendship123',
+    requesterId: 'user123',
+    receiverId: 'user456',
+    status: FriendshipStatus.pending,
+    username: 'frienduser',
+    email: 'friend@example.com',
+    avatarUrl: 'https://example.com/friend-avatar.jpg',
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
+  );
+
+  static const testFriendshipResponse = FriendshipResponseEntity(
+    success: true,
+    message: 'Friend request sent successfully',
+  );
+
+  static const testFriend = FriendEntity(
+    id: 'friend123',
+    username: 'frienduser',
+    email: 'friend@example.com',
+    avatarUrl: 'https://example.com/friend-avatar.jpg',
+    bio: 'Friend bio',
+  );
+
+  static const testFriendsList = [
+    testFriend,
+    FriendEntity(
+      id: 'friend456',
+      username: 'anotherfriend',
+      email: 'another@example.com',
+    ),
+  ];
+
+  static const testFriendshipStatus = FriendshipStatusEntity(
+    isFriend: true,
+    message: 'Users are friends',
+  );
 }
