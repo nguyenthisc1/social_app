@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:social_app/core/core.dart';
-import 'package:social_app/features/auth/domain/entities/user.dart';
+import 'package:social_app/core/errors/failures.dart';
 import 'package:social_app/features/auth/domain/usecases/login_usecase.dart';
 
+import '../../../../fixtures/test_data.dart';
 import '../../../../helpers/test_helper.mocks.dart';
 
 void main() {
@@ -16,51 +16,76 @@ void main() {
     usecase = LoginUseCase(mockAuthRepository);
   });
 
-  const tEmail = 'test@example.com';
-  const tPassword = 'password123';
-  final tUser = User(
-    id: 'user123',
-    email: tEmail,
-    username: 'testuser',
-    createdAt: DateTime.parse('2024-01-01T00:00:00.000Z'),
-    updatedAt: DateTime.now(),
-  );
+  const testEmail = 'test@example.com';
+  const testPassword = 'Test@1234';
 
-  test('should return User when login is successful', () async {
-    // arrange
-    when(
-      mockAuthRepository.login(
+  group('LoginUseCase', () {
+    test('should login user with valid credentials', () async {
+      // arrange
+      when(mockAuthRepository.login(
         email: anyNamed('email'),
         password: anyNamed('password'),
-      ),
-    ).thenAnswer((_) async => Right(tUser));
+      )).thenAnswer((_) async => Right(TestData.testUser));
 
-    // act
-    final result = await usecase(email: tEmail, password: tPassword);
+      // act
+      final result = await usecase(
+        email: testEmail,
+        password: testPassword,
+      );
 
-    // assert
-    expect(result, Right(tUser));
-    verify(mockAuthRepository.login(email: tEmail, password: tPassword));
-    verifyNoMoreInteractions(mockAuthRepository);
-  });
+      // assert
+      expect(result, Right(TestData.testUser));
+      verify(mockAuthRepository.login(
+        email: testEmail,
+        password: testPassword,
+      ));
+      verifyNoMoreInteractions(mockAuthRepository);
+    });
 
-  test('should forward repository failures', () async {
-    // arrange
-    when(
-      mockAuthRepository.login(
+    test('should return failure when credentials are invalid', () async {
+      // arrange
+      const failure = ServerFailure(message: 'Invalid credentials');
+      when(mockAuthRepository.login(
         email: anyNamed('email'),
         password: anyNamed('password'),
-      ),
-    ).thenAnswer(
-      (_) async => Left(ServerFailure(message: 'Invalid credentials')),
-    );
+      )).thenAnswer((_) async => const Left(failure));
 
-    // act
-    final result = await usecase(email: tEmail, password: tPassword);
+      // act
+      final result = await usecase(
+        email: testEmail,
+        password: 'wrongpassword',
+      );
 
-    // assert
-    expect(result, const Left(ServerFailure(message: 'Invalid credentials')));
-    verify(mockAuthRepository.login(email: tEmail, password: tPassword));
-    verifyNoMoreInteractions(mockAuthRepository);
+      // assert
+      expect(result, const Left(failure));
+      verify(mockAuthRepository.login(
+        email: testEmail,
+        password: 'wrongpassword',
+      ));
+      verifyNoMoreInteractions(mockAuthRepository);
+    });
+
+    test('should return failure when network error occurs', () async {
+      // arrange
+      const failure = NetworkFailure();
+      when(mockAuthRepository.login(
+        email: anyNamed('email'),
+        password: anyNamed('password'),
+      )).thenAnswer((_) async => const Left(failure));
+
+      // act
+      final result = await usecase(
+        email: testEmail,
+        password: testPassword,
+      );
+
+      // assert
+      expect(result, const Left(failure));
+      verify(mockAuthRepository.login(
+        email: testEmail,
+        password: testPassword,
+      ));
+      verifyNoMoreInteractions(mockAuthRepository);
+    });
   });
 }
