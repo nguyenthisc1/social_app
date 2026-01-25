@@ -83,5 +83,21 @@ class ApiEndpoints {
   static const String notifications = '/notification';
   static const String markAsRead = '/notification'; // + /{id}/read
   static const String markAllAsRead = '/notification/read-all';
+
+  // Reaction
+  static const String react = '/reactions/react';
+  static const String reactsummary = '/reactions/summary';
+  static const String userReaction = '/reactions/user-reaction';
+
+  // Friendship
+  static const String sendFriendRequest = '/friendship/request'; // POST
+  static const String acceptFriendRequest = '/friendship/accept'; // POST + /{requestId}
+  static const String rejectFriendRequest = '/friendship/reject'; // POST + /{requestId}
+  static const String pendingRequests = '/friendship/requests/pending'; // GET
+  static const String sentRequests = '/friendship/requests/sent'; // GET
+  static const String friends = '/friendship/friends'; // GET current user's friends
+  static const String userFriends = '/friendship/friends'; // + /{userId} for another user's friends
+  static const String checkFriendship = '/friendship/is-friend'; // GET with query params userAId, userBId
+  static const String friendIds = '/friendship/friend-ids'; // GET  
 }
 

@@ -1,0 +1,15 @@
+import 'package:dartz/dartz.dart';
+import 'package:social_app/core/core.dart';
+import 'package:social_app/features/friendship/domain/repositories/friendship_repository.dart';
+
+/// Use case for getting friend IDs
+class GetFriendIdsUsecase {
+  final FriendshipRepository repository;
+
+  GetFriendIdsUsecase({required this.repository});
+
+  /// Get list of friend IDs
+  Future<Either<Failure, List<String>>> call() async {
+    return await repository.getFriendIds();
+  }
+}
