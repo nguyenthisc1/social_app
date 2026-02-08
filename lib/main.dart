@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/core.dart';
+import 'core/l10n/app_localizations.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 
 void main() async {
@@ -20,17 +22,30 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Get managers from dependency injection
     final themeManager = sl<ThemeManager>();
+    final localeManager = sl<LocaleManager>();
 
     return BlocProvider(
       create: (_) => sl<AuthBloc>(),
       child: AnimatedBuilder(
-        animation: themeManager,
+        animation: Listenable.merge([themeManager, localeManager]),
         builder: (context, _) {
           return MaterialApp.router(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'), // English
+              Locale('vi'), // Vietnamese
+            ],
+            locale: localeManager.locale,
+            // App configuration
             title: 'Social App',
             debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
             themeMode: themeManager.themeMode,
             routerConfig: AppRouter.router,
           );

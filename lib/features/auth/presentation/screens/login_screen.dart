@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/core.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -30,16 +31,17 @@ class _LoginScreenState extends State<LoginScreen> {
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
       context.read<AuthBloc>().add(
-            AuthLoginRequested(
-              email: _emailController.text.trim(),
-              password: _passwordController.text,
-            ),
-          );
+        AuthLoginRequested(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -62,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
           return SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(AppSize.lg),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -72,82 +74,87 @@ class _LoginScreenState extends State<LoginScreen> {
                       // App Icon
                       Icon(
                         Icons.people,
-                        size: 80,
+                        size: AppSize.iconXLarge,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSize.md),
 
                       // Title
                       Text(
-                        'Welcome Back',
+                        l10n.login, // 'Đăng nhập' or 'Login'
                         style: AppTextStyles.displaySmall,
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSize.sm),
                       Text(
-                        'Sign in to continue',
+                        l10n.signInContinue ?? 'Sign in to continue',
                         style: AppTextStyles.bodyLarge.copyWith(
                           color: AppColors.textSecondary,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 48),
+                      const SizedBox(height: AppSize.sm),
 
                       // Email Field
                       CustomTextField(
                         controller: _emailController,
-                        labelText: 'Email',
-                        hintText: 'Enter your email',
+                        labelText: l10n.email,
+                        hintText: l10n.enterYourEmail ?? 'Enter your email',
                         prefixIcon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
                         validator: Validators.email,
                         enabled: !_isLoading,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSize.md),
 
                       // Password Field
                       PasswordTextField(
                         controller: _passwordController,
-                        labelText: 'Password',
-                        hintText: 'Enter your password',
+                        labelText: l10n.password,
+                        hintText:
+                            l10n.enterYourPassword ?? 'Enter your password',
                         textInputAction: TextInputAction.done,
                         validator: (value) => Validators.required(
                           value,
-                          fieldName: 'Password',
+                          fieldName: l10n.password,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSize.sm),
 
                       // Forgot Password
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: _isLoading ? null : () {
-                            // TODO: Navigate to forgot password
-                          },
-                          child: const Text('Forgot Password?'),
+                          onPressed: _isLoading
+                              ? null
+                              : () {
+                                  // TODO: Navigate to forgot password
+                                },
+                          child: Text(l10n.forgotPassword),
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSize.lg),
 
                       // Login Button
                       CustomButton(
-                        text: 'Sign In',
+                        text: l10n.login,
                         onPressed: _isLoading ? null : _handleLogin,
                         isLoading: _isLoading,
                         icon: Icons.login,
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSize.lg),
 
                       // Divider
                       Row(
                         children: [
                           const Expanded(child: Divider()),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSize.md,
+                            ),
                             child: Text(
-                              'OR',
+                              l10n.or ?? 'OR',
                               style: AppTextStyles.bodySmall.copyWith(
                                 color: AppColors.textSecondary,
                               ),
@@ -156,21 +163,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           const Expanded(child: Divider()),
                         ],
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSize.lg),
 
                       // Register Link
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Don't have an account? ",
+                            l10n.dontHaveAccount ?? "Don't have an account? ",
                             style: AppTextStyles.bodyMedium,
                           ),
                           TextButton(
                             onPressed: _isLoading
                                 ? null
                                 : () => context.push(AppRoutes.register),
-                            child: const Text('Sign Up'),
+                            child: Text(l10n.register),
                           ),
                         ],
                       ),
@@ -185,4 +192,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

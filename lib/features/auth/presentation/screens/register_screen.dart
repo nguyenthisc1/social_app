@@ -34,21 +34,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _handleRegister() {
     if (_formKey.currentState!.validate()) {
       context.read<AuthBloc>().add(
-            AuthRegisterRequested(
-              email: _emailController.text.trim(),
-              username: _usernameController.text.trim(),
-              password: _passwordController.text,
-            ),
-          );
+        AuthRegisterRequested(
+          email: _emailController.text.trim(),
+          username: _usernameController.text.trim(),
+          password: _passwordController.text,
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Account'),
-      ),
+      appBar: AppBar(title: Text(l10n.createAccount)),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
@@ -79,13 +78,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                     // Title
                     Text(
-                      'Create Account',
+                      l10n.createAccount,
                       style: AppTextStyles.displaySmall,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Sign up to get started',
+                      l10n.signUpContinue,
                       style: AppTextStyles.bodyLarge.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -96,8 +95,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // Email Field
                     CustomTextField(
                       controller: _emailController,
-                      labelText: 'Email',
-                      hintText: 'Enter your email',
+                      labelText: l10n.email,
+                      hintText: l10n.enterYourEmail,
                       prefixIcon: Icons.email_outlined,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
@@ -109,8 +108,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // Username Field
                     CustomTextField(
                       controller: _usernameController,
-                      labelText: 'Username',
-                      hintText: 'Choose a username',
+                      // There is no 'username' or 'chooseUsername' key in app_en.arb.
+                      // Use literal fallback strings.
+                      labelText: l10n.username,
+                      hintText: l10n.chooseUsername,
                       prefixIcon: Icons.person_outline,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
@@ -122,8 +123,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // Password Field
                     PasswordTextField(
                       controller: _passwordController,
-                      labelText: 'Password',
-                      hintText: 'Create a password',
+                      labelText: l10n.password,
+                      hintText: l10n.createPassword,
                       textInputAction: TextInputAction.next,
                       validator: Validators.password,
                     ),
@@ -132,8 +133,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // Confirm Password Field
                     PasswordTextField(
                       controller: _confirmPasswordController,
-                      labelText: 'Confirm Password',
-                      hintText: 'Confirm your password',
+                      labelText: l10n.confirmPassword ?? 'Confirm Password',
+                      hintText:
+                          l10n.confirmYourPassword ?? 'Confirm your password',
                       textInputAction: TextInputAction.done,
                       validator: (value) => Validators.confirmPassword(
                         value,
@@ -144,7 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                     // Register Button
                     CustomButton(
-                      text: 'Sign Up',
+                      text: l10n.signUp,
                       onPressed: _isLoading ? null : _handleRegister,
                       isLoading: _isLoading,
                       icon: Icons.person_add,
@@ -153,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                     // Terms and Privacy
                     Text(
-                      'By signing up, you agree to our Terms of Service and Privacy Policy',
+                      l10n.termsAndPrivacyNote,
                       style: AppTextStyles.bodySmall.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -166,14 +168,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Already have an account? ',
+                          l10n.alreadyHaveAccount,
                           style: AppTextStyles.bodyMedium,
                         ),
                         TextButton(
-                          onPressed: _isLoading
-                              ? null
-                              : () => context.pop(),
-                          child: const Text('Sign In'),
+                          onPressed: _isLoading ? null : () => context.pop(),
+                          child: Text(l10n.signIn),
                         ),
                       ],
                     ),
@@ -187,4 +187,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-

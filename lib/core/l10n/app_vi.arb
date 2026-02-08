@@ -1,0 +1,461 @@
+{
+  "@@locale": "vi",
+  
+  "@_AUTH": {},
+  "login": "Đăng nhập",
+  "@login": {
+    "description": "đăng nhập"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "email"
+  },
+  "password": "Mật khẩu",
+  "@password": {
+    "description": "mật khẩu"
+  },
+  "forgotPassword": "Quên mật khẩu?",
+  "@forgotPassword": {
+    "description": "Văn bản/đường dẫn quên mật khẩu"
+  },
+  "register": "Đăng ký",
+  "@register": {
+    "description": "đăng ký"
+  },
+  "loginError": "Đăng nhập thất bại",
+  "@loginError": {
+    "description": "Thông báo lỗi đăng nhập"
+  },
+  "emailRequired": "Email là bắt buộc",
+  "@emailRequired": {
+    "description": "Thông báo lỗi thiếu email"
+  },
+  "passwordRequired": "Mật khẩu là bắt buộc",
+  "@passwordRequired": {
+    "description": "Thông báo lỗi thiếu mật khẩu"
+  },
+  "invalidEmail": "Email không hợp lệ",
+  "@invalidEmail": {
+    "description": "Thông báo lỗi email không hợp lệ"
+  },
+  "logout": "Đăng xuất",
+  "@logout": {
+    "description": "đăng xuất"
+  },
+  "profile": "Hồ sơ",
+  "@profile": {
+    "description": "Tiêu đề màn hình hồ sơ"
+  },
+  "settings": "Cài đặt",
+  "@settings": {
+    "description": "Tiêu đề màn hình cài đặt"
+  },
+  "signInContinue": "Đăng nhập để tiếp tục",
+  "@signInContinue": {
+    "description": "Phụ đề tại màn hình đăng nhập"
+  },
+  "signUpContinue": "Đăng ký để bắt đầu",
+  "@signUpContinue": {
+    "description": "Phụ đề tại màn hình đăng ký"
+  },
+  "username": "Tên người dùng",
+  "@username": {
+    "description": "Nhãn trường tên người dùng"
+  },
+  "username": "Các tên người dùng",
+  "@username": {
+    "description": "Danh sách tên người dùng"
+  },
+  "chooseUsername": "Chọn tên người dùng",
+  "@chooseUsername": {
+    "description": "Gợi ý trường tên người dùng"
+  },
+  "chooseYourUsername": "Chọn tên người dùng của bạn",
+  "@chooseYourUsername": {
+    "description": "Gợi ý trường nhập tên người dùng (phiên bản đầy đủ)"
+  },
+  "createPassword": "Tạo mật khẩu",
+  "@createPassword": {
+    "description": "Gợi ý trường tạo mật khẩu"
+  },
+  "createYourPassword": "Tạo mật khẩu của bạn",
+  "@createYourPassword": {
+    "description": "Gợi ý trường tạo mật khẩu (phiên bản đầy đủ)"
+  },
+  "enterYourEmail": "Nhập email của bạn",
+  "@enterYourEmail": {
+    "description": "Gợi ý khi nhập email"
+  },
+  "enterYourPassword": "Nhập mật khẩu của bạn",
+  "@enterYourPassword": {
+    "description": "Gợi ý khi nhập mật khẩu"
+  },
+  "createAccount": "Tạo tài khoản",
+  "@createAccount": {
+    "description": "Tiêu đề màn hình đăng ký"
+  },
+  "alreadyHaveAccount": "Đã có tài khoản?",
+  "@alreadyHaveAccount": {
+    "description": "Thông báo đã có tài khoản"
+  },
+  "signIn": "Đăng nhập",
+  "@signIn": {
+    "description": "Nút đăng nhập"
+  },
+  "signUp": "Đăng ký",
+  "@signUp": {
+    "description": "Nút đăng ký"
+  },
+  "confirmPassword": "Xác nhận mật khẩu",
+  "@confirmPassword": {
+    "description": "Nhãn trường xác nhận mật khẩu"
+  },
+  "confirmYourPassword": "Xác nhận mật khẩu của bạn",
+  "@confirmYourPassword": {
+    "description": "Gợi ý trường xác nhận mật khẩu"
+  },
+  "termsAndPrivacyNote": "Bằng cách đăng ký, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi",
+  "@termsAndPrivacyNote": {
+    "description": "Ghi chú đồng ý điều khoản và bảo mật"
+  },
+  "dontHaveAccount": "Chưa có tài khoản?",
+  "@dontHaveAccount": {
+    "description": "Thông báo chưa có tài khoản"
+  },
+  
+  "@_COMMON": {},
+  "appName": "Mạng Xã Hội",
+  "@appName": {
+    "description": "Tên ứng dụng"
+  },
+  "cancel": "Hủy",
+  "@cancel": {
+    "description": "huỷ"
+  },
+  "save": "Lưu",
+  "@save": {
+    "description": "lưu"
+  },
+  "delete": "Xóa",
+  "@delete": {
+    "description": "xóa"
+  },
+  "edit": "Chỉnh sửa",
+  "@edit": {
+    "description": "chỉnh sửa"
+  },
+  "confirm": "Xác nhận",
+  "@confirm": {
+    "description": "xác nhận"
+  },
+  "yes": "Có",
+  "@yes": {
+    "description": "Chọn Có"
+  },
+  "no": "Không",
+  "@no": {
+    "description": "Chọn Không"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "OK"
+  },
+  "loading": "Đang tải...",
+  "@loading": {
+    "description": "Trạng thái đang tải"
+  },
+  "error": "Lỗi",
+  "@error": {
+    "description": "Thông báo lỗi"
+  },
+  "success": "Thành công",
+  "@success": {
+    "description": "Thông báo thành công"
+  },
+  "retry": "Thử lại",
+  "@retry": {
+    "description": "thử lại"
+  },
+  "close": "Đóng",
+  "@close": {
+    "description": "đóng"
+  },
+  "or": "HOẶC",
+  "@or": {
+    "description": "Văn bản phân cách cho các hành động thay thế"
+  },
+  "copiedToClipboard": "Đã sao chép vào clipboard",
+  "@copiedToClipboard": {
+    "description": "Thông báo khi đã sao chép"
+  },
+  
+  "@_POSTS": {},
+  "posts": "Bài viết",
+  "@posts": {
+    "description": "Tiêu đề bài viết"
+  },
+  "createPost": "Tạo bài viết",
+  "@createPost": {
+    "description": "tạo bài viết"
+  },
+  "editPost": "Chỉnh sửa bài viết",
+  "@editPost": {
+    "description": "chỉnh sửa bài viết"
+  },
+  "deletePost": "Xóa bài viết",
+  "@deletePost": {
+    "description": "xóa bài viết"
+  },
+  "likePost": "Thích",
+  "@likePost": {
+    "description": "thích bài viết"
+  },
+  "sharePost": "Chia sẻ",
+  "@sharePost": {
+    "description": "chia sẻ bài viết"
+  },
+  "commentPost": "Bình luận",
+  "@commentPost": {
+    "description": "bình luận bài viết"
+  },
+  "postDeleted": "Đã xóa bài viết",
+  "@postDeleted": {
+    "description": "Thông báo xóa bài viết"
+  },
+  "postCreated": "Đã tạo bài viết",
+  "@postCreated": {
+    "description": "Thông báo tạo bài viết"
+  },
+  "postUpdated": "Đã cập nhật bài viết",
+  "@postUpdated": {
+    "description": "Thông báo cập nhật bài viết"
+  },
+  "noPostsYet": "Chưa có bài viết nào",
+  "@noPostsYet": {
+    "description": "Thông báo chưa có bài viết"
+  },
+  "writePost": "Bạn đang nghĩ gì?",
+  "@writePost": {
+    "description": "Nơi nhập nội dung bài viết mới"
+  },
+  "viewPost": "Xem bài viết",
+  "@viewPost": {
+    "description": "Nút hoặc liên kết xem bài viết"
+  },
+  "postNotFound": "Không tìm thấy bài viết",
+  "@postNotFound": {
+    "description": "Hiển thị khi không tìm thấy bài viết"
+  },
+
+  "@_COMMENTS": {},
+  "comments": "Bình luận",
+  "@comments": {
+    "description": "Tiêu đề bình luận"
+  },
+  "writeComment": "Viết bình luận...",
+  "@writeComment": {
+    "description": "Nơi nhập bình luận mới"
+  },
+  "reply": "Trả lời",
+  "@reply": {
+    "description": "trả lời bình luận"
+  },
+  "replies": "Câu trả lời",
+  "@replies": {
+    "description": "Tiêu đề phản hồi"
+  },
+  "noComments": "Chưa có bình luận nào",
+  "@noComments": {
+    "description": "Thông báo chưa có bình luận"
+  },
+  "commentDeleted": "Đã xóa bình luận",
+  "@commentDeleted": {
+    "description": "Thông báo xóa bình luận"
+  },
+  "addComment": "Thêm bình luận",
+  "@addComment": {
+    "description": "Nút thêm bình luận"
+  },
+  
+  "@_FRIENDS": {},
+  "friends": "Bạn bè",
+  "@friends": {
+    "description": "Tiêu đề bạn bè"
+  },
+  "addFriend": "Thêm bạn",
+  "@addFriend": {
+    "description": "thêm bạn bè"
+  },
+  "removeFriend": "Xóa bạn",
+  "@removeFriend": {
+    "description": "xóa bạn bè"
+  },
+  "friendRequests": "Lời mời kết bạn",
+  "@friendRequests": {
+    "description": "Tiêu đề lời mời kết bạn"
+  },
+  "acceptRequest": "Chấp nhận",
+  "@acceptRequest": {
+    "description": "chấp nhận lời mời"
+  },
+  "rejectRequest": "Từ chối",
+  "@rejectRequest": {
+    "description": "từ chối lời mời"
+  },
+  "pendingRequests": "Yêu cầu đang chờ",
+  "@pendingRequests": {
+    "description": "Tiêu đề yêu cầu đang chờ"
+  },
+  "sentRequests": "Đã gửi yêu cầu",
+  "@sentRequests": {
+    "description": "Tiêu đề yêu cầu đã gửi"
+  },
+  "noFriends": "Chưa có bạn bè",
+  "@noFriends": {
+    "description": "Thông báo chưa có bạn bè"
+  },
+  "friendRequestSent": "Đã gửi lời mời kết bạn",
+  "@friendRequestSent": {
+    "description": "Thông báo đã gửi lời mời kết bạn"
+  },
+  "friendRequestAccepted": "Đã chấp nhận lời mời kết bạn",
+  "@friendRequestAccepted": {
+    "description": "Thông báo đã chấp nhận lời mời"
+  },
+  "friendRequestRejected": "Đã từ chối lời mời kết bạn",
+  "@friendRequestRejected": {
+    "description": "Thông báo đã từ chối lời mời"
+  },
+  "unfriend": "Hủy kết bạn",
+  "@unfriend": {
+    "description": "Nút xóa bạn bè"
+  },
+  
+  "@_REACTIONS": {},
+  "like": "Thích",
+  "@like": {
+    "description": "thích"
+  },
+  "love": "Yêu thích",
+  "@love": {
+    "description": "yêu thích"
+  },
+  "haha": "Haha",
+  "@haha": {
+    "description": "haha"
+  },
+  "wow": "Wow",
+  "@wow": {
+    "description": "wow"
+  },
+  "sad": "Buồn",
+  "@sad": {
+    "description": "buồn"
+  },
+  "angry": "Phẫn nộ",
+  "@angry": {
+    "description": "phẫn nộ"
+  },
+  "dislike": "Không thích",
+  "@dislike": {
+    "description": "Không thích"
+  },
+  "reacted": "Bạn đã bày tỏ cảm xúc",
+  "@reacted": {
+    "description": "Thông báo người dùng đã bày tỏ cảm xúc"
+  },
+  
+  "@_NAVIGATION": {},
+  "home": "Trang chủ",
+  "@home": {
+    "description": "Điều hướng về trang chủ"
+  },
+  "explore": "Khám phá",
+  "@explore": {
+    "description": "Điều hướng khám phá"
+  },
+  "notifications": "Thông báo",
+  "@notifications": {
+    "description": "Điều hướng thông báo"
+  },
+  "messages": "Tin nhắn",
+  "@messages": {
+    "description": "Điều hướng tin nhắn"
+  },
+  "search": "Tìm kiếm",
+  "@search": {
+    "description": "Điều hướng tìm kiếm"
+  },
+  "profileTab": "Hồ sơ",
+  "@profileTab": {
+    "description": "Tab điều hướng hồ sơ"
+  },
+  
+  "@_SETTINGS": {},
+  "darkMode": "Chế độ tối",
+  "@darkMode": {
+    "description": "Tùy chọn chế độ tối"
+  },
+  "language": "Ngôn ngữ",
+  "@language": {
+    "description": "Tùy chọn ngôn ngữ"
+  },
+  "about": "Giới thiệu",
+  "@about": {
+    "description": "Giới thiệu ứng dụng"
+  },
+  "version": "Phiên bản",
+  "@version": {
+    "description": "Phiên bản ứng dụng"
+  },
+  "privacyPolicy": "Chính sách bảo mật",
+  "@privacyPolicy": {
+    "description": "Chính sách bảo mật"
+  },
+  "termsOfService": "Điều khoản dịch vụ",
+  "@termsOfService": {
+    "description": "Điều khoản dịch vụ"
+  },
+  "accountSettings": "Cài đặt tài khoản",
+  "@accountSettings": {
+    "description": "Tiêu đề cài đặt tài khoản"
+  },
+  "notificationSettings": "Cài đặt thông báo",
+  "@notificationSettings": {
+    "description": "Tiêu đề cài đặt thông báo"
+  },
+  
+  "@_ERRORS": {},
+  "networkError": "Lỗi mạng. Vui lòng kiểm tra kết nối.",
+  "@networkError": {
+    "description": "Lỗi mạng"
+  },
+  "serverError": "Lỗi máy chủ. Vui lòng thử lại sau.",
+  "@serverError": {
+    "description": "Lỗi máy chủ"
+  },
+  "unknownError": "Đã xảy ra lỗi không xác định",
+  "@unknownError": {
+    "description": "Lỗi không xác định"
+  },
+  "unauthorized": "Chưa xác thực. Vui lòng đăng nhập lại.",
+  "@unauthorized": {
+    "description": "Lỗi chưa xác thực"
+  },
+  "notFound": "Không tìm thấy",
+  "@notFound": {
+    "description": "Không tìm thấy"
+  },
+  "timeoutError": "Yêu cầu hết thời gian. Vui lòng thử lại.",
+  "@timeoutError": {
+    "description": "Hiển thị khi yêu cầu hết thời gian"
+  },
+  "forbidden": "Bạn không có quyền thực hiện hành động này.",
+  "@forbidden": {
+    "description": "Hiển thị khi truy cập bị cấm"
+  },
+  "validationError": "Một số trường không hợp lệ. Vui lòng kiểm tra và thử lại.",
+  "@validationError": {
+    "description": "Hiển thị khi xác thực biểu mẫu thất bại"
+  }
+}

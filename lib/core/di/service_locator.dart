@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../network/network.dart';
 import '../theme/theme.dart';
+import '../locale/locale_manager.dart';
 import '../utils/constants.dart';
 
 // Auth imports
@@ -59,10 +60,13 @@ Future<void> initializeDependencies() async {
   // Theme Manager
   sl.registerLazySingleton<ThemeManager>(() => ThemeManager(sl()));
 
+  // Locale Manager
+  sl.registerLazySingleton<LocaleManager>(() => LocaleManager(sl()));
+
   // ============================================================================
   // Data Sources
   // ============================================================================
-  
+
   // Auth Data Sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(apiClient: sl()),
@@ -75,7 +79,7 @@ Future<void> initializeDependencies() async {
   // ============================================================================
   // Repositories
   // ============================================================================
-  
+
   // Auth Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -88,18 +92,18 @@ Future<void> initializeDependencies() async {
   // ============================================================================
   // Use Cases
   // ============================================================================
-  
+
   // Auth Use Cases
-  sl.registerLazySingleton(() => LoginUseCase(sl()));
-  sl.registerLazySingleton(() => RegisterUseCase(sl()));
-  sl.registerLazySingleton(() => LogoutUseCase(sl()));
-  sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
-  sl.registerLazySingleton(() => CheckAuthStatusUseCase(sl()));
+  sl.registerFactory(() => LoginUseCase(sl()));
+  sl.registerFactory(() => RegisterUseCase(sl()));
+  sl.registerFactory(() => LogoutUseCase(sl()));
+  sl.registerFactory(() => GetCurrentUserUseCase(sl()));
+  sl.registerFactory(() => CheckAuthStatusUseCase(sl()));
 
   // ============================================================================
   // State Management (BLoC/Cubit/Provider)
   // ============================================================================
-  
+
   // Auth BLoC
   sl.registerFactory(
     () => AuthBloc(
