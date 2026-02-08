@@ -15,8 +15,6 @@ class UserMapper {
       following: model.following,
       followers: model.followers,
       isActive: model.isActive,
-      createdAt: model.createdAt,
-      updatedAt: model.updatedAt,
     );
   }
 
@@ -32,8 +30,6 @@ class UserMapper {
       following: entity.following,
       followers: entity.followers,
       isActive: entity.isActive,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
     );
   }
 

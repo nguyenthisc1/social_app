@@ -11,8 +11,6 @@ class User extends Equatable {
   final List<String> following;
   final List<String> followers;
   final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const User({
     required this.id,
@@ -24,24 +22,20 @@ class User extends Equatable {
     this.following = const [],
     this.followers = const [],
     this.isActive = false,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   @override
   List<Object?> get props => [
-        id,
-        username,
-        email,
-        avatarUrl,
-        bio,
-        friends,
-        following,
-        followers,
-        isActive,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    username,
+    email,
+    avatarUrl,
+    bio,
+    friends,
+    following,
+    followers,
+    isActive,
+  ];
 
   /// Create a copy with updated fields
   User copyWith({
@@ -54,8 +48,6 @@ class User extends Equatable {
     List<String>? following,
     List<String>? followers,
     bool? isActive,
-    DateTime? createdAt,
-    DateTime? updatedAt,
   }) {
     return User(
       id: id ?? this.id,
@@ -67,9 +59,6 @@ class User extends Equatable {
       following: following ?? this.following,
       followers: followers ?? this.followers,
       isActive: isActive ?? this.isActive,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }
-

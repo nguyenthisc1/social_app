@@ -127,7 +127,7 @@ class CustomIconButton extends StatelessWidget {
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  color ?? Theme.of(context).iconTheme.color ?? Colors.black,
+                  color ?? Theme.of(context).iconTheme.color ?? Colors.white,
                 ),
               ),
             )

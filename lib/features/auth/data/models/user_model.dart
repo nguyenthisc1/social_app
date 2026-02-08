@@ -11,8 +11,6 @@ class UserModel extends Equatable {
   final List<String> following;
   final List<String> followers;
   final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const UserModel({
     required this.id,
@@ -24,24 +22,20 @@ class UserModel extends Equatable {
     this.following = const [],
     this.followers = const [],
     this.isActive = false,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   @override
   List<Object?> get props => [
-        id,
-        username,
-        email,
-        avatarUrl,
-        bio,
-        friends,
-        following,
-        followers,
-        isActive,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    username,
+    email,
+    avatarUrl,
+    bio,
+    friends,
+    following,
+    followers,
+    isActive,
+  ];
 
   /// Create UserModel from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -51,21 +45,22 @@ class UserModel extends Equatable {
       email: json['email'] as String,
       avatarUrl: json['avatarUrl'] as String?,
       bio: json['bio'] as String?,
-      friends: (json['friends'] as List<dynamic>?)
+      friends:
+          (json['friends'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],
-      following: (json['following'] as List<dynamic>?)
+      following:
+          (json['following'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],
-      followers: (json['followers'] as List<dynamic>?)
+      followers:
+          (json['followers'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],
       isActive: json['isActive'] as bool? ?? false,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
   }
 
@@ -81,8 +76,6 @@ class UserModel extends Equatable {
       'following': following,
       'followers': followers,
       'isActive': isActive,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
@@ -110,9 +103,6 @@ class UserModel extends Equatable {
       following: following ?? this.following,
       followers: followers ?? this.followers,
       isActive: isActive ?? this.isActive,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }
-

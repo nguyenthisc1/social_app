@@ -133,9 +133,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // Confirm Password Field
                     PasswordTextField(
                       controller: _confirmPasswordController,
-                      labelText: l10n.confirmPassword ?? 'Confirm Password',
+                      labelText: l10n.confirmPassword ,
                       hintText:
-                          l10n.confirmYourPassword ?? 'Confirm your password',
+                          l10n.confirmYourPassword,
                       textInputAction: TextInputAction.done,
                       validator: (value) => Validators.confirmPassword(
                         value,

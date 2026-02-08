@@ -81,13 +81,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       // Title
                       Text(
-                        l10n.login, // 'Đăng nhập' or 'Login'
+                        l10n.login,
                         style: AppTextStyles.displaySmall,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: AppSize.sm),
                       Text(
-                        l10n.signInContinue ?? 'Sign in to continue',
+                        l10n.signInContinue,
                         style: AppTextStyles.bodyLarge.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       CustomTextField(
                         controller: _emailController,
                         labelText: l10n.email,
-                        hintText: l10n.enterYourEmail ?? 'Enter your email',
+                        hintText: l10n.enterYourEmail,
                         prefixIcon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -112,8 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       PasswordTextField(
                         controller: _passwordController,
                         labelText: l10n.password,
-                        hintText:
-                            l10n.enterYourPassword ?? 'Enter your password',
+                        hintText: l10n.enterYourPassword,
                         textInputAction: TextInputAction.done,
                         validator: (value) => Validators.required(
                           value,
@@ -141,7 +140,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         text: l10n.login,
                         onPressed: _isLoading ? null : _handleLogin,
                         isLoading: _isLoading,
-                        icon: Icons.login,
                       ),
                       const SizedBox(height: AppSize.lg),
 
@@ -154,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               horizontal: AppSize.md,
                             ),
                             child: Text(
-                              l10n.or ?? 'OR',
+                              l10n.or,
                               style: AppTextStyles.bodySmall.copyWith(
                                 color: AppColors.textSecondary,
                               ),
@@ -170,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            l10n.dontHaveAccount ?? "Don't have an account? ",
+                            l10n.dontHaveAccount,
                             style: AppTextStyles.bodyMedium,
                           ),
                           TextButton(

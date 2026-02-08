@@ -36,7 +36,6 @@ class AuthRepositoryImpl implements AuthRepository {
         email: email,
         password: password,
       );
-
       final data = response.data;
       if (data == null) {
         return const Left(
@@ -45,10 +44,12 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       // Extract user and tokens from response
-      final userModel =
-          UserModel.fromJson(data['user'] as Map<String, dynamic>);
-      final tokensModel =
-          AuthTokensModel.fromJson(data['tokens'] as Map<String, dynamic>);
+      final userModel = UserModel.fromJson(
+        data['user'] as Map<String, dynamic>,
+      );
+      final tokensModel = AuthTokensModel.fromJson(
+        data['tokens'] as Map<String, dynamic>,
+      );
 
       // Cache user and tokens
       await localDataSource.cacheUser(userModel);
@@ -93,10 +94,12 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       // Extract user and tokens from response
-      final userModel =
-          UserModel.fromJson(data['user'] as Map<String, dynamic>);
-      final tokensModel =
-          AuthTokensModel.fromJson(data['tokens'] as Map<String, dynamic>);
+      final userModel = UserModel.fromJson(
+        data['user'] as Map<String, dynamic>,
+      );
+      final tokensModel = AuthTokensModel.fromJson(
+        data['tokens'] as Map<String, dynamic>,
+      );
 
       // Cache user and tokens
       await localDataSource.cacheUser(userModel);
@@ -148,7 +151,8 @@ class AuthRepositoryImpl implements AuthRepository {
           if (tokens != null && !tokens.isExpired) {
             try {
               final response = await remoteDataSource.getCurrentUser(
-                  accessToken: tokens.accessToken);
+                accessToken: tokens.accessToken,
+              );
 
               final userModel = response.data;
               if (userModel != null) {
@@ -171,11 +175,14 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final tokens = await localDataSource.getCachedTokens();
       if (tokens == null || tokens.isExpired) {
-        return const Left(UnauthorizedFailure(message: 'No valid authentication'));
+        return const Left(
+          UnauthorizedFailure(message: 'No valid authentication'),
+        );
       }
 
-      final response =
-          await remoteDataSource.getCurrentUser(accessToken: tokens.accessToken);
+      final response = await remoteDataSource.getCurrentUser(
+        accessToken: tokens.accessToken,
+      );
 
       final userModel = response.data;
       if (userModel == null) {
@@ -342,7 +349,9 @@ class AuthRepositoryImpl implements AuthRepository {
     } on NetworkException catch (e) {
       return Left(NetworkFailure(message: e.message));
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to request password reset: $e'));
+      return Left(
+        ServerFailure(message: 'Failed to request password reset: $e'),
+      );
     }
   }
 
@@ -373,9 +382,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> verifyEmail({
-    required String token,
-  }) async {
+  Future<Either<Failure, void>> verifyEmail({required String token}) async {
     if (!await networkInfo.isConnected) {
       return const Left(NetworkFailure());
     }

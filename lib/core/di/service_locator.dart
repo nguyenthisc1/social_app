@@ -105,7 +105,7 @@ Future<void> initializeDependencies() async {
   // ============================================================================
 
   // Auth BLoC
-  sl.registerFactory(
+  sl.registerLazySingleton(
     () => AuthBloc(
       loginUseCase: sl(),
       registerUseCase: sl(),

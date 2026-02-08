@@ -70,10 +70,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: ApiEndpoints.login,
-      body: {
-        'email': email,
-        'password': password,
-      },
+      body: {'email': email, 'password': password},
     );
 
     return BaseResponse.fromJson(
@@ -91,11 +88,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: ApiEndpoints.register,
-      body: {
-        'email': email,
-        'username': username,
-        'password': password,
-      },
+      body: {'email': email, 'username': username, 'password': password},
     );
 
     return BaseResponse.fromJson(
@@ -166,10 +159,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       method: 'PUT',
       endpoint: '${ApiEndpoints.profile}/change-password',
       token: accessToken,
-      body: {
-        'current_password': currentPassword,
-        'new_password': newPassword,
-      },
+      body: {'current_password': currentPassword, 'new_password': newPassword},
     );
 
     return BaseResponse.fromJson(response, (data) {});
@@ -182,9 +172,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: ApiEndpoints.forgotPassword,
-      body: {
-        'email': email,
-      },
+      body: {'email': email},
     );
 
     return BaseResponse.fromJson(response, (data) {});
@@ -198,10 +186,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: ApiEndpoints.resetPassword,
-      body: {
-        'token': token,
-        'new_password': newPassword,
-      },
+      body: {'token': token, 'new_password': newPassword},
     );
 
     return BaseResponse.fromJson(response, (data) {});
@@ -212,9 +197,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: '${ApiEndpoints.profile}/verify-email',
-      body: {
-        'token': token,
-      },
+      body: {'token': token},
     );
 
     return BaseResponse.fromJson(response, (data) {});
@@ -227,9 +210,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: ApiEndpoints.refreshToken,
-      body: {
-        'refresh_token': refreshToken,
-      },
+      body: {'refresh_token': refreshToken},
     );
 
     return BaseResponse.fromJson(

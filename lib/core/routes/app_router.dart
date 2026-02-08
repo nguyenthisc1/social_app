@@ -45,23 +45,20 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.forgotPassword,
         name: 'forgotPassword',
-        builder: (context, state) => const _PlaceholderScreen(
-          title: 'Forgot Password',
-        ),
+        builder: (context, state) =>
+            const _PlaceholderScreen(title: 'Forgot Password'),
       ),
       GoRoute(
         path: AppRoutes.resetPassword,
         name: 'resetPassword',
-        builder: (context, state) => const _PlaceholderScreen(
-          title: 'Reset Password',
-        ),
+        builder: (context, state) =>
+            const _PlaceholderScreen(title: 'Reset Password'),
       ),
       GoRoute(
         path: AppRoutes.verifyEmail,
         name: 'verifyEmail',
-        builder: (context, state) => const _PlaceholderScreen(
-          title: 'Verify Email',
-        ),
+        builder: (context, state) =>
+            const _PlaceholderScreen(title: 'Verify Email'),
       ),
 
       // ========================================================================
@@ -85,9 +82,8 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.notifications,
         name: 'notifications',
-        builder: (context, state) => const _PlaceholderScreen(
-          title: 'Notifications',
-        ),
+        builder: (context, state) =>
+            const _PlaceholderScreen(title: 'Notifications'),
       ),
       GoRoute(
         path: AppRoutes.profile,
@@ -101,9 +97,8 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.createPost,
         name: 'createPost',
-        builder: (context, state) => const _PlaceholderScreen(
-          title: 'Create Post',
-        ),
+        builder: (context, state) =>
+            const _PlaceholderScreen(title: 'Create Post'),
       ),
       GoRoute(
         path: '${AppRoutes.postDetail}/:id',
@@ -145,9 +140,8 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.editProfile,
         name: 'editProfile',
-        builder: (context, state) => const _PlaceholderScreen(
-          title: 'Edit Profile',
-        ),
+        builder: (context, state) =>
+            const _PlaceholderScreen(title: 'Edit Profile'),
       ),
       GoRoute(
         path: '${AppRoutes.followers}/:id',
@@ -178,44 +172,38 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.settings,
         name: 'settings',
-        builder: (context, state) => const _PlaceholderScreen(
-          title: 'Settings',
-        ),
+        builder: (context, state) =>
+            const _PlaceholderScreen(title: 'Settings'),
         routes: [
           GoRoute(
             path: 'account',
             name: 'accountSettings',
-            builder: (context, state) => const _PlaceholderScreen(
-              title: 'Account Settings',
-            ),
+            builder: (context, state) =>
+                const _PlaceholderScreen(title: 'Account Settings'),
           ),
           GoRoute(
             path: 'privacy',
             name: 'privacySettings',
-            builder: (context, state) => const _PlaceholderScreen(
-              title: 'Privacy Settings',
-            ),
+            builder: (context, state) =>
+                const _PlaceholderScreen(title: 'Privacy Settings'),
           ),
           GoRoute(
             path: 'notifications',
             name: 'notificationSettings',
-            builder: (context, state) => const _PlaceholderScreen(
-              title: 'Notification Settings',
-            ),
+            builder: (context, state) =>
+                const _PlaceholderScreen(title: 'Notification Settings'),
           ),
           GoRoute(
             path: 'theme',
             name: 'themeSettings',
-            builder: (context, state) => const _PlaceholderScreen(
-              title: 'Theme Settings',
-            ),
+            builder: (context, state) =>
+                const _PlaceholderScreen(title: 'Theme Settings'),
           ),
           GoRoute(
             path: 'about',
             name: 'about',
-            builder: (context, state) => const _PlaceholderScreen(
-              title: 'About',
-            ),
+            builder: (context, state) =>
+                const _PlaceholderScreen(title: 'About'),
           ),
         ],
       ),
@@ -226,9 +214,8 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.messages,
         name: 'messages',
-        builder: (context, state) => const _PlaceholderScreen(
-          title: 'Messages',
-        ),
+        builder: (context, state) =>
+            const _PlaceholderScreen(title: 'Messages'),
       ),
       GoRoute(
         path: '${AppRoutes.chat}/:id',
@@ -250,18 +237,11 @@ class AppRouter {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red,
-              ),
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
               const Text(
                 'Page Not Found',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Text(
@@ -285,12 +265,12 @@ class AppRouter {
     final authBloc = sl<AuthBloc>();
     final isAuthenticated = authBloc.state is AuthAuthenticated;
     final isOnSplash = state.matchedLocation == AppRoutes.splash;
-    final isOnAuthRoute = state.matchedLocation == AppRoutes.login ||
+    final isOnAuthRoute =
+        state.matchedLocation == AppRoutes.login ||
         state.matchedLocation == AppRoutes.register ||
         state.matchedLocation == AppRoutes.forgotPassword ||
         state.matchedLocation == AppRoutes.resetPassword ||
         state.matchedLocation == AppRoutes.verifyEmail;
-
     // Allow splash screen
     if (isOnSplash) {
       return null;
@@ -326,28 +306,19 @@ class _PlaceholderScreen extends StatelessWidget {
   final String title;
   final String? subtitle;
 
-  const _PlaceholderScreen({
-    required this.title,
-    this.subtitle,
-  });
+  const _PlaceholderScreen({required this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
+      appBar: AppBar(title: Text(title)),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.construction,
-                size: 64,
-                color: Colors.orange,
-              ),
+              const Icon(Icons.construction, size: 64, color: Colors.orange),
               const SizedBox(height: 16),
               Text(
                 title,
@@ -383,4 +354,3 @@ class _PlaceholderScreen extends StatelessWidget {
     );
   }
 }
-
