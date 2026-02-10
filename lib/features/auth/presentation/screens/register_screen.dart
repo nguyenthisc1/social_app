@@ -68,13 +68,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         builder: (context, state) {
           return SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSize.lg),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSize.lg),
 
                     // Title
                     Text(
@@ -82,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       style: AppTextStyles.displaySmall,
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSize.md),
                     Text(
                       l10n.signUpContinue,
                       style: AppTextStyles.bodyLarge.copyWith(
@@ -90,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 48),
+                    const SizedBox(height: AppSize.xxxl),
 
                     // Email Field
                     CustomTextField(
@@ -103,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       validator: Validators.email,
                       enabled: !_isLoading,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSize.lg),
 
                     // Username Field
                     CustomTextField(
@@ -118,7 +118,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       validator: Validators.username,
                       enabled: !_isLoading,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSize.lg),
 
                     // Password Field
                     PasswordTextField(
@@ -128,14 +128,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       textInputAction: TextInputAction.next,
                       validator: Validators.password,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSize.lg),
 
                     // Confirm Password Field
                     PasswordTextField(
                       controller: _confirmPasswordController,
-                      labelText: l10n.confirmPassword ,
-                      hintText:
-                          l10n.confirmYourPassword,
+                      labelText: l10n.confirmPassword,
+                      hintText: l10n.confirmYourPassword,
                       textInputAction: TextInputAction.done,
                       validator: (value) => Validators.confirmPassword(
                         value,
@@ -151,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       isLoading: _isLoading,
                       icon: Icons.person_add,
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSize.lg),
 
                     // Terms and Privacy
                     Text(
@@ -161,7 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSize.lg),
 
                     // Login Link
                     Row(
