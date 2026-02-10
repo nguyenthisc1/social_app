@@ -52,7 +52,7 @@ abstract class AuthRemoteDataSource {
   Future<BaseResponse<void>> verifyEmail({required String token});
 
   /// Refresh access token
-  Future<BaseResponse<AuthTokensModel>> refreshToken({
+  Future<BaseResponse<Map<String, dynamic>>> refreshToken({
     required String refreshToken,
   });
 }
@@ -204,19 +204,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<BaseResponse<AuthTokensModel>> refreshToken({
+  Future<BaseResponse<Map<String, dynamic>>> refreshToken({
     required String refreshToken,
   }) async {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: ApiEndpoints.refreshToken,
-      body: {'refresh_token': refreshToken},
+      body: {'refreshToken': refreshToken},
     );
 
     return BaseResponse.fromJson(
       response,
-      (data) =>
-          AuthTokensModel.fromJson(data['tokens'] as Map<String, dynamic>),
+      (data) => data as Map<String, dynamic>,
     );
   }
 }
