@@ -57,6 +57,7 @@ dependencies:
   
   # Storage
   shared_preferences: ^2.3.5
+  unique_device_identifier: ^2.0.4
   
   # UI
   google_fonts: ^6.2.1

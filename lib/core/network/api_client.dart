@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../errors/exceptions.dart';
 import 'network_info.dart';
+import '../utils/device_service.dart';
 
 class ApiClient {
   final http.Client httpClient;
@@ -17,14 +18,16 @@ class ApiClient {
     required this.baseUrl,
   });
 
-  /// Common headers for all requests
-  Map<String, String> _getHeaders({
+  /// Common headers for all requests (now async for device-id)
+  Future<Map<String, String>> _getHeaders({
     String? token,
     Map<String, String>? headers,
     bool hasBody = false,
-  }) {
+  }) async {
+    final device = await DeviceService.getDeviceId();
     final output = <String, String>{
       'Accept': 'application/json',
+      'device-id': device!,
       if (hasBody) 'Content-Type': 'application/json',
     };
     if (token != null) {
@@ -50,7 +53,7 @@ class ApiClient {
     }
 
     final uri = Uri.parse('$baseUrl$endpoint').replace(queryParameters: query);
-    final requestHeaders = _getHeaders(
+    final requestHeaders = await _getHeaders(
       token: token,
       headers: headers,
       hasBody: body != null,
@@ -86,7 +89,7 @@ class ApiClient {
     } on SocketException {
       throw NetworkException(message: 'No internet connection');
     } on http.ClientException {
-      throw NetworkException(message: 'Failed to connect to server');
+      throw http.ClientException('Failed to connect to server');
     }
   }
 
@@ -101,7 +104,9 @@ class ApiClient {
       throw NetworkException(message: 'No internet connection');
     }
 
-    // Add headers if provided
+    // Add headers, including device-id
+    final device = await DeviceService.getDeviceId();
+    request.headers['device-id'] = device!;
     if (token != null) {
       request.headers['Authorization'] = 'Bearer $token';
     }
