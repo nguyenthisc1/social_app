@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
               final user = state.user;
               return Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(AppSize.xl),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -57,11 +57,11 @@ class HomeScreen extends StatelessWidget {
                               )
                             : null,
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSize.xl),
 
                       // Display Name
                       Text(user.username, style: AppTextStyles.headlineMedium),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSize.md),
 
                       // Username
                       Text(
@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                           color: AppColors.textSecondary,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSize.md),
 
                       // Email
                       Text(
@@ -79,19 +79,19 @@ class HomeScreen extends StatelessWidget {
                           color: AppColors.textHint,
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: AppSize.xxl),
 
                       // Stats
                       // Row(
                       //   mainAxisAlignment: MainAxisAlignment.center,
                       //   children: [
                       //     _StatItem(label: 'Posts', value: user),
-                      //     const SizedBox(width: 32),
+                      //     const SizedBox(width: AppSize.xxl),
                       //     _StatItem(
                       //       label: 'Followers',
                       //       value: user.followersCount,
                       //     ),
-                      //     const SizedBox(width: 32),
+                      //     const SizedBox(width: AppSize.xxl),
                       //     _StatItem(
                       //       label: 'Following',
                       //       value: user.followingCount,
@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                       // Welcome Message
                       Card(
                         child: Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(AppSize.lg),
                           child: Column(
                             children: [
                               Icon(
@@ -111,7 +111,7 @@ class HomeScreen extends StatelessWidget {
                                 size: 48,
                                 color: AppColors.success,
                               ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: AppSize.lg),
                               Text(
                                 'Authentication Successful!',
                                 style: AppTextStyles.titleLarge.copyWith(

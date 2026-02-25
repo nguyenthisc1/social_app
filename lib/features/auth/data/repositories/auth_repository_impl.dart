@@ -110,6 +110,8 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
       return Left(NetworkFailure(message: e.message));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
     } on ValidationException catch (e) {
       return Left(ValidationFailure(message: e.message, errors: e.errors));
     } catch (e) {
@@ -121,18 +123,20 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, void>> logout() async {
     try {
       final tokens = await localDataSource.getCachedTokens();
+      final user = await localDataSource.getCachedUser();
 
-      if (tokens != null && await networkInfo.isConnected) {
-        try {
-          await remoteDataSource.logout(accessToken: tokens.accessToken);
-        } catch (_) {
-          // Ignore remote logout errors
+      if (tokens != null && user != null && await networkInfo.isConnected) {
+        final response = await remoteDataSource.logout(user.id);
+        if (response.success == true) {
+          await localDataSource.clearAllData();
+          
+          // ignore: void_checks
+          return const Right({'success': true});
         }
       }
 
-      // Clear local data regardless of remote logout result
+      // In all cases (no tokens/user/network, or remote logout not successful), always clear local data
       await localDataSource.clearAllData();
-
       return const Right(null);
     } catch (e) {
       return Left(CacheFailure(message: 'Failed to logout: $e'));
@@ -232,12 +236,17 @@ class AuthRepositoryImpl implements AuthRepository {
         refreshToken: currentTokens.refreshToken,
       );
 
-      final tokensModel = response.data;
-      if (tokensModel == null) {
+      final data = response.data;
+
+      if (data == null) {
         return const Left(
-          ServerFailure(message: 'Token refresh failed: no data returned'),
+          ServerFailure(message: 'RefreshToken failed: no data returned'),
         );
       }
+
+      final tokensModel = AuthTokensModel.fromJson(
+        data['tokens'] as Map<String, dynamic>,
+      );
 
       await localDataSource.cacheTokens(tokensModel);
 

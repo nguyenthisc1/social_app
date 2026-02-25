@@ -19,7 +19,7 @@ abstract class AuthRemoteDataSource {
   });
 
   /// Logout current user
-  Future<BaseResponse<void>> logout({required String accessToken});
+  Future<BaseResponse<void>> logout(userId);
 
   /// Get current user
   Future<BaseResponse<UserModel>> getCurrentUser({required String accessToken});
@@ -98,14 +98,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<BaseResponse<void>> logout({required String accessToken}) async {
+  Future<BaseResponse<void>> logout(userId) async {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: ApiEndpoints.logout,
-      token: accessToken,
+      body: {'userId': userId},
     );
 
-    return BaseResponse.fromJson(response, (data) {});
+    return BaseResponse.fromJson(response, (_) {});
   }
 
   @override
