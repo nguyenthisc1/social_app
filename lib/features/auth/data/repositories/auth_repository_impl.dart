@@ -16,11 +16,63 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
+  Future<String>? _refreshInProgress;
+
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
   });
+
+  /// Returns a valid access token, automatically refreshing if expired or about to expire.
+  Future<String> _getValidAccessToken() async {
+    final tokens = await localDataSource.getCachedTokens();
+    if (tokens == null) {
+      throw const UnauthorizedException(message: 'No authentication tokens');
+    }
+
+    if (!tokens.isExpired && !tokens.willExpireSoon) {
+      return tokens.accessToken;
+    }
+
+    return _refreshAndGetAccessToken(tokens.refreshToken);
+  }
+
+  /// Deduplicates concurrent refresh calls so only one network request is made.
+  Future<String> _refreshAndGetAccessToken(String refreshToken) async {
+    _refreshInProgress ??= _performTokenRefresh(refreshToken);
+    try {
+      return await _refreshInProgress!;
+    } finally {
+      _refreshInProgress = null;
+    }
+  }
+
+  /// Executes the actual refresh request and caches the new tokens.
+  Future<String> _performTokenRefresh(String refreshToken) async {
+    try {
+      final response = await remoteDataSource.refreshToken(
+        refreshToken: refreshToken,
+      );
+      final data = response.data;
+      if (data == null) {
+        await localDataSource.clearAllData();
+        throw const UnauthorizedException(message: 'Token refresh failed');
+      }
+
+      final newTokens = AuthTokensModel.fromJson(
+        data['tokens'] as Map<String, dynamic>,
+      );
+      await localDataSource.cacheTokens(newTokens);
+      return newTokens.accessToken;
+    } on UnauthorizedException {
+      await localDataSource.clearAllData();
+      rethrow;
+    } catch (e) {
+      await localDataSource.clearAllData();
+      throw const UnauthorizedException(message: 'Token refresh failed');
+    }
+  }
 
   @override
   Future<Either<Failure, User>> login({
@@ -129,7 +181,7 @@ class AuthRepositoryImpl implements AuthRepository {
         final response = await remoteDataSource.logout(user.id);
         if (response.success == true) {
           await localDataSource.clearAllData();
-          
+
           // ignore: void_checks
           return const Right({'success': true});
         }
@@ -146,46 +198,34 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, User>> getCurrentUser() async {
     try {
-      // Try to get cached user first
       final cachedUser = await localDataSource.getCachedUser();
       if (cachedUser != null) {
-        // If we have network, try to fetch fresh data
         if (await networkInfo.isConnected) {
-          final tokens = await localDataSource.getCachedTokens();
-          if (tokens != null && !tokens.isExpired) {
-            try {
-              final response = await remoteDataSource.getCurrentUser(
-                accessToken: tokens.accessToken,
-              );
+          try {
+            final accessToken = await _getValidAccessToken();
+            final response = await remoteDataSource.getCurrentUser(
+              accessToken: accessToken,
+            );
 
-              final userModel = response.data;
-              if (userModel != null) {
-                await localDataSource.cacheUser(userModel);
-                return Right(UserMapper.fromModel(userModel));
-              }
-            } catch (_) {
-              // Return cached user if remote fetch fails
-              return Right(UserMapper.fromModel(cachedUser));
+            final userModel = response.data;
+            if (userModel != null) {
+              await localDataSource.cacheUser(userModel);
+              return Right(UserMapper.fromModel(userModel));
             }
+          } catch (_) {
+            return Right(UserMapper.fromModel(cachedUser));
           }
         }
         return Right(UserMapper.fromModel(cachedUser));
       }
 
-      // No cached user, try remote
       if (!await networkInfo.isConnected) {
         return const Left(NetworkFailure());
       }
 
-      final tokens = await localDataSource.getCachedTokens();
-      if (tokens == null || tokens.isExpired) {
-        return const Left(
-          UnauthorizedFailure(message: 'No valid authentication'),
-        );
-      }
-
+      final accessToken = await _getValidAccessToken();
       final response = await remoteDataSource.getCurrentUser(
-        accessToken: tokens.accessToken,
+        accessToken: accessToken,
       );
 
       final userModel = response.data;
@@ -211,7 +251,15 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<bool> isAuthenticated() async {
     final tokens = await localDataSource.getCachedTokens();
-    return tokens != null && !tokens.isExpired;
+    if (tokens == null) return false;
+    if (!tokens.isExpired) return true;
+
+    try {
+      await _getValidAccessToken();
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   @override
@@ -273,13 +321,10 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final tokens = await localDataSource.getCachedTokens();
-      if (tokens == null || tokens.isExpired) {
-        return const Left(UnauthorizedFailure(message: 'Not authenticated'));
-      }
+      final accessToken = await _getValidAccessToken();
 
       final response = await remoteDataSource.updateProfile(
-        accessToken: tokens.accessToken,
+        accessToken: accessToken,
         displayName: displayName,
         bio: bio,
         avatarUrl: avatarUrl,
@@ -317,13 +362,10 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final tokens = await localDataSource.getCachedTokens();
-      if (tokens == null || tokens.isExpired) {
-        return const Left(UnauthorizedFailure(message: 'Not authenticated'));
-      }
+      final accessToken = await _getValidAccessToken();
 
       await remoteDataSource.changePassword(
-        accessToken: tokens.accessToken,
+        accessToken: accessToken,
         currentPassword: currentPassword,
         newPassword: newPassword,
       );
