@@ -13,12 +13,16 @@ class AppRoutes {
   static const String resetPassword = '/reset-password';
   static const String verifyEmail = '/verify-email';
 
-  // Main app routes
+  // Main tab routes (inside shell)
   static const String home = '/home';
-  static const String feed = '/feed';
+  static const String shop = '/shop';
+  static const String conversations = '/conversations';
   static const String search = '/search';
-  static const String notifications = '/notifications';
   static const String profile = '/profile';
+
+  // Feed (alias for home content)
+  static const String feed = '/feed';
+  static const String notifications = '/notifications';
 
   // Post routes
   static const String createPost = '/create-post';

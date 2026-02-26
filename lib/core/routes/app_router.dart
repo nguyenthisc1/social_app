@@ -1,37 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/bloc/auth_state.dart';
-import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
-import '../../features/auth/presentation/screens/home_screen.dart';
+import '../../features/auth/presentation/screens/splash_screen.dart';
+import '../../features/screens/presentation/pages/conversations_page.dart';
+import '../../features/screens/presentation/pages/home_page.dart';
+import '../../features/screens/presentation/pages/profile_page.dart';
+import '../../features/screens/presentation/pages/search_page.dart';
+import '../../features/screens/presentation/pages/shop_page.dart';
 import '../di/injection_container.dart';
+import '../widgets/root_screen.dart';
 import 'app_routes.dart';
 
-/// GoRouter configuration for the app
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
 class AppRouter {
   AppRouter._();
 
-  /// Router instance
   static final GoRouter router = GoRouter(
+    navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
     initialLocation: AppRoutes.splash,
     redirect: _redirect,
     refreshListenable: _AuthStateNotifier(),
     routes: [
-      // ========================================================================
-      // Initial Route
-      // ========================================================================
+      // ====================================================================
+      // Splash
+      // ====================================================================
       GoRoute(
         path: AppRoutes.splash,
         name: 'splash',
         builder: (context, state) => const SplashScreen(),
       ),
 
-      // ========================================================================
-      // Auth Routes
-      // ========================================================================
+      // ====================================================================
+      // Auth Routes (no shell)
+      // ====================================================================
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
@@ -61,48 +68,86 @@ class AppRouter {
             const _PlaceholderScreen(title: 'Verify Email'),
       ),
 
-      // ========================================================================
-      // Main App Routes (Protected)
-      // ========================================================================
-      GoRoute(
-        path: AppRoutes.home,
-        name: 'home',
-        builder: (context, state) => const HomeScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.feed,
-        name: 'feed',
-        builder: (context, state) => const _PlaceholderScreen(title: 'Feed'),
-      ),
-      GoRoute(
-        path: AppRoutes.search,
-        name: 'search',
-        builder: (context, state) => const _PlaceholderScreen(title: 'Search'),
-      ),
-      GoRoute(
-        path: AppRoutes.notifications,
-        name: 'notifications',
-        builder: (context, state) =>
-            const _PlaceholderScreen(title: 'Notifications'),
-      ),
-      GoRoute(
-        path: AppRoutes.profile,
-        name: 'profile',
-        builder: (context, state) => const _PlaceholderScreen(title: 'Profile'),
+      // ====================================================================
+      // Main App Shell (protected — 5-tab layout)
+      // ====================================================================
+      StatefulShellRoute.indexedStack(
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state, navigationShell) {
+          return RootScreen(navigationShell: navigationShell);
+        },
+        branches: [
+          // Tab 0 — Home
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.home,
+                name: 'home',
+                builder: (context, state) => const HomePage(),
+              ),
+            ],
+          ),
+
+          // Tab 1 — Shop
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.shop,
+                name: 'shop',
+                builder: (context, state) => const ShopPage(),
+              ),
+            ],
+          ),
+
+          // Tab 2 — Conversations
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.conversations,
+                name: 'conversations',
+                builder: (context, state) => const ConversationsPage(),
+              ),
+            ],
+          ),
+
+          // Tab 3 — Search
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.search,
+                name: 'search',
+                builder: (context, state) => const SearchPage(),
+              ),
+            ],
+          ),
+
+          // Tab 4 — Profile
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.profile,
+                name: 'profile',
+                builder: (context, state) => const ProfilePage(),
+              ),
+            ],
+          ),
+        ],
       ),
 
-      // ========================================================================
-      // Post Routes
-      // ========================================================================
+      // ====================================================================
+      // Detail Routes (pushed on top of shell — no bottom nav)
+      // ====================================================================
       GoRoute(
         path: AppRoutes.createPost,
         name: 'createPost',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) =>
             const _PlaceholderScreen(title: 'Create Post'),
       ),
       GoRoute(
         path: '${AppRoutes.postDetail}/:id',
         name: 'postDetail',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           final postId = state.pathParameters['id']!;
           return _PlaceholderScreen(
@@ -114,6 +159,7 @@ class AppRouter {
       GoRoute(
         path: '${AppRoutes.editPost}/:id',
         name: 'editPost',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           final postId = state.pathParameters['id']!;
           return _PlaceholderScreen(
@@ -122,13 +168,10 @@ class AppRouter {
           );
         },
       ),
-
-      // ========================================================================
-      // User Routes
-      // ========================================================================
       GoRoute(
         path: '${AppRoutes.userProfile}/:id',
         name: 'userProfile',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           final userId = state.pathParameters['id']!;
           return _PlaceholderScreen(
@@ -140,12 +183,14 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.editProfile,
         name: 'editProfile',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) =>
             const _PlaceholderScreen(title: 'Edit Profile'),
       ),
       GoRoute(
         path: '${AppRoutes.followers}/:id',
         name: 'followers',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           final userId = state.pathParameters['id']!;
           return _PlaceholderScreen(
@@ -157,6 +202,7 @@ class AppRouter {
       GoRoute(
         path: '${AppRoutes.following}/:id',
         name: 'following',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           final userId = state.pathParameters['id']!;
           return _PlaceholderScreen(
@@ -165,13 +211,10 @@ class AppRouter {
           );
         },
       ),
-
-      // ========================================================================
-      // Settings Routes
-      // ========================================================================
       GoRoute(
         path: AppRoutes.settings,
         name: 'settings',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) =>
             const _PlaceholderScreen(title: 'Settings'),
         routes: [
@@ -207,19 +250,17 @@ class AppRouter {
           ),
         ],
       ),
-
-      // ========================================================================
-      // Chat/Messages Routes
-      // ========================================================================
       GoRoute(
         path: AppRoutes.messages,
         name: 'messages',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) =>
             const _PlaceholderScreen(title: 'Messages'),
       ),
       GoRoute(
         path: '${AppRoutes.chat}/:id',
         name: 'chat',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           final userId = state.pathParameters['id']!;
           return _PlaceholderScreen(
@@ -260,38 +301,46 @@ class AppRouter {
     ),
   );
 
-  /// Redirect logic for route guards
   static String? _redirect(BuildContext context, GoRouterState state) {
     final authBloc = sl<AuthBloc>();
-    final isAuthenticated = authBloc.state is AuthAuthenticated;
-    final isOnSplash = state.matchedLocation == AppRoutes.splash;
+    final authState = authBloc.state;
+    final location = state.matchedLocation;
+
+    final isOnSplash = location == AppRoutes.splash;
     final isOnAuthRoute =
-        state.matchedLocation == AppRoutes.login ||
-        state.matchedLocation == AppRoutes.register ||
-        state.matchedLocation == AppRoutes.forgotPassword ||
-        state.matchedLocation == AppRoutes.resetPassword ||
-        state.matchedLocation == AppRoutes.verifyEmail;
-    // Allow splash screen
-    if (isOnSplash) {
-      return null;
+        location == AppRoutes.login ||
+        location == AppRoutes.register ||
+        location == AppRoutes.forgotPassword ||
+        location == AppRoutes.resetPassword ||
+        location == AppRoutes.verifyEmail;
+
+    final isAuthenticated = authState is AuthAuthenticated;
+    final isLoading = authState is AuthInitial || authState is AuthLoading;
+
+    // Auth state still loading — stay on or go to splash
+    if (isLoading) {
+      return isOnSplash ? null : AppRoutes.splash;
     }
 
-    // Redirect to login if not authenticated and trying to access protected route
+    // Auth resolved — redirect away from splash
+    if (isOnSplash) {
+      return isAuthenticated ? AppRoutes.home : AppRoutes.login;
+    }
+
+    // Not authenticated — only allow auth routes
     if (!isAuthenticated && !isOnAuthRoute) {
       return AppRoutes.login;
     }
 
-    // Redirect to home if authenticated and trying to access auth routes
+    // Authenticated — don't allow auth routes
     if (isAuthenticated && isOnAuthRoute) {
       return AppRoutes.home;
     }
 
-    // No redirect needed
     return null;
   }
 }
 
-/// Notifier for auth state changes to trigger route refresh
 class _AuthStateNotifier extends ChangeNotifier {
   _AuthStateNotifier() {
     final authBloc = sl<AuthBloc>();
@@ -301,7 +350,6 @@ class _AuthStateNotifier extends ChangeNotifier {
   }
 }
 
-/// Placeholder screen for routes not yet implemented
 class _PlaceholderScreen extends StatelessWidget {
   final String title;
   final String? subtitle;
