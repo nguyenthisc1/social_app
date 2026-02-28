@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:social_app/core/theme/app_size.dart';
 
 class RootScreen extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -36,12 +37,12 @@ class RootScreen extends StatelessWidget {
                 ),
               ),
         leading: IconButton(
-          icon: const Icon(LucideIcons.squarePlus, size: 24),
+          icon: const Icon(LucideIcons.squarePlus, size: AppSize.icon),
           onPressed: () {},
         ),
         actions: [
           IconButton(
-            icon: const Icon(LucideIcons.heart, size: 24),
+            icon: const Icon(LucideIcons.heart, size: AppSize.icon),
             onPressed: () {},
           ),
         ],
@@ -60,30 +61,51 @@ class RootScreen extends StatelessWidget {
         backgroundColor: theme.colorScheme.surface,
         indicatorColor: Colors.transparent,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        destinations: const [
+        // Remove const, because we use non-const value (theme) in selectedIcon
+        destinations: [
           NavigationDestination(
-            icon: Icon(LucideIcons.house, size: 26),
-            selectedIcon: Icon(LucideIcons.house, size: 26),
+            icon: Icon(LucideIcons.house, size: AppSize.icon),
+            selectedIcon: Icon(
+              LucideIcons.house,
+              size: AppSize.icon,
+              color: theme.colorScheme.primary,
+            ),
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.store, size: 26),
-            selectedIcon: Icon(LucideIcons.store, size: 26),
+            icon: Icon(LucideIcons.store, size: AppSize.icon),
+            selectedIcon: Icon(
+              LucideIcons.store,
+              size: AppSize.icon,
+              color: theme.colorScheme.primary,
+            ),
             label: 'Shop',
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.messageCircle, size: 24),
-            selectedIcon: Icon(LucideIcons.messageCircle, size: 24),
+            icon: Icon(LucideIcons.messageCircle, size: AppSize.icon),
+            selectedIcon: Icon(
+              LucideIcons.messageCircle,
+              size: AppSize.icon,
+              color: theme.colorScheme.primary,
+            ),
             label: 'Chat',
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.search, size: 26),
-            selectedIcon: Icon(LucideIcons.search, size: 26),
+            icon: Icon(LucideIcons.search, size: AppSize.icon),
+            selectedIcon: Icon(
+              LucideIcons.search,
+              size: AppSize.icon,
+              color: theme.colorScheme.primary,
+            ),
             label: 'Search',
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.user, size: 26),
-            selectedIcon: Icon(LucideIcons.user, size: 26),
+            icon: Icon(LucideIcons.user, size: AppSize.icon),
+            selectedIcon: Icon(
+              LucideIcons.user,
+              size: AppSize.icon,
+              color: theme.colorScheme.primary,
+            ),
             label: 'Profile',
           ),
         ],
