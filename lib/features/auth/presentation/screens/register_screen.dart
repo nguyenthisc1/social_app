@@ -46,6 +46,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(title: Text(l10n.createAccount)),
       body: BlocConsumer<AuthBloc, AuthState>(
@@ -56,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: AppColors.error,
+                backgroundColor: theme.colorScheme.error,
               ),
             );
           }
@@ -86,7 +89,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Text(
                       l10n.signUpContinue,
                       style: AppTextStyles.bodyLarge.copyWith(
-                        color: AppColors.textSecondary,
+                        color: theme.colorScheme.secondary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -156,7 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Text(
                       l10n.termsAndPrivacyNote,
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
+                        color: theme.colorScheme.secondary,
                       ),
                       textAlign: TextAlign.center,
                     ),

@@ -42,6 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -51,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: AppColors.error,
+                backgroundColor: theme.colorScheme.error,
               ),
             );
           }
@@ -89,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(
                         l10n.signInContinue,
                         style: AppTextStyles.bodyLarge.copyWith(
-                          color: AppColors.textSecondary,
+                          color: theme.colorScheme.secondary,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -154,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text(
                               l10n.or,
                               style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.textSecondary,
+                                color: theme.colorScheme.secondary,
                               ),
                             ),
                           ),
