@@ -342,9 +342,14 @@ class AppRouter {
 }
 
 class _AuthStateNotifier extends ChangeNotifier {
+  late final Stream<AuthState> _stream;
+
   _AuthStateNotifier() {
     final authBloc = sl<AuthBloc>();
-    authBloc.stream.listen((_) {
+    _stream = authBloc.stream;
+    _stream
+        .where((state) => state is AuthAuthenticated || state is AuthUnauthenticated)
+        .listen((_) {
       notifyListeners();
     });
   }
