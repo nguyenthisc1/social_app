@@ -16,7 +16,7 @@ class LocaleManager extends ChangeNotifier {
   bool _isInitialized = false;
 
   LocaleManager(this._prefs) {
-    _init();
+    _loadLocaleSync();
   }
 
   /// Get current locale
@@ -31,23 +31,17 @@ class LocaleManager extends ChangeNotifier {
     Locale('vi'), // Vietnamese
   ];
 
-  /// Initialize locale from saved preferences
-  Future<void> _init() async {
-    await _loadLocale();
-    _isInitialized = true;
-    notifyListeners();
-  }
-
-  /// Load locale from preferences
-  Future<void> _loadLocale() async {
+  /// Load locale synchronously from SharedPreferences (getters are sync).
+  /// Runs during construction before any listeners exist, so no notification needed.
+  void _loadLocaleSync() {
     final String? localeCode = _prefs.getString(_localeKey);
     if (localeCode != null && localeCode.isNotEmpty) {
-      // Validate that the saved locale is supported
       final savedLocale = Locale(localeCode);
       if (supportedLocales.contains(savedLocale)) {
         _locale = savedLocale;
       }
     }
+    _isInitialized = true;
   }
 
   /// Set locale and save to preferences

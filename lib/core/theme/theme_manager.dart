@@ -9,7 +9,7 @@ class ThemeManager extends ChangeNotifier {
   final SharedPreferences _prefs;
 
   ThemeManager(this._prefs) {
-    _loadTheme();
+    _loadThemeSync();
   }
 
   /// Current theme mode
@@ -18,18 +18,17 @@ class ThemeManager extends ChangeNotifier {
   /// Check if dark mode is active
   bool get isDarkMode {
     if (_themeMode == ThemeMode.system) {
-      // In system mode, we can't know for sure without BuildContext
       return false;
     }
     return _themeMode == ThemeMode.dark;
   }
 
-  /// Load saved theme from storage
-  Future<void> _loadTheme() async {
+  /// Load saved theme synchronously from SharedPreferences (getters are sync).
+  /// Runs during construction before any listeners exist, so no notification needed.
+  void _loadThemeSync() {
     final themeIndex = _prefs.getInt(_themeKey);
     if (themeIndex != null) {
       _themeMode = ThemeMode.values[themeIndex];
-      notifyListeners();
     }
   }
 
