@@ -18,7 +18,6 @@ class PostWidget extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: AppSize.md,
       children: [
         // Post header
         Padding(
@@ -48,14 +47,13 @@ class PostWidget extends StatelessWidget {
           ),
         ),
 
-        // Post image
-        if (post.images != null && post.images!.isNotEmpty)
+        if (post.images.isNotEmpty) ...[
           AspectRatio(
             aspectRatio: 1,
             child: Container(
               color: theme.colorScheme.surfaceContainerHighest,
               child: Image.network(
-                post.images!.first,
+                post.images.first,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Center(
                   child: Icon(
@@ -70,24 +68,10 @@ class PostWidget extends StatelessWidget {
                 },
               ),
             ),
-          )
-        else
-          // Fallback placeholder if no images
-          AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              color: theme.colorScheme.surfaceContainerHighest,
-              child: Center(
-                child: Icon(
-                  LucideIcons.image,
-                  size: AppSize.iconXLarge,
-                  color: theme.colorScheme.outline,
-                ),
-              ),
-            ),
           ),
+        ],
 
-        // Post actions
+        //  Post Actions
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSize.md,
@@ -95,9 +79,28 @@ class PostWidget extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Icon(LucideIcons.heart, size: AppSize.xl),
+              Icon(LucideIcons.heart, size: AppSize.xl),
+              if (post.likeCount > 1) ...[
+                const SizedBox(width: AppSize.xs),
+                Text(
+                  TextHelpers.formatCount(post.likeCount),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
               const SizedBox(width: AppSize.md),
-              const Icon(LucideIcons.messageCircle, size: AppSize.xl),
+              Icon(LucideIcons.messageCircle, size: AppSize.xl),
+
+              if (post.commentCount > 1) ...[
+                const SizedBox(width: AppSize.xs),
+                Text(
+                  TextHelpers.formatCount(post.commentCount),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
               const SizedBox(width: AppSize.md),
               const Icon(LucideIcons.send, size: AppSize.xl),
               const Spacer(),
@@ -106,19 +109,12 @@ class PostWidget extends StatelessWidget {
           ),
         ),
 
-
-        // Likes & caption
+        // Post caption & metadata
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSize.md),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '${TextHelpers.formatCount(post.likeCount)} likes',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
               const SizedBox(height: AppSize.md),
               if (post.content != null && post.content!.isNotEmpty)
                 RichText(

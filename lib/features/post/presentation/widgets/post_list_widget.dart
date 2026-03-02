@@ -21,6 +21,7 @@ class PostList extends StatelessWidget {
         }
 
         return Column(
+          spacing: AppSize.lg,
           children: [
             ...posts.map((post) => PostWidget(post: post)),
             if (isLoadingMore)
