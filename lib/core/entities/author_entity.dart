@@ -14,7 +14,7 @@ class Author extends Equatable {
   List<Object?> get props => [id, username];
 
   factory Author.fromJson(Map<String, dynamic> json) {
-    return Author(id: json['id'], username: json['username']);
+    return Author(id: json['_id'] ?? json['id'], username: json['username']);
   }
 
   Map<String, dynamic> toJson() {

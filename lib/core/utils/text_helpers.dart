@@ -3,7 +3,11 @@ class TextHelpers {
   TextHelpers._();
 
   /// Truncate text to specified length with ellipsis
-  static String truncate(String text, int maxLength, {String ellipsis = '...'}) {
+  static String truncate(
+    String text,
+    int maxLength, {
+    String ellipsis = '...',
+  }) {
     if (text.length <= maxLength) {
       return text;
     }
@@ -42,7 +46,10 @@ class TextHelpers {
   /// Convert string to title case
   static String toTitleCase(String text) {
     if (text.isEmpty) return text;
-    return text.split(' ').map((word) => capitalize(word.toLowerCase())).join(' ');
+    return text
+        .split(' ')
+        .map((word) => capitalize(word.toLowerCase()))
+        .join(' ');
   }
 
   /// Remove extra whitespace
@@ -61,7 +68,11 @@ class TextHelpers {
 
   /// Count words in text
   static int wordCount(String text) {
-    return text.trim().split(RegExp(r'\s+')).where((word) => word.isNotEmpty).length;
+    return text
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((word) => word.isNotEmpty)
+        .length;
   }
 
   /// Format number with K, M suffixes
@@ -81,15 +92,34 @@ class TextHelpers {
   static String getInitials(String name, {int maxChars = 2}) {
     final words = name.trim().split(RegExp(r'\s+'));
     if (words.isEmpty) return '';
-    
+
     if (words.length == 1) {
-      return words[0].substring(0, maxChars.clamp(1, words[0].length)).toUpperCase();
+      return words[0]
+          .substring(0, maxChars.clamp(1, words[0].length))
+          .toUpperCase();
     }
-    
+
     return words
         .take(maxChars)
         .map((word) => word.isNotEmpty ? word[0].toUpperCase() : '')
         .join();
   }
-}
 
+  static String timeAgo(DateTime date) {
+    final now = DateTime.now();
+    final diff = now.difference(date);
+
+    if (diff.inSeconds < 60) return 'Just now';
+    if (diff.inMinutes < 60)
+      return '${diff.inMinutes} minute${diff.inMinutes == 1 ? '' : 's'} ago';
+    if (diff.inHours < 24)
+      return '${diff.inHours} hour${diff.inHours == 1 ? '' : 's'} ago';
+    if (diff.inDays < 7)
+      return '${diff.inDays} day${diff.inDays == 1 ? '' : 's'} ago';
+    if (diff.inDays < 30)
+      return '${(diff.inDays / 7).floor()} week${(diff.inDays / 7).floor() == 1 ? '' : 's'} ago';
+    if (diff.inDays < 365)
+      return '${(diff.inDays / 30).floor()} month${(diff.inDays / 30).floor() == 1 ? '' : 's'} ago';
+    return '${(diff.inDays / 365).floor()} year${(diff.inDays / 365).floor() == 1 ? '' : 's'} ago';
+  }
+}

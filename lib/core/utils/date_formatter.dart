@@ -19,6 +19,25 @@ class DateFormatter {
     return DateFormat('MMM dd, yyyy hh:mm a').format(date);
   }
 
+  static DateTime parseDate(dynamic value) {
+    if (value == null) {
+      return DateTime.fromMillisecondsSinceEpoch(0);
+    }
+    if (value is DateTime) return value;
+    if (value is int) {
+      // unix timestamp in seconds or milliseconds
+      // decide by digit count
+      return value > 10000000000
+          ? DateTime.fromMillisecondsSinceEpoch(value)
+          : DateTime.fromMillisecondsSinceEpoch(value * 1000);
+    }
+    if (value is String) {
+      // try parsing as ISO string
+      return DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+    }
+    return DateTime.fromMillisecondsSinceEpoch(0);
+  }
+
   /// Formats date to relative time (e.g., "2 hours ago", "3 days ago")
   static String timeAgo(DateTime date) {
     final now = DateTime.now();
@@ -95,4 +114,3 @@ class DateFormatter {
         date.day == yesterday.day;
   }
 }
-
