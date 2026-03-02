@@ -6,23 +6,11 @@ class AppSize {
   static const double nano = 2.0;
   static const double xs = 4.0;
   static const double sm = 8.0;
-  static const double md = 16.0;
-  static const double lg = 24.0;
-  static const double xl = 32.0;
-  static const double xxl = 48.0;
-  static const double xxxl = 64.0;
-
-  // Vertical spacing
-  static const double vSpace1 = 4.0;
-  static const double vSpace2 = 8.0;
-  static const double vSpace3 = 16.0;
-  static const double vSpace4 = 24.0;
-
-  // Horizontal spacing
-  static const double hSpace1 = 4.0;
-  static const double hSpace2 = 8.0;
-  static const double hSpace3 = 16.0;
-  static const double hSpace4 = 24.0;
+  static const double md = 12.0;
+  static const double lg = 16.0;
+  static const double xl = 24.0;
+  static const double xxl = 36.0;
+  static const double xxxl = 48.0;
 
   // Size values
   static const double iconTiny = 12.0;
@@ -40,7 +28,7 @@ class AppSize {
   static const double inputHeightLarge = 60.0;
 
   // Avatar sizes
-  static const double avatarSmall = 24.0;
+  static const double avatarSmall = 16.0;
   static const double avatar = 40.0;
   static const double avatarLarge = 56.0;
   static const double avatarXLarge = 72.0;
