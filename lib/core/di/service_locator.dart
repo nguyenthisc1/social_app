@@ -2,23 +2,33 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_app/features/post/data/datasources/post_local_data_source.dart';
+import 'package:social_app/features/post/data/datasources/post_remote_data_source.dart';
+import 'package:social_app/features/post/data/repositories/post_repository_impl.dart';
+import 'package:social_app/features/post/domain/repositories/post_repository.dart';
+import 'package:social_app/features/post/domain/usecases/create_post_usecase.dart';
+import 'package:social_app/features/post/domain/usecases/delete_post_usecase.dart';
+import 'package:social_app/features/post/domain/usecases/get_home_post_usecase.dart';
+import 'package:social_app/features/post/domain/usecases/get_post_usecase.dart';
+import 'package:social_app/features/post/domain/usecases/get_posts_by_user_usecase.dart';
+import 'package:social_app/features/post/domain/usecases/update_post_usecase.dart';
+import 'package:social_app/features/post/presentation/bloc/post_bloc.dart';
 
+import 'package:social_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:social_app/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:social_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:social_app/features/auth/domain/usecases/check_auth_status_usecase.dart';
+import 'package:social_app/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:social_app/features/auth/domain/usecases/login_usecase.dart';
+import 'package:social_app/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:social_app/features/auth/domain/usecases/register_usecase.dart';
+import 'package:social_app/features/auth/presentation/bloc/auth_bloc.dart';
+
+import '../locale/locale_manager.dart';
 import '../network/network.dart';
 import '../theme/theme.dart';
-import '../locale/locale_manager.dart';
 import '../utils/constants.dart';
-
-// Auth imports
-import '../../features/auth/data/datasources/auth_remote_data_source.dart';
-import '../../features/auth/data/datasources/auth_local_data_source.dart';
-import '../../features/auth/data/repositories/auth_repository_impl.dart';
-import '../../features/auth/domain/repositories/auth_repository.dart';
-import '../../features/auth/domain/usecases/login_usecase.dart';
-import '../../features/auth/domain/usecases/register_usecase.dart';
-import '../../features/auth/domain/usecases/logout_usecase.dart';
-import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
-import '../../features/auth/domain/usecases/check_auth_status_usecase.dart';
-import '../../features/auth/presentation/bloc/auth_bloc.dart';
 
 /// Service locator instance
 final sl = GetIt.instance;
@@ -54,6 +64,7 @@ Future<void> initializeDependencies() async {
       httpClient: sl<http.Client>(),
       networkInfo: sl(),
       baseUrl: AppConstants.apiBaseUrl,
+      tokenProvider: sl(),
     ),
   );
 
@@ -76,6 +87,15 @@ Future<void> initializeDependencies() async {
     () => AuthLocalDataSourceImpl(sharedPreferences: sl()),
   );
 
+  // Post Data Sources
+  sl.registerLazySingleton<PostRemoteDataSource>(
+    () => PostRemoteDataSourceImpl(apiClient: sl()),
+  );
+
+  sl.registerLazySingleton<PostLocalDataSource>(
+    () => PostLocalDataSourceImpl(sharedPreferences: sl()),
+  );
+
   // ============================================================================
   // Repositories
   // ============================================================================
@@ -89,6 +109,11 @@ Future<void> initializeDependencies() async {
     ),
   );
 
+  // Post Repository
+  sl.registerLazySingleton<PostRepository>(
+    () => PostRepositoryImpl(networkInfo: sl(), remote: sl(), local: sl()),
+  );
+
   // ============================================================================
   // Use Cases
   // ============================================================================
@@ -99,6 +124,14 @@ Future<void> initializeDependencies() async {
   sl.registerFactory(() => LogoutUseCase(sl()));
   sl.registerFactory(() => GetCurrentUserUseCase(sl()));
   sl.registerFactory(() => CheckAuthStatusUseCase(sl()));
+
+  // Post Use Cases
+  sl.registerFactory(() => CreatePostUsecase(sl()));
+  sl.registerFactory(() => GetPostUsecase(sl()));
+  sl.registerFactory(() => GetPostsByUserUsecase(sl()));
+  sl.registerFactory(() => UpdatePostUsecase(sl()));
+  sl.registerFactory(() => DeletePostUsecase(sl()));
+  sl.registerFactory(() => GetHomePostUsecase(sl()));
 
   // ============================================================================
   // State Management (BLoC/Cubit/Provider)
@@ -112,6 +145,18 @@ Future<void> initializeDependencies() async {
       logoutUseCase: sl(),
       getCurrentUserUseCase: sl(),
       checkAuthStatusUseCase: sl(),
+    ),
+  );
+
+  // Post BLoC
+  sl.registerLazySingleton(
+    () => PostBloc(
+      createPostUsecase: sl(),
+      getHomePostUsecase: sl(),
+      getPostUsecase: sl(),
+      getPostsByUserUsecase: sl(),
+      updatePostUsecase: sl(),
+      deletePostUsecase: sl(),
     ),
   );
 }

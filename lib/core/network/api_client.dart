@@ -2,25 +2,27 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:social_app/features/auth/data/datasources/auth_local_data_source.dart';
 
 import '../errors/exceptions.dart';
-import 'network_info.dart';
 import '../utils/device_service.dart';
+import 'network_info.dart';
 
 class ApiClient {
   final http.Client httpClient;
   final NetworkInfo networkInfo;
   final String baseUrl;
+  final AuthLocalDataSource tokenProvider;
 
   ApiClient({
     required this.httpClient,
     required this.networkInfo,
     required this.baseUrl,
+    required this.tokenProvider,
   });
 
   /// Common headers for all requests (now async for device-id)
   Future<Map<String, String>> _getHeaders({
-    String? token,
     Map<String, String>? headers,
     bool hasBody = false,
   }) async {
@@ -30,8 +32,11 @@ class ApiClient {
       'device-id': device!,
       if (hasBody) 'Content-Type': 'application/json',
     };
-    if (token != null) {
-      output['Authorization'] = 'Bearer $token';
+
+    final tokens = await tokenProvider.getCachedTokens();
+
+    if (tokens != null && tokens.accessToken.isNotEmpty) {
+      output['Authorization'] = '${tokens.tokenType} ${tokens.accessToken}';
     }
     if (headers != null) {
       output.addAll(headers);
@@ -54,7 +59,6 @@ class ApiClient {
 
     final uri = Uri.parse('$baseUrl$endpoint').replace(queryParameters: query);
     final requestHeaders = await _getHeaders(
-      token: token,
       headers: headers,
       hasBody: body != null,
     );
@@ -107,8 +111,12 @@ class ApiClient {
     // Add headers, including device-id
     final device = await DeviceService.getDeviceId();
     request.headers['device-id'] = device!;
-    if (token != null) {
-      request.headers['Authorization'] = 'Bearer $token';
+
+    final tokens = await tokenProvider.getCachedTokens();
+
+    if (tokens != null && tokens.accessToken.isNotEmpty) {
+      request.headers['Authorization'] =
+          '${tokens.tokenType} ${tokens.accessToken}';
     }
     if (headers != null) {
       request.headers.addAll(headers);
