@@ -6,7 +6,7 @@ import 'package:social_app/features/post/domain/repositories/post_repository.dar
 
 class CreatePostUsecase {
   final PostRepository repository;
-  CreatePostUsecase({required this.repository});
+  CreatePostUsecase(this.repository);
 
   Future<Either<Failure, PostEntity>> call({
     required String content,

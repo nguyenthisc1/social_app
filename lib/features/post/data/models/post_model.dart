@@ -1,19 +1,19 @@
 import 'package:equatable/equatable.dart';
-
 import 'package:social_app/core/entities/author_entity.dart';
+import 'package:social_app/core/utils/date_formatter.dart';
 
 class PostModel extends Equatable {
   final String id;
   final Author author;
   final String? content;
-  final List<String>? images;
-  final String type;
-  final String? sharedPostId;
-  final String visibility;
+  final List<String> images;
+  final String type; // 'text', 'image', 'share'
+  final String sharedPostId;
+  final String visibility; // 'public', 'friends', 'private'
   final List<String> allowedUserIds;
   final int likeCount;
   final int commentCount;
-  final String status;
+  final String status; // 'active', 'hidden', 'reported'
   final bool isDeleted;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -23,37 +23,53 @@ class PostModel extends Equatable {
     required this.id,
     required this.author,
     this.content,
-    this.images,
+    this.images = const [],
     required this.type,
-    this.sharedPostId,
+    this.sharedPostId = '',
     required this.visibility,
-    required this.allowedUserIds,
-    required this.likeCount,
-    required this.commentCount,
+    this.allowedUserIds = const [],
+    this.likeCount = 0,
+    this.commentCount = 0,
     required this.status,
-    required this.isDeleted,
+    this.isDeleted = false,
     required this.createdAt,
     required this.updatedAt,
     required this.v,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
+    int parseInt(dynamic value, [int defaultValue = 0]) {
+      if (value == null) return defaultValue;
+      if (value is int) return value;
+      return int.tryParse('$value') ?? defaultValue;
+    }
+
     return PostModel(
-      id: json['id'],
-      author: Author.fromJson(json['author']),
+      id: json['id'] ?? json['_id'] ?? '',
+      author: Author.fromJson(json['authorId']),
       content: json['content'],
-      images: List<String>.from(json['images']),
-      type: json['type'],
-      sharedPostId: json['sharedPostId'],
-      visibility: json['visibility'],
-      allowedUserIds: List<String>.from(json['allowedUserIds']),
-      likeCount: json['likeCount'],
-      commentCount: json['commentCount'],
-      status: json['status'],
-      isDeleted: json['isDeleted'],
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
-      v: json['v'],
+      images:
+          (json['images'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      type: json['type'] ?? 'text',
+      sharedPostId: json['sharedPostId'] != null
+          ? json['sharedPostId'].toString()
+          : '',
+      visibility: json['visibility'] ?? 'friends',
+      allowedUserIds:
+          (json['allowedUserIds'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
+      likeCount: parseInt(json['likeCount']),
+      commentCount: parseInt(json['commentCount']),
+      status: json['status'] ?? 'active',
+      isDeleted: json['isDeleted'] == true,
+      createdAt: DateFormatter.parseDate(json['createdAt']),
+      updatedAt: DateFormatter.parseDate(json['updatedAt']),
+      v: parseInt(json['v']),
     );
   }
 
@@ -71,8 +87,8 @@ class PostModel extends Equatable {
       'commentCount': commentCount,
       'status': status,
       'isDeleted': isDeleted,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
       'v': v,
     };
   }

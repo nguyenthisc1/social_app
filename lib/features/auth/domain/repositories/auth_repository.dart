@@ -47,9 +47,7 @@ abstract class AuthRepository {
   });
 
   /// Request password reset
-  Future<Either<Failure, void>> requestPasswordReset({
-    required String email,
-  });
+  Future<Either<Failure, void>> requestPasswordReset({required String email});
 
   /// Reset password with token
   Future<Either<Failure, void>> resetPassword({
@@ -58,8 +56,5 @@ abstract class AuthRepository {
   });
 
   /// Verify email with token
-  Future<Either<Failure, void>> verifyEmail({
-    required String token,
-  });
+  Future<Either<Failure, void>> verifyEmail({required String token});
 }
-

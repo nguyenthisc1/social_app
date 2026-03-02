@@ -37,9 +37,11 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       endpoint: ApiEndpoints.feedHome,
     );
 
+    print(response['data']);
+
     return BaseResponse.fromJson(
       response,
-      (data) => (data['posts'] as List<dynamic>)
+      (data) => (data as List<dynamic>)
           .map((item) => PostModel.fromJson(item))
           .toList(),
     );

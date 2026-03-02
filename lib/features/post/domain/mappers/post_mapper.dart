@@ -30,7 +30,7 @@ class PostMapper {
       content: entity.content,
       images: entity.images,
       type: entity.type.value,
-      sharedPostId: entity.sharedPostId,
+      // sharedPostId: entity.sharedPostId,
       visibility: entity.visibility.value,
       allowedUserIds: entity.allowedUserIds,
       likeCount: entity.likeCount,

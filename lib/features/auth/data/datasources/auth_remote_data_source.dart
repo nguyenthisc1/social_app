@@ -1,6 +1,6 @@
 import 'package:social_app/core/core.dart';
 import 'package:social_app/core/network/base_response.dart';
-import '../models/auth_tokens_model.dart';
+
 import '../models/user_model.dart';
 
 /// Remote data source for authentication

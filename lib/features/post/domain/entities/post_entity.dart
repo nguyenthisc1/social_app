@@ -7,9 +7,9 @@ class PostEntity extends Equatable {
   final String id;
   final Author author;
   final String? content;
-  final List<String>? images;
+  final List<String> images;
   final PostType type;
-  final String? sharedPostId;
+  final String sharedPostId;
   final PostVisibility visibility;
   final List<String> allowedUserIds;
   final int likeCount;
@@ -24,9 +24,9 @@ class PostEntity extends Equatable {
     required this.id,
     required this.author,
     this.content,
-    this.images,
+    this.images = const [],
     required this.type,
-    this.sharedPostId,
+    this.sharedPostId = '',
     required this.visibility,
     required this.allowedUserIds,
     required this.likeCount,
@@ -52,6 +52,7 @@ class PostEntity extends Equatable {
     commentCount,
     status,
     isDeleted,
+    createdAt, // FIX: Added createdAt to props
     updatedAt,
     v,
   ];

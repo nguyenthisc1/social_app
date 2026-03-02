@@ -5,9 +5,9 @@ import 'package:social_app/features/post/domain/repositories/post_repository.dar
 
 class GetHomePostUsecase {
   final PostRepository repository;
-  GetHomePostUsecase({required this.repository});
+  GetHomePostUsecase(this.repository);
 
-  Future<Either<Failure, List<PostEntity>>> call(String postId) async {
+  Future<Either<Failure, List<PostEntity>>> call() async {
     return await repository.getHomePost();
   }
 }

@@ -5,7 +5,7 @@ import 'package:social_app/features/post/domain/repositories/post_repository.dar
 
 class GetPostUsecase {
   final PostRepository repository;
-  GetPostUsecase({required this.repository});
+  GetPostUsecase(this.repository);
 
   Future<Either<Failure, PostEntity>> call(String postId) async {
     return await repository.getPost(postId);

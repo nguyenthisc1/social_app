@@ -6,7 +6,7 @@ import 'package:social_app/features/post/domain/repositories/post_repository.dar
 
 class UpdatePostUsecase {
   final PostRepository repository;
-  UpdatePostUsecase({required this.repository});
+  UpdatePostUsecase(this.repository);
 
   Future<Either<Failure, PostEntity>> call({
     required String postId,
