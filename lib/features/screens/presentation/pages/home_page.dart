@@ -4,7 +4,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:social_app/core/di/service_locator.dart';
 import 'package:social_app/core/theme/app_size.dart';
 import 'package:social_app/features/post/presentation/bloc/post_bloc.dart';
-import 'package:social_app/features/post/presentation/bloc/post_event.dart';
 import 'package:social_app/features/post/presentation/widgets/post_list_widget.dart';
 
 class HomePage extends StatelessWidget {
@@ -15,7 +14,7 @@ class HomePage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BlocProvider(
-      create: (_) => sl<PostBloc>()..add(PostFetched()),
+      create: (_) => sl<PostBloc>(),
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: AppSize.md),
         children: [
@@ -73,7 +72,6 @@ class HomePage extends StatelessWidget {
           ),
           const Divider(height: 1),
 
-          // Feed posts placeholder
           PostList(),
         ],
       ),

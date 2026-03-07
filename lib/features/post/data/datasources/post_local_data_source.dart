@@ -19,10 +19,19 @@ class PostLocalDataSourceImpl implements PostLocalDataSource {
 
   @override
   Future<void> cachePosts(List<PostModel> posts) async {
-    final List<String> postJsonList = posts
+    final List<String> newPostJsonList = posts
         .map((post) => json.encode(post.toJson()))
         .toList();
-    await sharedPreferences.setStringList(_cachedPostsKey, postJsonList);
+
+    final List<String> existingPosts =
+        sharedPreferences.getStringList(_cachedPostsKey) ?? [];
+
+    final List<String> combinedPosts = [...newPostJsonList, ...existingPosts];
+
+    // Limit to a maximum of 50 posts
+    final List<String> limitedPosts = combinedPosts.take(50).toList();
+
+    await sharedPreferences.setStringList(_cachedPostsKey, limitedPosts);
   }
 
   @override

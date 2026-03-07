@@ -1,13 +1,125 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/features/post/domain/entities/post_entity.dart';
+import 'package:social_app/features/post/domain/entities/post_enum.dart';
 import 'package:social_app/features/post/domain/usecases/create_post_usecase.dart';
 import 'package:social_app/features/post/domain/usecases/delete_post_usecase.dart';
 import 'package:social_app/features/post/domain/usecases/get_home_post_usecase.dart';
 import 'package:social_app/features/post/domain/usecases/get_post_usecase.dart';
 import 'package:social_app/features/post/domain/usecases/get_posts_by_user_usecase.dart';
 import 'package:social_app/features/post/domain/usecases/update_post_usecase.dart';
-import 'package:social_app/features/post/presentation/bloc/post_event.dart';
-import 'package:social_app/features/post/presentation/bloc/post_state.dart';
 
+/// Post Events & States in one file
+
+// --------------- EVENTS -----------------
+abstract class PostEvent extends Equatable {
+  const PostEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class PostFetched extends PostEvent {}
+
+class PostRefreshed extends PostEvent {}
+
+class PostLoadMore extends PostEvent {}
+
+class PostCreated extends PostEvent {
+  final String content;
+  final PostVisibility visibility;
+  final PostType type;
+  const PostCreated({
+    required this.content,
+    this.visibility = PostVisibility.private,
+    this.type = PostType.text,
+  });
+
+  @override
+  List<Object?> get props => [content, visibility, type];
+}
+
+class PostLikeToggled extends PostEvent {
+  final String postId;
+  const PostLikeToggled(this.postId);
+
+  @override
+  List<Object?> get props => [postId];
+}
+
+class PostDeleted extends PostEvent {
+  final String postId;
+  const PostDeleted(this.postId);
+
+  @override
+  List<Object?> get props => [postId];
+}
+
+class PostUpdated extends PostEvent {
+  final String postId;
+  final String content;
+  final PostVisibility visibility;
+  final PostType type;
+
+  const PostUpdated(
+    this.postId, {
+    required this.content,
+    required this.visibility,
+    required this.type,
+  });
+
+  @override
+  List<Object?> get props => [postId, content, visibility, type];
+}
+
+// --------------- STATES -----------------
+class PostState extends Equatable {
+  final List<PostEntity> posts;
+  final bool isLoading;
+  final bool isRefreshing;
+  final bool isLoadingMore;
+  final bool hasReachedMax;
+  final String? error;
+
+  const PostState({
+    this.posts = const [],
+    this.isLoading = false,
+    this.isRefreshing = false,
+    this.isLoadingMore = false,
+    this.hasReachedMax = false,
+    this.error,
+  });
+
+  PostState copyWith({
+    List<PostEntity>? posts,
+    bool? isLoading,
+    bool? isRefreshing,
+    bool? isLoadingMore,
+    bool? hasReachedMax,
+    String? error,
+  }) {
+    return PostState(
+      posts: posts ?? this.posts,
+      isLoading: isLoading ?? this.isLoading,
+      isRefreshing: isRefreshing ?? this.isRefreshing,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      error: error,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    posts,
+    isLoading,
+    isRefreshing,
+    isLoadingMore,
+    hasReachedMax,
+    error,
+  ];
+}
+
+// -------------- BLOC --------------------
 class PostBloc extends Bloc<PostEvent, PostState> {
   final CreatePostUsecase createPostUsecase;
   final GetHomePostUsecase getHomePostUsecase;
@@ -37,7 +149,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     emit(state.copyWith(isLoading: true, error: null));
 
     final result = await getHomePostUsecase();
-    print(result);
 
     result.fold(
       (failure) =>
