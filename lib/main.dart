@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'core/core.dart';
 import 'core/l10n/app_localizations.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
@@ -9,7 +10,6 @@ void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize dependency injection
   await InjectionContainer.init();
 
   runApp(const MyApp());

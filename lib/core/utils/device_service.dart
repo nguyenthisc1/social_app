@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:html' as html;
 import 'dart:io' show Platform;
 import 'dart:math';
 
@@ -20,7 +19,7 @@ class DeviceService {
   static Future<String?> getDeviceId() async {
     try {
       if (kIsWeb) {
-        return await _getWebDeviceId();
+        return _generateRandomId();
       } else {
         return await _getMobileDeviceId();
       }
@@ -40,12 +39,12 @@ class DeviceService {
   }
 
   /// WEB ONLY: reset device id (vd logout toàn bộ session web)
-  static Future<void> resetWebDeviceId() async {
-    if (!kIsWeb) return;
+  // static Future<void> resetWebDeviceId() async {
+  //   if (!kIsWeb) return;
 
-    _cachedWebDeviceId = null;
-    html.window.localStorage.remove(_webStorageKey);
-  }
+  //   _cachedWebDeviceId = null;
+  //   html.window.localStorage.remove(_webStorageKey);
+  // }
 
   // ==============================
   // MOBILE
@@ -62,20 +61,20 @@ class DeviceService {
   // WEB
   // ==============================
 
-  static Future<String> _getWebDeviceId() async {
-    // cache trong memory để tránh đọc localStorage nhiều lần
-    if (_cachedWebDeviceId != null) return _cachedWebDeviceId!;
+  // static Future<String> _getWebDeviceId() async {
+  //   // cache trong memory để tránh đọc localStorage nhiều lần
+  //   if (_cachedWebDeviceId != null) return _cachedWebDeviceId!;
 
-    String? storedId = html.window.localStorage[_webStorageKey];
+  //   String? storedId = html.window.localStorage[_webStorageKey];
 
-    if (storedId == null || storedId.isEmpty) {
-      storedId = _generateRandomId();
-      html.window.localStorage[_webStorageKey] = storedId;
-    }
+  //   if (storedId == null || storedId.isEmpty) {
+  //     storedId = _generateRandomId();
+  //     html.window.localStorage[_webStorageKey] = storedId;
+  //   }
 
-    _cachedWebDeviceId = _hash(storedId);
-    return _cachedWebDeviceId!;
-  }
+  //   _cachedWebDeviceId = _hash(storedId);
+  //   return _cachedWebDeviceId!;
+  // }
 
   // ==============================
   // UTILITIES

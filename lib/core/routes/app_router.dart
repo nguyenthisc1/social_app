@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:social_app/features/post/presentation/screens/create_post_screen.dart';
 
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
-import '../../features/auth/presentation/bloc/auth_state.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
@@ -141,8 +141,7 @@ class AppRouter {
         path: AppRoutes.createPost,
         name: 'createPost',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) =>
-            const _PlaceholderScreen(title: 'Create Post'),
+        builder: (context, state) => const CreatePostScreen(),
       ),
       GoRoute(
         path: '${AppRoutes.postDetail}/:id',
@@ -348,10 +347,12 @@ class _AuthStateNotifier extends ChangeNotifier {
     final authBloc = sl<AuthBloc>();
     _stream = authBloc.stream;
     _stream
-        .where((state) => state is AuthAuthenticated || state is AuthUnauthenticated)
+        .where(
+          (state) => state is AuthAuthenticated || state is AuthUnauthenticated,
+        )
         .listen((_) {
-      notifyListeners();
-    });
+          notifyListeners();
+        });
   }
 }
 

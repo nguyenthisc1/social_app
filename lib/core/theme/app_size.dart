@@ -37,6 +37,8 @@ class AppSize {
   static const double borderRadiusSmall = 6.0;
   static const double borderRadius = 12.0;
   static const double borderRadiusLarge = 20.0;
+  static const double borderRadiusXLarge = 32.0;
+  static const double borderRadiusFull = 100.0;
 
   // Divider & stroke
   static const double divider = 1.0;
