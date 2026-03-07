@@ -3,28 +3,28 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i10;
+import 'dart:async' as _i11;
 
-import 'package:dartz/dartz.dart' as _i4;
+import 'package:dartz/dartz.dart' as _i5;
 import 'package:http/http.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i9;
-import 'package:social_app/core/core.dart' as _i8;
+import 'package:mockito/src/dummies.dart' as _i10;
+import 'package:social_app/core/core.dart' as _i9;
 import 'package:social_app/core/entities/pagination_param.dart' as _i26;
-import 'package:social_app/core/network/base_response.dart' as _i5;
+import 'package:social_app/core/network/base_response.dart' as _i6;
 import 'package:social_app/core/network/network_info.dart' as _i3;
 import 'package:social_app/features/auth/data/datasources/auth_local_data_source.dart'
-    as _i17;
+    as _i4;
 import 'package:social_app/features/auth/data/datasources/auth_remote_data_source.dart'
-    as _i14;
+    as _i15;
 import 'package:social_app/features/auth/data/models/auth_tokens_model.dart'
-    as _i16;
-import 'package:social_app/features/auth/data/models/user_model.dart' as _i15;
+    as _i17;
+import 'package:social_app/features/auth/data/models/user_model.dart' as _i16;
 import 'package:social_app/features/auth/domain/entities/auth_tokens.dart'
-    as _i13;
-import 'package:social_app/features/auth/domain/entities/user.dart' as _i12;
+    as _i14;
+import 'package:social_app/features/auth/domain/entities/user.dart' as _i13;
 import 'package:social_app/features/auth/domain/repositories/auth_repository.dart'
-    as _i11;
+    as _i12;
 import 'package:social_app/features/comment/data/datasources/comment_remote_data_source.dart'
     as _i27;
 import 'package:social_app/features/comment/data/models/comment_model.dart'
@@ -36,7 +36,7 @@ import 'package:social_app/features/comment/domain/repositories/comment_reposito
 import 'package:social_app/features/friendship/data/datasources/friendship_remote_data_source.dart'
     as _i35;
 import 'package:social_app/features/friendship/data/models/friendship_model.dart'
-    as _i7;
+    as _i8;
 import 'package:social_app/features/friendship/domain/entities/friendship_entity.dart'
     as _i34;
 import 'package:social_app/features/friendship/domain/repositories/friendship_repository.dart'
@@ -55,7 +55,7 @@ import 'package:social_app/features/post/domain/repositories/post_repository.dar
 import 'package:social_app/features/reaction/data/datasources/reaction_remote_data_source.dart'
     as _i32;
 import 'package:social_app/features/reaction/data/models/reaction_model.dart'
-    as _i6;
+    as _i7;
 import 'package:social_app/features/reaction/domain/entities/reaction_entity.dart'
     as _i30;
 import 'package:social_app/features/reaction/domain/entities/reaction_enums.dart'
@@ -88,39 +88,45 @@ class _FakeNetworkInfo_1 extends _i1.SmartFake implements _i3.NetworkInfo {
     : super(parent, parentInvocation);
 }
 
-class _FakeEither_2<L, R> extends _i1.SmartFake implements _i4.Either<L, R> {
-  _FakeEither_2(Object parent, Invocation parentInvocation)
+class _FakeAuthLocalDataSource_2 extends _i1.SmartFake
+    implements _i4.AuthLocalDataSource {
+  _FakeAuthLocalDataSource_2(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeBaseResponse_3<T> extends _i1.SmartFake
-    implements _i5.BaseResponse<T> {
-  _FakeBaseResponse_3(Object parent, Invocation parentInvocation)
+class _FakeEither_3<L, R> extends _i1.SmartFake implements _i5.Either<L, R> {
+  _FakeEither_3(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeReactionResponseModel_4 extends _i1.SmartFake
-    implements _i6.ReactionResponseModel {
-  _FakeReactionResponseModel_4(Object parent, Invocation parentInvocation)
+class _FakeBaseResponse_4<T> extends _i1.SmartFake
+    implements _i6.BaseResponse<T> {
+  _FakeBaseResponse_4(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeFriendshipResponseModel_5 extends _i1.SmartFake
-    implements _i7.FriendshipResponseModel {
-  _FakeFriendshipResponseModel_5(Object parent, Invocation parentInvocation)
+class _FakeReactionResponseModel_5 extends _i1.SmartFake
+    implements _i7.ReactionResponseModel {
+  _FakeReactionResponseModel_5(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeFriendshipStatusModel_6 extends _i1.SmartFake
-    implements _i7.FriendshipStatusModel {
-  _FakeFriendshipStatusModel_6(Object parent, Invocation parentInvocation)
+class _FakeFriendshipResponseModel_6 extends _i1.SmartFake
+    implements _i8.FriendshipResponseModel {
+  _FakeFriendshipResponseModel_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeFriendshipStatusModel_7 extends _i1.SmartFake
+    implements _i8.FriendshipStatusModel {
+  _FakeFriendshipStatusModel_7(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
 /// A class which mocks [ApiClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockApiClient extends _i1.Mock implements _i8.ApiClient {
+class MockApiClient extends _i1.Mock implements _i9.ApiClient {
   MockApiClient() {
     _i1.throwOnMissingStub(this);
   }
@@ -148,7 +154,7 @@ class MockApiClient extends _i1.Mock implements _i8.ApiClient {
   String get baseUrl =>
       (super.noSuchMethod(
             Invocation.getter(#baseUrl),
-            returnValue: _i9.dummyValue<String>(
+            returnValue: _i10.dummyValue<String>(
               this,
               Invocation.getter(#baseUrl),
             ),
@@ -156,7 +162,18 @@ class MockApiClient extends _i1.Mock implements _i8.ApiClient {
           as String);
 
   @override
-  _i10.Future<Map<String, dynamic>> request({
+  _i4.AuthLocalDataSource get tokenProvider =>
+      (super.noSuchMethod(
+            Invocation.getter(#tokenProvider),
+            returnValue: _FakeAuthLocalDataSource_2(
+              this,
+              Invocation.getter(#tokenProvider),
+            ),
+          )
+          as _i4.AuthLocalDataSource);
+
+  @override
+  _i11.Future<Map<String, dynamic>> request({
     required String? method,
     required String? endpoint,
     Map<String, dynamic>? body,
@@ -173,14 +190,14 @@ class MockApiClient extends _i1.Mock implements _i8.ApiClient {
               #token: token,
               #headers: headers,
             }),
-            returnValue: _i10.Future<Map<String, dynamic>>.value(
+            returnValue: _i11.Future<Map<String, dynamic>>.value(
               <String, dynamic>{},
             ),
           )
-          as _i10.Future<Map<String, dynamic>>);
+          as _i11.Future<Map<String, dynamic>>);
 
   @override
-  _i10.Future<Map<String, dynamic>?> upload({
+  _i11.Future<Map<String, dynamic>?> upload({
     required String? endpoint,
     required _i2.MultipartRequest? request,
     String? token,
@@ -193,9 +210,9 @@ class MockApiClient extends _i1.Mock implements _i8.ApiClient {
               #token: token,
               #headers: headers,
             }),
-            returnValue: _i10.Future<Map<String, dynamic>?>.value(),
+            returnValue: _i11.Future<Map<String, dynamic>?>.value(),
           )
-          as _i10.Future<Map<String, dynamic>?>);
+          as _i11.Future<Map<String, dynamic>?>);
 }
 
 /// A class which mocks [NetworkInfo].
@@ -207,39 +224,39 @@ class MockNetworkInfo extends _i1.Mock implements _i3.NetworkInfo {
   }
 
   @override
-  _i10.Future<bool> get isConnected =>
+  _i11.Future<bool> get isConnected =>
       (super.noSuchMethod(
             Invocation.getter(#isConnected),
-            returnValue: _i10.Future<bool>.value(false),
+            returnValue: _i11.Future<bool>.value(false),
           )
-          as _i10.Future<bool>);
+          as _i11.Future<bool>);
 
   @override
-  _i10.Stream<bool> get onConnectivityChanged =>
+  _i11.Stream<bool> get onConnectivityChanged =>
       (super.noSuchMethod(
             Invocation.getter(#onConnectivityChanged),
-            returnValue: _i10.Stream<bool>.empty(),
+            returnValue: _i11.Stream<bool>.empty(),
           )
-          as _i10.Stream<bool>);
+          as _i11.Stream<bool>);
 }
 
 /// A class which mocks [AuthRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
+class MockAuthRepository extends _i1.Mock implements _i12.AuthRepository {
   MockAuthRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i12.User>> login({
+  _i11.Future<_i5.Either<_i9.Failure, _i13.User>> login({
     required String? email,
     required String? password,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#login, [], {#email: email, #password: password}),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, _i12.User>>.value(
-              _FakeEither_2<_i8.Failure, _i12.User>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, _i13.User>>.value(
+              _FakeEither_3<_i9.Failure, _i13.User>(
                 this,
                 Invocation.method(#login, [], {
                   #email: email,
@@ -248,10 +265,10 @@ class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i12.User>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i13.User>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i12.User>> register({
+  _i11.Future<_i5.Either<_i9.Failure, _i13.User>> register({
     required String? email,
     required String? username,
     required String? password,
@@ -262,8 +279,8 @@ class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
               #username: username,
               #password: password,
             }),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, _i12.User>>.value(
-              _FakeEither_2<_i8.Failure, _i12.User>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, _i13.User>>.value(
+              _FakeEither_3<_i9.Failure, _i13.User>(
                 this,
                 Invocation.method(#register, [], {
                   #email: email,
@@ -273,66 +290,66 @@ class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i12.User>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i13.User>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, void>> logout() =>
+  _i11.Future<_i5.Either<_i9.Failure, void>> logout() =>
       (super.noSuchMethod(
             Invocation.method(#logout, []),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, void>>.value(
+              _FakeEither_3<_i9.Failure, void>(
                 this,
                 Invocation.method(#logout, []),
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, void>>);
+          as _i11.Future<_i5.Either<_i9.Failure, void>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i12.User>> getCurrentUser() =>
+  _i11.Future<_i5.Either<_i9.Failure, _i13.User>> getCurrentUser() =>
       (super.noSuchMethod(
             Invocation.method(#getCurrentUser, []),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, _i12.User>>.value(
-              _FakeEither_2<_i8.Failure, _i12.User>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, _i13.User>>.value(
+              _FakeEither_3<_i9.Failure, _i13.User>(
                 this,
                 Invocation.method(#getCurrentUser, []),
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i12.User>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i13.User>>);
 
   @override
-  _i10.Future<bool> isAuthenticated() =>
+  _i11.Future<bool> isAuthenticated() =>
       (super.noSuchMethod(
             Invocation.method(#isAuthenticated, []),
-            returnValue: _i10.Future<bool>.value(false),
+            returnValue: _i11.Future<bool>.value(false),
           )
-          as _i10.Future<bool>);
+          as _i11.Future<bool>);
 
   @override
-  _i10.Future<_i13.AuthTokens?> getAuthTokens() =>
+  _i11.Future<_i14.AuthTokens?> getAuthTokens() =>
       (super.noSuchMethod(
             Invocation.method(#getAuthTokens, []),
-            returnValue: _i10.Future<_i13.AuthTokens?>.value(),
+            returnValue: _i11.Future<_i14.AuthTokens?>.value(),
           )
-          as _i10.Future<_i13.AuthTokens?>);
+          as _i11.Future<_i14.AuthTokens?>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i13.AuthTokens>> refreshToken() =>
+  _i11.Future<_i5.Either<_i9.Failure, _i14.AuthTokens>> refreshToken() =>
       (super.noSuchMethod(
             Invocation.method(#refreshToken, []),
             returnValue:
-                _i10.Future<_i4.Either<_i8.Failure, _i13.AuthTokens>>.value(
-                  _FakeEither_2<_i8.Failure, _i13.AuthTokens>(
+                _i11.Future<_i5.Either<_i9.Failure, _i14.AuthTokens>>.value(
+                  _FakeEither_3<_i9.Failure, _i14.AuthTokens>(
                     this,
                     Invocation.method(#refreshToken, []),
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i13.AuthTokens>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i14.AuthTokens>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i12.User>> updateProfile({
+  _i11.Future<_i5.Either<_i9.Failure, _i13.User>> updateProfile({
     String? displayName,
     String? bio,
     String? avatarUrl,
@@ -343,8 +360,8 @@ class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
               #bio: bio,
               #avatarUrl: avatarUrl,
             }),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, _i12.User>>.value(
-              _FakeEither_2<_i8.Failure, _i12.User>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, _i13.User>>.value(
+              _FakeEither_3<_i9.Failure, _i13.User>(
                 this,
                 Invocation.method(#updateProfile, [], {
                   #displayName: displayName,
@@ -354,10 +371,10 @@ class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i12.User>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i13.User>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, void>> changePassword({
+  _i11.Future<_i5.Either<_i9.Failure, void>> changePassword({
     required String? currentPassword,
     required String? newPassword,
   }) =>
@@ -366,8 +383,8 @@ class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
               #currentPassword: currentPassword,
               #newPassword: newPassword,
             }),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, void>>.value(
+              _FakeEither_3<_i9.Failure, void>(
                 this,
                 Invocation.method(#changePassword, [], {
                   #currentPassword: currentPassword,
@@ -376,25 +393,25 @@ class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, void>>);
+          as _i11.Future<_i5.Either<_i9.Failure, void>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, void>> requestPasswordReset({
+  _i11.Future<_i5.Either<_i9.Failure, void>> requestPasswordReset({
     required String? email,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#requestPasswordReset, [], {#email: email}),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, void>>.value(
+              _FakeEither_3<_i9.Failure, void>(
                 this,
                 Invocation.method(#requestPasswordReset, [], {#email: email}),
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, void>>);
+          as _i11.Future<_i5.Either<_i9.Failure, void>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, void>> resetPassword({
+  _i11.Future<_i5.Either<_i9.Failure, void>> resetPassword({
     required String? token,
     required String? newPassword,
   }) =>
@@ -403,8 +420,8 @@ class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
               #token: token,
               #newPassword: newPassword,
             }),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, void>>.value(
+              _FakeEither_3<_i9.Failure, void>(
                 this,
                 Invocation.method(#resetPassword, [], {
                   #token: token,
@@ -413,43 +430,43 @@ class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, void>>);
+          as _i11.Future<_i5.Either<_i9.Failure, void>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, void>> verifyEmail({
+  _i11.Future<_i5.Either<_i9.Failure, void>> verifyEmail({
     required String? token,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#verifyEmail, [], {#token: token}),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, void>>.value(
+              _FakeEither_3<_i9.Failure, void>(
                 this,
                 Invocation.method(#verifyEmail, [], {#token: token}),
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, void>>);
+          as _i11.Future<_i5.Either<_i9.Failure, void>>);
 }
 
 /// A class which mocks [AuthRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthRemoteDataSource extends _i1.Mock
-    implements _i14.AuthRemoteDataSource {
+    implements _i15.AuthRemoteDataSource {
   MockAuthRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i10.Future<_i5.BaseResponse<Map<String, dynamic>>> login({
+  _i11.Future<_i6.BaseResponse<Map<String, dynamic>>> login({
     required String? email,
     required String? password,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#login, [], {#email: email, #password: password}),
             returnValue:
-                _i10.Future<_i5.BaseResponse<Map<String, dynamic>>>.value(
-                  _FakeBaseResponse_3<Map<String, dynamic>>(
+                _i11.Future<_i6.BaseResponse<Map<String, dynamic>>>.value(
+                  _FakeBaseResponse_4<Map<String, dynamic>>(
                     this,
                     Invocation.method(#login, [], {
                       #email: email,
@@ -458,10 +475,10 @@ class MockAuthRemoteDataSource extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<_i5.BaseResponse<Map<String, dynamic>>>);
+          as _i11.Future<_i6.BaseResponse<Map<String, dynamic>>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<Map<String, dynamic>>> register({
+  _i11.Future<_i6.BaseResponse<Map<String, dynamic>>> register({
     required String? email,
     required String? username,
     required String? password,
@@ -473,8 +490,8 @@ class MockAuthRemoteDataSource extends _i1.Mock
               #password: password,
             }),
             returnValue:
-                _i10.Future<_i5.BaseResponse<Map<String, dynamic>>>.value(
-                  _FakeBaseResponse_3<Map<String, dynamic>>(
+                _i11.Future<_i6.BaseResponse<Map<String, dynamic>>>.value(
+                  _FakeBaseResponse_4<Map<String, dynamic>>(
                     this,
                     Invocation.method(#register, [], {
                       #email: email,
@@ -484,29 +501,29 @@ class MockAuthRemoteDataSource extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<_i5.BaseResponse<Map<String, dynamic>>>);
+          as _i11.Future<_i6.BaseResponse<Map<String, dynamic>>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<void>> logout({required String? accessToken}) =>
+  _i11.Future<_i6.BaseResponse<void>> logout(dynamic userId) =>
       (super.noSuchMethod(
-            Invocation.method(#logout, [], {#accessToken: accessToken}),
-            returnValue: _i10.Future<_i5.BaseResponse<void>>.value(
-              _FakeBaseResponse_3<void>(
+            Invocation.method(#logout, [userId]),
+            returnValue: _i11.Future<_i6.BaseResponse<void>>.value(
+              _FakeBaseResponse_4<void>(
                 this,
-                Invocation.method(#logout, [], {#accessToken: accessToken}),
+                Invocation.method(#logout, [userId]),
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<void>>);
+          as _i11.Future<_i6.BaseResponse<void>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<_i15.UserModel>> getCurrentUser({
+  _i11.Future<_i6.BaseResponse<_i16.UserModel>> getCurrentUser({
     required String? accessToken,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getCurrentUser, [], {#accessToken: accessToken}),
-            returnValue: _i10.Future<_i5.BaseResponse<_i15.UserModel>>.value(
-              _FakeBaseResponse_3<_i15.UserModel>(
+            returnValue: _i11.Future<_i6.BaseResponse<_i16.UserModel>>.value(
+              _FakeBaseResponse_4<_i16.UserModel>(
                 this,
                 Invocation.method(#getCurrentUser, [], {
                   #accessToken: accessToken,
@@ -514,10 +531,10 @@ class MockAuthRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<_i15.UserModel>>);
+          as _i11.Future<_i6.BaseResponse<_i16.UserModel>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<_i15.UserModel>> updateProfile({
+  _i11.Future<_i6.BaseResponse<_i16.UserModel>> updateProfile({
     required String? accessToken,
     String? displayName,
     String? bio,
@@ -530,8 +547,8 @@ class MockAuthRemoteDataSource extends _i1.Mock
               #bio: bio,
               #avatarUrl: avatarUrl,
             }),
-            returnValue: _i10.Future<_i5.BaseResponse<_i15.UserModel>>.value(
-              _FakeBaseResponse_3<_i15.UserModel>(
+            returnValue: _i11.Future<_i6.BaseResponse<_i16.UserModel>>.value(
+              _FakeBaseResponse_4<_i16.UserModel>(
                 this,
                 Invocation.method(#updateProfile, [], {
                   #accessToken: accessToken,
@@ -542,10 +559,10 @@ class MockAuthRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<_i15.UserModel>>);
+          as _i11.Future<_i6.BaseResponse<_i16.UserModel>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<void>> changePassword({
+  _i11.Future<_i6.BaseResponse<void>> changePassword({
     required String? accessToken,
     required String? currentPassword,
     required String? newPassword,
@@ -556,8 +573,8 @@ class MockAuthRemoteDataSource extends _i1.Mock
               #currentPassword: currentPassword,
               #newPassword: newPassword,
             }),
-            returnValue: _i10.Future<_i5.BaseResponse<void>>.value(
-              _FakeBaseResponse_3<void>(
+            returnValue: _i11.Future<_i6.BaseResponse<void>>.value(
+              _FakeBaseResponse_4<void>(
                 this,
                 Invocation.method(#changePassword, [], {
                   #accessToken: accessToken,
@@ -567,25 +584,25 @@ class MockAuthRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<void>>);
+          as _i11.Future<_i6.BaseResponse<void>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<void>> requestPasswordReset({
+  _i11.Future<_i6.BaseResponse<void>> requestPasswordReset({
     required String? email,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#requestPasswordReset, [], {#email: email}),
-            returnValue: _i10.Future<_i5.BaseResponse<void>>.value(
-              _FakeBaseResponse_3<void>(
+            returnValue: _i11.Future<_i6.BaseResponse<void>>.value(
+              _FakeBaseResponse_4<void>(
                 this,
                 Invocation.method(#requestPasswordReset, [], {#email: email}),
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<void>>);
+          as _i11.Future<_i6.BaseResponse<void>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<void>> resetPassword({
+  _i11.Future<_i6.BaseResponse<void>> resetPassword({
     required String? token,
     required String? newPassword,
   }) =>
@@ -594,8 +611,8 @@ class MockAuthRemoteDataSource extends _i1.Mock
               #token: token,
               #newPassword: newPassword,
             }),
-            returnValue: _i10.Future<_i5.BaseResponse<void>>.value(
-              _FakeBaseResponse_3<void>(
+            returnValue: _i11.Future<_i6.BaseResponse<void>>.value(
+              _FakeBaseResponse_4<void>(
                 this,
                 Invocation.method(#resetPassword, [], {
                   #token: token,
@@ -604,30 +621,30 @@ class MockAuthRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<void>>);
+          as _i11.Future<_i6.BaseResponse<void>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<void>> verifyEmail({required String? token}) =>
+  _i11.Future<_i6.BaseResponse<void>> verifyEmail({required String? token}) =>
       (super.noSuchMethod(
             Invocation.method(#verifyEmail, [], {#token: token}),
-            returnValue: _i10.Future<_i5.BaseResponse<void>>.value(
-              _FakeBaseResponse_3<void>(
+            returnValue: _i11.Future<_i6.BaseResponse<void>>.value(
+              _FakeBaseResponse_4<void>(
                 this,
                 Invocation.method(#verifyEmail, [], {#token: token}),
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<void>>);
+          as _i11.Future<_i6.BaseResponse<void>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<_i16.AuthTokensModel>> refreshToken({
+  _i11.Future<_i6.BaseResponse<Map<String, dynamic>>> refreshToken({
     required String? refreshToken,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#refreshToken, [], {#refreshToken: refreshToken}),
             returnValue:
-                _i10.Future<_i5.BaseResponse<_i16.AuthTokensModel>>.value(
-                  _FakeBaseResponse_3<_i16.AuthTokensModel>(
+                _i11.Future<_i6.BaseResponse<Map<String, dynamic>>>.value(
+                  _FakeBaseResponse_4<Map<String, dynamic>>(
                     this,
                     Invocation.method(#refreshToken, [], {
                       #refreshToken: refreshToken,
@@ -635,78 +652,78 @@ class MockAuthRemoteDataSource extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<_i5.BaseResponse<_i16.AuthTokensModel>>);
+          as _i11.Future<_i6.BaseResponse<Map<String, dynamic>>>);
 }
 
 /// A class which mocks [AuthLocalDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthLocalDataSource extends _i1.Mock
-    implements _i17.AuthLocalDataSource {
+    implements _i4.AuthLocalDataSource {
   MockAuthLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i10.Future<void> cacheUser(_i15.UserModel? user) =>
+  _i11.Future<void> cacheUser(_i16.UserModel? user) =>
       (super.noSuchMethod(
             Invocation.method(#cacheUser, [user]),
-            returnValue: _i10.Future<void>.value(),
-            returnValueForMissingStub: _i10.Future<void>.value(),
+            returnValue: _i11.Future<void>.value(),
+            returnValueForMissingStub: _i11.Future<void>.value(),
           )
-          as _i10.Future<void>);
+          as _i11.Future<void>);
 
   @override
-  _i10.Future<_i15.UserModel?> getCachedUser() =>
+  _i11.Future<_i16.UserModel?> getCachedUser() =>
       (super.noSuchMethod(
             Invocation.method(#getCachedUser, []),
-            returnValue: _i10.Future<_i15.UserModel?>.value(),
+            returnValue: _i11.Future<_i16.UserModel?>.value(),
           )
-          as _i10.Future<_i15.UserModel?>);
+          as _i11.Future<_i16.UserModel?>);
 
   @override
-  _i10.Future<void> clearCachedUser() =>
+  _i11.Future<void> clearCachedUser() =>
       (super.noSuchMethod(
             Invocation.method(#clearCachedUser, []),
-            returnValue: _i10.Future<void>.value(),
-            returnValueForMissingStub: _i10.Future<void>.value(),
+            returnValue: _i11.Future<void>.value(),
+            returnValueForMissingStub: _i11.Future<void>.value(),
           )
-          as _i10.Future<void>);
+          as _i11.Future<void>);
 
   @override
-  _i10.Future<void> cacheTokens(_i16.AuthTokensModel? tokens) =>
+  _i11.Future<void> cacheTokens(_i17.AuthTokensModel? tokens) =>
       (super.noSuchMethod(
             Invocation.method(#cacheTokens, [tokens]),
-            returnValue: _i10.Future<void>.value(),
-            returnValueForMissingStub: _i10.Future<void>.value(),
+            returnValue: _i11.Future<void>.value(),
+            returnValueForMissingStub: _i11.Future<void>.value(),
           )
-          as _i10.Future<void>);
+          as _i11.Future<void>);
 
   @override
-  _i10.Future<_i16.AuthTokensModel?> getCachedTokens() =>
+  _i11.Future<_i17.AuthTokensModel?> getCachedTokens() =>
       (super.noSuchMethod(
             Invocation.method(#getCachedTokens, []),
-            returnValue: _i10.Future<_i16.AuthTokensModel?>.value(),
+            returnValue: _i11.Future<_i17.AuthTokensModel?>.value(),
           )
-          as _i10.Future<_i16.AuthTokensModel?>);
+          as _i11.Future<_i17.AuthTokensModel?>);
 
   @override
-  _i10.Future<void> clearCachedTokens() =>
+  _i11.Future<void> clearCachedTokens() =>
       (super.noSuchMethod(
             Invocation.method(#clearCachedTokens, []),
-            returnValue: _i10.Future<void>.value(),
-            returnValueForMissingStub: _i10.Future<void>.value(),
+            returnValue: _i11.Future<void>.value(),
+            returnValueForMissingStub: _i11.Future<void>.value(),
           )
-          as _i10.Future<void>);
+          as _i11.Future<void>);
 
   @override
-  _i10.Future<void> clearAllData() =>
+  _i11.Future<void> clearAllData() =>
       (super.noSuchMethod(
             Invocation.method(#clearAllData, []),
-            returnValue: _i10.Future<void>.value(),
-            returnValueForMissingStub: _i10.Future<void>.value(),
+            returnValue: _i11.Future<void>.value(),
+            returnValueForMissingStub: _i11.Future<void>.value(),
           )
-          as _i10.Future<void>);
+          as _i11.Future<void>);
 }
 
 /// A class which mocks [PostRepository].
@@ -718,7 +735,7 @@ class MockPostRepository extends _i1.Mock implements _i18.PostRepository {
   }
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i19.PostEntity>> createPost({
+  _i11.Future<_i5.Either<_i9.Failure, _i19.PostEntity>> createPost({
     required String? content,
     required _i20.PostVisibility? visibility,
     required _i20.PostType? type,
@@ -730,8 +747,8 @@ class MockPostRepository extends _i1.Mock implements _i18.PostRepository {
               #type: type,
             }),
             returnValue:
-                _i10.Future<_i4.Either<_i8.Failure, _i19.PostEntity>>.value(
-                  _FakeEither_2<_i8.Failure, _i19.PostEntity>(
+                _i11.Future<_i5.Either<_i9.Failure, _i19.PostEntity>>.value(
+                  _FakeEither_3<_i9.Failure, _i19.PostEntity>(
                     this,
                     Invocation.method(#createPost, [], {
                       #content: content,
@@ -741,10 +758,10 @@ class MockPostRepository extends _i1.Mock implements _i18.PostRepository {
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i19.PostEntity>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i19.PostEntity>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i19.PostEntity>> updatePost({
+  _i11.Future<_i5.Either<_i9.Failure, _i19.PostEntity>> updatePost({
     required String? postId,
     required String? content,
     required _i20.PostVisibility? visibility,
@@ -758,8 +775,8 @@ class MockPostRepository extends _i1.Mock implements _i18.PostRepository {
               #type: type,
             }),
             returnValue:
-                _i10.Future<_i4.Either<_i8.Failure, _i19.PostEntity>>.value(
-                  _FakeEither_2<_i8.Failure, _i19.PostEntity>(
+                _i11.Future<_i5.Either<_i9.Failure, _i19.PostEntity>>.value(
+                  _FakeEither_3<_i9.Failure, _i19.PostEntity>(
                     this,
                     Invocation.method(#updatePost, [], {
                       #postId: postId,
@@ -770,70 +787,70 @@ class MockPostRepository extends _i1.Mock implements _i18.PostRepository {
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i19.PostEntity>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i19.PostEntity>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, void>> deletePost(String? postId) =>
+  _i11.Future<_i5.Either<_i9.Failure, void>> deletePost(String? postId) =>
       (super.noSuchMethod(
             Invocation.method(#deletePost, [postId]),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, void>>.value(
+              _FakeEither_3<_i9.Failure, void>(
                 this,
                 Invocation.method(#deletePost, [postId]),
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, void>>);
+          as _i11.Future<_i5.Either<_i9.Failure, void>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i19.PostEntity>> getPost(
+  _i11.Future<_i5.Either<_i9.Failure, _i19.PostEntity>> getPost(
     String? postId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getPost, [postId]),
             returnValue:
-                _i10.Future<_i4.Either<_i8.Failure, _i19.PostEntity>>.value(
-                  _FakeEither_2<_i8.Failure, _i19.PostEntity>(
+                _i11.Future<_i5.Either<_i9.Failure, _i19.PostEntity>>.value(
+                  _FakeEither_3<_i9.Failure, _i19.PostEntity>(
                     this,
                     Invocation.method(#getPost, [postId]),
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i19.PostEntity>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i19.PostEntity>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, List<_i19.PostEntity>>> getHomePost() =>
+  _i11.Future<_i5.Either<_i9.Failure, List<_i19.PostEntity>>> getHomePost() =>
       (super.noSuchMethod(
             Invocation.method(#getHomePost, []),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, List<_i19.PostEntity>>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, List<_i19.PostEntity>>
                 >.value(
-                  _FakeEither_2<_i8.Failure, List<_i19.PostEntity>>(
+                  _FakeEither_3<_i9.Failure, List<_i19.PostEntity>>(
                     this,
                     Invocation.method(#getHomePost, []),
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, List<_i19.PostEntity>>>);
+          as _i11.Future<_i5.Either<_i9.Failure, List<_i19.PostEntity>>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, List<_i19.PostEntity>>> getPostsByUser(
+  _i11.Future<_i5.Either<_i9.Failure, List<_i19.PostEntity>>> getPostsByUser(
     String? viewerId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getPostsByUser, [viewerId]),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, List<_i19.PostEntity>>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, List<_i19.PostEntity>>
                 >.value(
-                  _FakeEither_2<_i8.Failure, List<_i19.PostEntity>>(
+                  _FakeEither_3<_i9.Failure, List<_i19.PostEntity>>(
                     this,
                     Invocation.method(#getPostsByUser, [viewerId]),
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, List<_i19.PostEntity>>>);
+          as _i11.Future<_i5.Either<_i9.Failure, List<_i19.PostEntity>>>);
 }
 
 /// A class which mocks [PostRemoteDataSource].
@@ -846,7 +863,7 @@ class MockPostRemoteDataSource extends _i1.Mock
   }
 
   @override
-  _i10.Future<_i5.BaseResponse<_i22.PostModel>> createPost({
+  _i11.Future<_i6.BaseResponse<_i22.PostModel>> createPost({
     required String? content,
     required String? visibility,
     required String? type,
@@ -857,8 +874,8 @@ class MockPostRemoteDataSource extends _i1.Mock
               #visibility: visibility,
               #type: type,
             }),
-            returnValue: _i10.Future<_i5.BaseResponse<_i22.PostModel>>.value(
-              _FakeBaseResponse_3<_i22.PostModel>(
+            returnValue: _i11.Future<_i6.BaseResponse<_i22.PostModel>>.value(
+              _FakeBaseResponse_4<_i22.PostModel>(
                 this,
                 Invocation.method(#createPost, [], {
                   #content: content,
@@ -868,10 +885,10 @@ class MockPostRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<_i22.PostModel>>);
+          as _i11.Future<_i6.BaseResponse<_i22.PostModel>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<_i22.PostModel>> updatePost({
+  _i11.Future<_i6.BaseResponse<_i22.PostModel>> updatePost({
     required String? postId,
     required String? content,
     required String? visibility,
@@ -884,8 +901,8 @@ class MockPostRemoteDataSource extends _i1.Mock
               #visibility: visibility,
               #type: type,
             }),
-            returnValue: _i10.Future<_i5.BaseResponse<_i22.PostModel>>.value(
-              _FakeBaseResponse_3<_i22.PostModel>(
+            returnValue: _i11.Future<_i6.BaseResponse<_i22.PostModel>>.value(
+              _FakeBaseResponse_4<_i22.PostModel>(
                 this,
                 Invocation.method(#updatePost, [], {
                   #postId: postId,
@@ -896,63 +913,63 @@ class MockPostRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<_i22.PostModel>>);
+          as _i11.Future<_i6.BaseResponse<_i22.PostModel>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<void>> deletePost(String? postId) =>
+  _i11.Future<_i6.BaseResponse<void>> deletePost(String? postId) =>
       (super.noSuchMethod(
             Invocation.method(#deletePost, [postId]),
-            returnValue: _i10.Future<_i5.BaseResponse<void>>.value(
-              _FakeBaseResponse_3<void>(
+            returnValue: _i11.Future<_i6.BaseResponse<void>>.value(
+              _FakeBaseResponse_4<void>(
                 this,
                 Invocation.method(#deletePost, [postId]),
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<void>>);
+          as _i11.Future<_i6.BaseResponse<void>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<_i22.PostModel>> getPost(String? postId) =>
+  _i11.Future<_i6.BaseResponse<_i22.PostModel>> getPost(String? postId) =>
       (super.noSuchMethod(
             Invocation.method(#getPost, [postId]),
-            returnValue: _i10.Future<_i5.BaseResponse<_i22.PostModel>>.value(
-              _FakeBaseResponse_3<_i22.PostModel>(
+            returnValue: _i11.Future<_i6.BaseResponse<_i22.PostModel>>.value(
+              _FakeBaseResponse_4<_i22.PostModel>(
                 this,
                 Invocation.method(#getPost, [postId]),
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<_i22.PostModel>>);
+          as _i11.Future<_i6.BaseResponse<_i22.PostModel>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<List<_i22.PostModel>>> getHomePost() =>
+  _i11.Future<_i6.BaseResponse<List<_i22.PostModel>>> getHomePost() =>
       (super.noSuchMethod(
             Invocation.method(#getHomePost, []),
             returnValue:
-                _i10.Future<_i5.BaseResponse<List<_i22.PostModel>>>.value(
-                  _FakeBaseResponse_3<List<_i22.PostModel>>(
+                _i11.Future<_i6.BaseResponse<List<_i22.PostModel>>>.value(
+                  _FakeBaseResponse_4<List<_i22.PostModel>>(
                     this,
                     Invocation.method(#getHomePost, []),
                   ),
                 ),
           )
-          as _i10.Future<_i5.BaseResponse<List<_i22.PostModel>>>);
+          as _i11.Future<_i6.BaseResponse<List<_i22.PostModel>>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<List<_i22.PostModel>>> getPostsByUser(
+  _i11.Future<_i6.BaseResponse<List<_i22.PostModel>>> getPostsByUser(
     String? viewerId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getPostsByUser, [viewerId]),
             returnValue:
-                _i10.Future<_i5.BaseResponse<List<_i22.PostModel>>>.value(
-                  _FakeBaseResponse_3<List<_i22.PostModel>>(
+                _i11.Future<_i6.BaseResponse<List<_i22.PostModel>>>.value(
+                  _FakeBaseResponse_4<List<_i22.PostModel>>(
                     this,
                     Invocation.method(#getPostsByUser, [viewerId]),
                   ),
                 ),
           )
-          as _i10.Future<_i5.BaseResponse<List<_i22.PostModel>>>);
+          as _i11.Future<_i6.BaseResponse<List<_i22.PostModel>>>);
 }
 
 /// A class which mocks [PostLocalDataSource].
@@ -965,30 +982,30 @@ class MockPostLocalDataSource extends _i1.Mock
   }
 
   @override
-  _i10.Future<void> cachePosts(List<_i22.PostModel>? posts) =>
+  _i11.Future<void> cachePosts(List<_i22.PostModel>? posts) =>
       (super.noSuchMethod(
             Invocation.method(#cachePosts, [posts]),
-            returnValue: _i10.Future<void>.value(),
-            returnValueForMissingStub: _i10.Future<void>.value(),
+            returnValue: _i11.Future<void>.value(),
+            returnValueForMissingStub: _i11.Future<void>.value(),
           )
-          as _i10.Future<void>);
+          as _i11.Future<void>);
 
   @override
-  _i10.Future<List<_i22.PostModel>?> getCachedPosts() =>
+  _i11.Future<List<_i22.PostModel>?> getCachedPosts() =>
       (super.noSuchMethod(
             Invocation.method(#getCachedPosts, []),
-            returnValue: _i10.Future<List<_i22.PostModel>?>.value(),
+            returnValue: _i11.Future<List<_i22.PostModel>?>.value(),
           )
-          as _i10.Future<List<_i22.PostModel>?>);
+          as _i11.Future<List<_i22.PostModel>?>);
 
   @override
-  _i10.Future<void> clearCachedPosts() =>
+  _i11.Future<void> clearCachedPosts() =>
       (super.noSuchMethod(
             Invocation.method(#clearCachedPosts, []),
-            returnValue: _i10.Future<void>.value(),
-            returnValueForMissingStub: _i10.Future<void>.value(),
+            returnValue: _i11.Future<void>.value(),
+            returnValueForMissingStub: _i11.Future<void>.value(),
           )
-          as _i10.Future<void>);
+          as _i11.Future<void>);
 }
 
 /// A class which mocks [CommentRepository].
@@ -1000,7 +1017,7 @@ class MockCommentRepository extends _i1.Mock implements _i24.CommentRepository {
   }
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i25.CommentEntity>> createComment({
+  _i11.Future<_i5.Either<_i9.Failure, _i25.CommentEntity>> createComment({
     required String? postId,
     required String? content,
     String? parentCommentId,
@@ -1012,8 +1029,8 @@ class MockCommentRepository extends _i1.Mock implements _i24.CommentRepository {
               #parentCommentId: parentCommentId,
             }),
             returnValue:
-                _i10.Future<_i4.Either<_i8.Failure, _i25.CommentEntity>>.value(
-                  _FakeEither_2<_i8.Failure, _i25.CommentEntity>(
+                _i11.Future<_i5.Either<_i9.Failure, _i25.CommentEntity>>.value(
+                  _FakeEither_3<_i9.Failure, _i25.CommentEntity>(
                     this,
                     Invocation.method(#createComment, [], {
                       #postId: postId,
@@ -1023,10 +1040,10 @@ class MockCommentRepository extends _i1.Mock implements _i24.CommentRepository {
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i25.CommentEntity>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i25.CommentEntity>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i25.CommentEntity>> updateComment({
+  _i11.Future<_i5.Either<_i9.Failure, _i25.CommentEntity>> updateComment({
     required String? commentId,
     required String? content,
   }) =>
@@ -1036,8 +1053,8 @@ class MockCommentRepository extends _i1.Mock implements _i24.CommentRepository {
               #content: content,
             }),
             returnValue:
-                _i10.Future<_i4.Either<_i8.Failure, _i25.CommentEntity>>.value(
-                  _FakeEither_2<_i8.Failure, _i25.CommentEntity>(
+                _i11.Future<_i5.Either<_i9.Failure, _i25.CommentEntity>>.value(
+                  _FakeEither_3<_i9.Failure, _i25.CommentEntity>(
                     this,
                     Invocation.method(#updateComment, [], {
                       #commentId: commentId,
@@ -1046,23 +1063,23 @@ class MockCommentRepository extends _i1.Mock implements _i24.CommentRepository {
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i25.CommentEntity>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i25.CommentEntity>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, void>> deleteComment(String? commentId) =>
+  _i11.Future<_i5.Either<_i9.Failure, void>> deleteComment(String? commentId) =>
       (super.noSuchMethod(
             Invocation.method(#deleteComment, [commentId]),
-            returnValue: _i10.Future<_i4.Either<_i8.Failure, void>>.value(
-              _FakeEither_2<_i8.Failure, void>(
+            returnValue: _i11.Future<_i5.Either<_i9.Failure, void>>.value(
+              _FakeEither_3<_i9.Failure, void>(
                 this,
                 Invocation.method(#deleteComment, [commentId]),
               ),
             ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, void>>);
+          as _i11.Future<_i5.Either<_i9.Failure, void>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, List<_i25.CommentEntity>>>
+  _i11.Future<_i5.Either<_i9.Failure, List<_i25.CommentEntity>>>
   getCommentsByPost({
     required String? postId,
     required _i26.PaginationParams? query,
@@ -1073,10 +1090,10 @@ class MockCommentRepository extends _i1.Mock implements _i24.CommentRepository {
               #query: query,
             }),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, List<_i25.CommentEntity>>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, List<_i25.CommentEntity>>
                 >.value(
-                  _FakeEither_2<_i8.Failure, List<_i25.CommentEntity>>(
+                  _FakeEither_3<_i9.Failure, List<_i25.CommentEntity>>(
                     this,
                     Invocation.method(#getCommentsByPost, [], {
                       #postId: postId,
@@ -1085,10 +1102,10 @@ class MockCommentRepository extends _i1.Mock implements _i24.CommentRepository {
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, List<_i25.CommentEntity>>>);
+          as _i11.Future<_i5.Either<_i9.Failure, List<_i25.CommentEntity>>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, List<_i25.CommentEntity>>> getReplies({
+  _i11.Future<_i5.Either<_i9.Failure, List<_i25.CommentEntity>>> getReplies({
     required String? commentId,
     required _i26.PaginationParams? query,
   }) =>
@@ -1098,10 +1115,10 @@ class MockCommentRepository extends _i1.Mock implements _i24.CommentRepository {
               #query: query,
             }),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, List<_i25.CommentEntity>>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, List<_i25.CommentEntity>>
                 >.value(
-                  _FakeEither_2<_i8.Failure, List<_i25.CommentEntity>>(
+                  _FakeEither_3<_i9.Failure, List<_i25.CommentEntity>>(
                     this,
                     Invocation.method(#getReplies, [], {
                       #commentId: commentId,
@@ -1110,7 +1127,7 @@ class MockCommentRepository extends _i1.Mock implements _i24.CommentRepository {
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, List<_i25.CommentEntity>>>);
+          as _i11.Future<_i5.Either<_i9.Failure, List<_i25.CommentEntity>>>);
 }
 
 /// A class which mocks [CommentRemoteDataSource].
@@ -1123,7 +1140,7 @@ class MockCommentRemoteDataSource extends _i1.Mock
   }
 
   @override
-  _i10.Future<_i5.BaseResponse<_i28.CommentModel>> createComment({
+  _i11.Future<_i6.BaseResponse<_i28.CommentModel>> createComment({
     required String? postId,
     required String? content,
     String? parentCommentId,
@@ -1134,8 +1151,8 @@ class MockCommentRemoteDataSource extends _i1.Mock
               #content: content,
               #parentCommentId: parentCommentId,
             }),
-            returnValue: _i10.Future<_i5.BaseResponse<_i28.CommentModel>>.value(
-              _FakeBaseResponse_3<_i28.CommentModel>(
+            returnValue: _i11.Future<_i6.BaseResponse<_i28.CommentModel>>.value(
+              _FakeBaseResponse_4<_i28.CommentModel>(
                 this,
                 Invocation.method(#createComment, [], {
                   #postId: postId,
@@ -1145,10 +1162,10 @@ class MockCommentRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<_i28.CommentModel>>);
+          as _i11.Future<_i6.BaseResponse<_i28.CommentModel>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<_i28.CommentModel>> updateComment({
+  _i11.Future<_i6.BaseResponse<_i28.CommentModel>> updateComment({
     required String? commentId,
     required String? content,
   }) =>
@@ -1157,8 +1174,8 @@ class MockCommentRemoteDataSource extends _i1.Mock
               #commentId: commentId,
               #content: content,
             }),
-            returnValue: _i10.Future<_i5.BaseResponse<_i28.CommentModel>>.value(
-              _FakeBaseResponse_3<_i28.CommentModel>(
+            returnValue: _i11.Future<_i6.BaseResponse<_i28.CommentModel>>.value(
+              _FakeBaseResponse_4<_i28.CommentModel>(
                 this,
                 Invocation.method(#updateComment, [], {
                   #commentId: commentId,
@@ -1167,23 +1184,23 @@ class MockCommentRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<_i28.CommentModel>>);
+          as _i11.Future<_i6.BaseResponse<_i28.CommentModel>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<void>> deleteComment(String? commentId) =>
+  _i11.Future<_i6.BaseResponse<void>> deleteComment(String? commentId) =>
       (super.noSuchMethod(
             Invocation.method(#deleteComment, [commentId]),
-            returnValue: _i10.Future<_i5.BaseResponse<void>>.value(
-              _FakeBaseResponse_3<void>(
+            returnValue: _i11.Future<_i6.BaseResponse<void>>.value(
+              _FakeBaseResponse_4<void>(
                 this,
                 Invocation.method(#deleteComment, [commentId]),
               ),
             ),
           )
-          as _i10.Future<_i5.BaseResponse<void>>);
+          as _i11.Future<_i6.BaseResponse<void>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<List<_i28.CommentModel>>> getCommentByPost({
+  _i11.Future<_i6.BaseResponse<List<_i28.CommentModel>>> getCommentByPost({
     required String? postId,
     _i26.PaginationParams? pagination,
   }) =>
@@ -1193,8 +1210,8 @@ class MockCommentRemoteDataSource extends _i1.Mock
               #pagination: pagination,
             }),
             returnValue:
-                _i10.Future<_i5.BaseResponse<List<_i28.CommentModel>>>.value(
-                  _FakeBaseResponse_3<List<_i28.CommentModel>>(
+                _i11.Future<_i6.BaseResponse<List<_i28.CommentModel>>>.value(
+                  _FakeBaseResponse_4<List<_i28.CommentModel>>(
                     this,
                     Invocation.method(#getCommentByPost, [], {
                       #postId: postId,
@@ -1203,10 +1220,10 @@ class MockCommentRemoteDataSource extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<_i5.BaseResponse<List<_i28.CommentModel>>>);
+          as _i11.Future<_i6.BaseResponse<List<_i28.CommentModel>>>);
 
   @override
-  _i10.Future<_i5.BaseResponse<List<_i28.CommentModel>>> getReplies({
+  _i11.Future<_i6.BaseResponse<List<_i28.CommentModel>>> getReplies({
     required String? commentId,
     _i26.PaginationParams? pagination,
   }) =>
@@ -1216,8 +1233,8 @@ class MockCommentRemoteDataSource extends _i1.Mock
               #pagination: pagination,
             }),
             returnValue:
-                _i10.Future<_i5.BaseResponse<List<_i28.CommentModel>>>.value(
-                  _FakeBaseResponse_3<List<_i28.CommentModel>>(
+                _i11.Future<_i6.BaseResponse<List<_i28.CommentModel>>>.value(
+                  _FakeBaseResponse_4<List<_i28.CommentModel>>(
                     this,
                     Invocation.method(#getReplies, [], {
                       #commentId: commentId,
@@ -1226,7 +1243,7 @@ class MockCommentRemoteDataSource extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<_i5.BaseResponse<List<_i28.CommentModel>>>);
+          as _i11.Future<_i6.BaseResponse<List<_i28.CommentModel>>>);
 }
 
 /// A class which mocks [ReactionRepository].
@@ -1239,7 +1256,7 @@ class MockReactionRepository extends _i1.Mock
   }
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i30.ReactionResponseEntity>> react({
+  _i11.Future<_i5.Either<_i9.Failure, _i30.ReactionResponseEntity>> react({
     required _i31.ReactionTargetType? targetType,
     required String? targetId,
     required _i31.ReactionType? type,
@@ -1251,10 +1268,10 @@ class MockReactionRepository extends _i1.Mock
               #type: type,
             }),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, _i30.ReactionResponseEntity>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, _i30.ReactionResponseEntity>
                 >.value(
-                  _FakeEither_2<_i8.Failure, _i30.ReactionResponseEntity>(
+                  _FakeEither_3<_i9.Failure, _i30.ReactionResponseEntity>(
                     this,
                     Invocation.method(#react, [], {
                       #targetType: targetType,
@@ -1264,10 +1281,10 @@ class MockReactionRepository extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i30.ReactionResponseEntity>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i30.ReactionResponseEntity>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, List<_i30.ReactionSummaryEntity>>>
+  _i11.Future<_i5.Either<_i9.Failure, List<_i30.ReactionSummaryEntity>>>
   getReactionSummary({
     required _i31.ReactionTargetType? targetType,
     required String? targetId,
@@ -1278,10 +1295,10 @@ class MockReactionRepository extends _i1.Mock
               #targetId: targetId,
             }),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, List<_i30.ReactionSummaryEntity>>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, List<_i30.ReactionSummaryEntity>>
                 >.value(
-                  _FakeEither_2<_i8.Failure, List<_i30.ReactionSummaryEntity>>(
+                  _FakeEither_3<_i9.Failure, List<_i30.ReactionSummaryEntity>>(
                     this,
                     Invocation.method(#getReactionSummary, [], {
                       #targetType: targetType,
@@ -1290,12 +1307,12 @@ class MockReactionRepository extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<
-            _i4.Either<_i8.Failure, List<_i30.ReactionSummaryEntity>>
+          as _i11.Future<
+            _i5.Either<_i9.Failure, List<_i30.ReactionSummaryEntity>>
           >);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i30.ReactionEntity?>> getUserReaction({
+  _i11.Future<_i5.Either<_i9.Failure, _i30.ReactionEntity?>> getUserReaction({
     required _i31.ReactionTargetType? targetType,
     required String? targetId,
   }) =>
@@ -1305,10 +1322,10 @@ class MockReactionRepository extends _i1.Mock
               #targetId: targetId,
             }),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, _i30.ReactionEntity?>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, _i30.ReactionEntity?>
                 >.value(
-                  _FakeEither_2<_i8.Failure, _i30.ReactionEntity?>(
+                  _FakeEither_3<_i9.Failure, _i30.ReactionEntity?>(
                     this,
                     Invocation.method(#getUserReaction, [], {
                       #targetType: targetType,
@@ -1317,7 +1334,7 @@ class MockReactionRepository extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i30.ReactionEntity?>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i30.ReactionEntity?>>);
 }
 
 /// A class which mocks [ReactionRemoteDataSource].
@@ -1330,7 +1347,7 @@ class MockReactionRemoteDataSource extends _i1.Mock
   }
 
   @override
-  _i10.Future<_i6.ReactionResponseModel> react({
+  _i11.Future<_i7.ReactionResponseModel> react({
     required _i31.ReactionTargetType? targetType,
     required String? targetId,
     required _i31.ReactionType? type,
@@ -1341,8 +1358,8 @@ class MockReactionRemoteDataSource extends _i1.Mock
               #targetId: targetId,
               #type: type,
             }),
-            returnValue: _i10.Future<_i6.ReactionResponseModel>.value(
-              _FakeReactionResponseModel_4(
+            returnValue: _i11.Future<_i7.ReactionResponseModel>.value(
+              _FakeReactionResponseModel_5(
                 this,
                 Invocation.method(#react, [], {
                   #targetType: targetType,
@@ -1352,10 +1369,10 @@ class MockReactionRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i10.Future<_i6.ReactionResponseModel>);
+          as _i11.Future<_i7.ReactionResponseModel>);
 
   @override
-  _i10.Future<List<_i6.ReactionSummaryModel>> getReactionSummary({
+  _i11.Future<List<_i7.ReactionSummaryModel>> getReactionSummary({
     required _i31.ReactionTargetType? targetType,
     required String? targetId,
   }) =>
@@ -1364,14 +1381,14 @@ class MockReactionRemoteDataSource extends _i1.Mock
               #targetType: targetType,
               #targetId: targetId,
             }),
-            returnValue: _i10.Future<List<_i6.ReactionSummaryModel>>.value(
-              <_i6.ReactionSummaryModel>[],
+            returnValue: _i11.Future<List<_i7.ReactionSummaryModel>>.value(
+              <_i7.ReactionSummaryModel>[],
             ),
           )
-          as _i10.Future<List<_i6.ReactionSummaryModel>>);
+          as _i11.Future<List<_i7.ReactionSummaryModel>>);
 
   @override
-  _i10.Future<_i6.ReactionModel?> getUserReaction({
+  _i11.Future<_i7.ReactionModel?> getUserReaction({
     required _i31.ReactionTargetType? targetType,
     required String? targetId,
   }) =>
@@ -1380,9 +1397,9 @@ class MockReactionRemoteDataSource extends _i1.Mock
               #targetType: targetType,
               #targetId: targetId,
             }),
-            returnValue: _i10.Future<_i6.ReactionModel?>.value(),
+            returnValue: _i11.Future<_i7.ReactionModel?>.value(),
           )
-          as _i10.Future<_i6.ReactionModel?>);
+          as _i11.Future<_i7.ReactionModel?>);
 }
 
 /// A class which mocks [FriendshipRepository].
@@ -1395,34 +1412,34 @@ class MockFriendshipRepository extends _i1.Mock
   }
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i34.FriendshipResponseEntity>>
+  _i11.Future<_i5.Either<_i9.Failure, _i34.FriendshipResponseEntity>>
   sendRequest({required String? toUserId}) =>
       (super.noSuchMethod(
             Invocation.method(#sendRequest, [], {#toUserId: toUserId}),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, _i34.FriendshipResponseEntity>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, _i34.FriendshipResponseEntity>
                 >.value(
-                  _FakeEither_2<_i8.Failure, _i34.FriendshipResponseEntity>(
+                  _FakeEither_3<_i9.Failure, _i34.FriendshipResponseEntity>(
                     this,
                     Invocation.method(#sendRequest, [], {#toUserId: toUserId}),
                   ),
                 ),
           )
-          as _i10.Future<
-            _i4.Either<_i8.Failure, _i34.FriendshipResponseEntity>
+          as _i11.Future<
+            _i5.Either<_i9.Failure, _i34.FriendshipResponseEntity>
           >);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i34.FriendshipResponseEntity>>
+  _i11.Future<_i5.Either<_i9.Failure, _i34.FriendshipResponseEntity>>
   acceptRequest({required String? requestId}) =>
       (super.noSuchMethod(
             Invocation.method(#acceptRequest, [], {#requestId: requestId}),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, _i34.FriendshipResponseEntity>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, _i34.FriendshipResponseEntity>
                 >.value(
-                  _FakeEither_2<_i8.Failure, _i34.FriendshipResponseEntity>(
+                  _FakeEither_3<_i9.Failure, _i34.FriendshipResponseEntity>(
                     this,
                     Invocation.method(#acceptRequest, [], {
                       #requestId: requestId,
@@ -1430,20 +1447,20 @@ class MockFriendshipRepository extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<
-            _i4.Either<_i8.Failure, _i34.FriendshipResponseEntity>
+          as _i11.Future<
+            _i5.Either<_i9.Failure, _i34.FriendshipResponseEntity>
           >);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i34.FriendshipResponseEntity>>
+  _i11.Future<_i5.Either<_i9.Failure, _i34.FriendshipResponseEntity>>
   rejectRequest({required String? requestId}) =>
       (super.noSuchMethod(
             Invocation.method(#rejectRequest, [], {#requestId: requestId}),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, _i34.FriendshipResponseEntity>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, _i34.FriendshipResponseEntity>
                 >.value(
-                  _FakeEither_2<_i8.Failure, _i34.FriendshipResponseEntity>(
+                  _FakeEither_3<_i9.Failure, _i34.FriendshipResponseEntity>(
                     this,
                     Invocation.method(#rejectRequest, [], {
                       #requestId: requestId,
@@ -1451,84 +1468,84 @@ class MockFriendshipRepository extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<
-            _i4.Either<_i8.Failure, _i34.FriendshipResponseEntity>
+          as _i11.Future<
+            _i5.Either<_i9.Failure, _i34.FriendshipResponseEntity>
           >);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, List<_i34.FriendRequestEntity>>>
+  _i11.Future<_i5.Either<_i9.Failure, List<_i34.FriendRequestEntity>>>
   getPendingRequests() =>
       (super.noSuchMethod(
             Invocation.method(#getPendingRequests, []),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, List<_i34.FriendRequestEntity>>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, List<_i34.FriendRequestEntity>>
                 >.value(
-                  _FakeEither_2<_i8.Failure, List<_i34.FriendRequestEntity>>(
+                  _FakeEither_3<_i9.Failure, List<_i34.FriendRequestEntity>>(
                     this,
                     Invocation.method(#getPendingRequests, []),
                   ),
                 ),
           )
-          as _i10.Future<
-            _i4.Either<_i8.Failure, List<_i34.FriendRequestEntity>>
+          as _i11.Future<
+            _i5.Either<_i9.Failure, List<_i34.FriendRequestEntity>>
           >);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, List<_i34.FriendRequestEntity>>>
+  _i11.Future<_i5.Either<_i9.Failure, List<_i34.FriendRequestEntity>>>
   getSentRequests() =>
       (super.noSuchMethod(
             Invocation.method(#getSentRequests, []),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, List<_i34.FriendRequestEntity>>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, List<_i34.FriendRequestEntity>>
                 >.value(
-                  _FakeEither_2<_i8.Failure, List<_i34.FriendRequestEntity>>(
+                  _FakeEither_3<_i9.Failure, List<_i34.FriendRequestEntity>>(
                     this,
                     Invocation.method(#getSentRequests, []),
                   ),
                 ),
           )
-          as _i10.Future<
-            _i4.Either<_i8.Failure, List<_i34.FriendRequestEntity>>
+          as _i11.Future<
+            _i5.Either<_i9.Failure, List<_i34.FriendRequestEntity>>
           >);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, List<_i34.FriendEntity>>> getFriends() =>
+  _i11.Future<_i5.Either<_i9.Failure, List<_i34.FriendEntity>>> getFriends() =>
       (super.noSuchMethod(
             Invocation.method(#getFriends, []),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, List<_i34.FriendEntity>>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, List<_i34.FriendEntity>>
                 >.value(
-                  _FakeEither_2<_i8.Failure, List<_i34.FriendEntity>>(
+                  _FakeEither_3<_i9.Failure, List<_i34.FriendEntity>>(
                     this,
                     Invocation.method(#getFriends, []),
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, List<_i34.FriendEntity>>>);
+          as _i11.Future<_i5.Either<_i9.Failure, List<_i34.FriendEntity>>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, List<_i34.FriendEntity>>> getUserFriends({
+  _i11.Future<_i5.Either<_i9.Failure, List<_i34.FriendEntity>>> getUserFriends({
     required String? userId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getUserFriends, [], {#userId: userId}),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, List<_i34.FriendEntity>>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, List<_i34.FriendEntity>>
                 >.value(
-                  _FakeEither_2<_i8.Failure, List<_i34.FriendEntity>>(
+                  _FakeEither_3<_i9.Failure, List<_i34.FriendEntity>>(
                     this,
                     Invocation.method(#getUserFriends, [], {#userId: userId}),
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, List<_i34.FriendEntity>>>);
+          as _i11.Future<_i5.Either<_i9.Failure, List<_i34.FriendEntity>>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, _i34.FriendshipStatusEntity>> isFriend({
+  _i11.Future<_i5.Either<_i9.Failure, _i34.FriendshipStatusEntity>> isFriend({
     required String? userAId,
     required String? userBId,
   }) =>
@@ -1538,10 +1555,10 @@ class MockFriendshipRepository extends _i1.Mock
               #userBId: userBId,
             }),
             returnValue:
-                _i10.Future<
-                  _i4.Either<_i8.Failure, _i34.FriendshipStatusEntity>
+                _i11.Future<
+                  _i5.Either<_i9.Failure, _i34.FriendshipStatusEntity>
                 >.value(
-                  _FakeEither_2<_i8.Failure, _i34.FriendshipStatusEntity>(
+                  _FakeEither_3<_i9.Failure, _i34.FriendshipStatusEntity>(
                     this,
                     Invocation.method(#isFriend, [], {
                       #userAId: userAId,
@@ -1550,21 +1567,21 @@ class MockFriendshipRepository extends _i1.Mock
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, _i34.FriendshipStatusEntity>>);
+          as _i11.Future<_i5.Either<_i9.Failure, _i34.FriendshipStatusEntity>>);
 
   @override
-  _i10.Future<_i4.Either<_i8.Failure, List<String>>> getFriendIds() =>
+  _i11.Future<_i5.Either<_i9.Failure, List<String>>> getFriendIds() =>
       (super.noSuchMethod(
             Invocation.method(#getFriendIds, []),
             returnValue:
-                _i10.Future<_i4.Either<_i8.Failure, List<String>>>.value(
-                  _FakeEither_2<_i8.Failure, List<String>>(
+                _i11.Future<_i5.Either<_i9.Failure, List<String>>>.value(
+                  _FakeEither_3<_i9.Failure, List<String>>(
                     this,
                     Invocation.method(#getFriendIds, []),
                   ),
                 ),
           )
-          as _i10.Future<_i4.Either<_i8.Failure, List<String>>>);
+          as _i11.Future<_i5.Either<_i9.Failure, List<String>>>);
 }
 
 /// A class which mocks [FriendshipRemoteDataSource].
@@ -1577,94 +1594,94 @@ class MockFriendshipRemoteDataSource extends _i1.Mock
   }
 
   @override
-  _i10.Future<_i7.FriendshipResponseModel> sendRequest({
+  _i11.Future<_i8.FriendshipResponseModel> sendRequest({
     required String? toUserId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#sendRequest, [], {#toUserId: toUserId}),
-            returnValue: _i10.Future<_i7.FriendshipResponseModel>.value(
-              _FakeFriendshipResponseModel_5(
+            returnValue: _i11.Future<_i8.FriendshipResponseModel>.value(
+              _FakeFriendshipResponseModel_6(
                 this,
                 Invocation.method(#sendRequest, [], {#toUserId: toUserId}),
               ),
             ),
           )
-          as _i10.Future<_i7.FriendshipResponseModel>);
+          as _i11.Future<_i8.FriendshipResponseModel>);
 
   @override
-  _i10.Future<_i7.FriendshipResponseModel> acceptRequest({
+  _i11.Future<_i8.FriendshipResponseModel> acceptRequest({
     required String? requestId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#acceptRequest, [], {#requestId: requestId}),
-            returnValue: _i10.Future<_i7.FriendshipResponseModel>.value(
-              _FakeFriendshipResponseModel_5(
+            returnValue: _i11.Future<_i8.FriendshipResponseModel>.value(
+              _FakeFriendshipResponseModel_6(
                 this,
                 Invocation.method(#acceptRequest, [], {#requestId: requestId}),
               ),
             ),
           )
-          as _i10.Future<_i7.FriendshipResponseModel>);
+          as _i11.Future<_i8.FriendshipResponseModel>);
 
   @override
-  _i10.Future<_i7.FriendshipResponseModel> rejectRequest({
+  _i11.Future<_i8.FriendshipResponseModel> rejectRequest({
     required String? requestId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#rejectRequest, [], {#requestId: requestId}),
-            returnValue: _i10.Future<_i7.FriendshipResponseModel>.value(
-              _FakeFriendshipResponseModel_5(
+            returnValue: _i11.Future<_i8.FriendshipResponseModel>.value(
+              _FakeFriendshipResponseModel_6(
                 this,
                 Invocation.method(#rejectRequest, [], {#requestId: requestId}),
               ),
             ),
           )
-          as _i10.Future<_i7.FriendshipResponseModel>);
+          as _i11.Future<_i8.FriendshipResponseModel>);
 
   @override
-  _i10.Future<List<_i7.FriendRequestModel>> getPendingRequests() =>
+  _i11.Future<List<_i8.FriendRequestModel>> getPendingRequests() =>
       (super.noSuchMethod(
             Invocation.method(#getPendingRequests, []),
-            returnValue: _i10.Future<List<_i7.FriendRequestModel>>.value(
-              <_i7.FriendRequestModel>[],
+            returnValue: _i11.Future<List<_i8.FriendRequestModel>>.value(
+              <_i8.FriendRequestModel>[],
             ),
           )
-          as _i10.Future<List<_i7.FriendRequestModel>>);
+          as _i11.Future<List<_i8.FriendRequestModel>>);
 
   @override
-  _i10.Future<List<_i7.FriendRequestModel>> getSentRequests() =>
+  _i11.Future<List<_i8.FriendRequestModel>> getSentRequests() =>
       (super.noSuchMethod(
             Invocation.method(#getSentRequests, []),
-            returnValue: _i10.Future<List<_i7.FriendRequestModel>>.value(
-              <_i7.FriendRequestModel>[],
+            returnValue: _i11.Future<List<_i8.FriendRequestModel>>.value(
+              <_i8.FriendRequestModel>[],
             ),
           )
-          as _i10.Future<List<_i7.FriendRequestModel>>);
+          as _i11.Future<List<_i8.FriendRequestModel>>);
 
   @override
-  _i10.Future<List<_i7.FriendModel>> getFriends() =>
+  _i11.Future<List<_i8.FriendModel>> getFriends() =>
       (super.noSuchMethod(
             Invocation.method(#getFriends, []),
-            returnValue: _i10.Future<List<_i7.FriendModel>>.value(
-              <_i7.FriendModel>[],
+            returnValue: _i11.Future<List<_i8.FriendModel>>.value(
+              <_i8.FriendModel>[],
             ),
           )
-          as _i10.Future<List<_i7.FriendModel>>);
+          as _i11.Future<List<_i8.FriendModel>>);
 
   @override
-  _i10.Future<List<_i7.FriendModel>> getUserFriends({
+  _i11.Future<List<_i8.FriendModel>> getUserFriends({
     required String? userId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getUserFriends, [], {#userId: userId}),
-            returnValue: _i10.Future<List<_i7.FriendModel>>.value(
-              <_i7.FriendModel>[],
+            returnValue: _i11.Future<List<_i8.FriendModel>>.value(
+              <_i8.FriendModel>[],
             ),
           )
-          as _i10.Future<List<_i7.FriendModel>>);
+          as _i11.Future<List<_i8.FriendModel>>);
 
   @override
-  _i10.Future<_i7.FriendshipStatusModel> isFriend({
+  _i11.Future<_i8.FriendshipStatusModel> isFriend({
     required String? userAId,
     required String? userBId,
   }) =>
@@ -1673,8 +1690,8 @@ class MockFriendshipRemoteDataSource extends _i1.Mock
               #userAId: userAId,
               #userBId: userBId,
             }),
-            returnValue: _i10.Future<_i7.FriendshipStatusModel>.value(
-              _FakeFriendshipStatusModel_6(
+            returnValue: _i11.Future<_i8.FriendshipStatusModel>.value(
+              _FakeFriendshipStatusModel_7(
                 this,
                 Invocation.method(#isFriend, [], {
                   #userAId: userAId,
@@ -1683,13 +1700,13 @@ class MockFriendshipRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i10.Future<_i7.FriendshipStatusModel>);
+          as _i11.Future<_i8.FriendshipStatusModel>);
 
   @override
-  _i10.Future<List<String>> getFriendIds() =>
+  _i11.Future<List<String>> getFriendIds() =>
       (super.noSuchMethod(
             Invocation.method(#getFriendIds, []),
-            returnValue: _i10.Future<List<String>>.value(<String>[]),
+            returnValue: _i11.Future<List<String>>.value(<String>[]),
           )
-          as _i10.Future<List<String>>);
+          as _i11.Future<List<String>>);
 }
