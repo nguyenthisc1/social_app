@@ -1,4 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.fluttercandies.photo_manager_example">
+        <application
+            android:label="photo_manager_example"
+            android:icon="@mipmap/ic_launcher"
+            android:requestLegacyExternalStorage="true">
+        </application>
+    </manifest>
     <application
         android:label="social_app"
         android:name="${applicationName}"
