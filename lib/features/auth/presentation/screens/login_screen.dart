@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/core.dart';
 import '../bloc/auth_bloc.dart';
-import '../bloc/auth_event.dart';
-import '../bloc/auth_state.dart';
 
 /// Login screen
 class LoginScreen extends StatefulWidget {
@@ -87,15 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: AppTextStyles.displaySmall,
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: AppSize.sm),
-                      Text(
-                        l10n.signInContinue,
-                        style: AppTextStyles.bodyLarge.copyWith(
-                          color: theme.colorScheme.secondary,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: AppSize.sm),
+                      const SizedBox(height: AppSize.xl),
 
                       // Email Field
                       CustomTextField(

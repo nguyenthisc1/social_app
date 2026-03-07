@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:social_app/core/theme/app_size.dart';
+import 'package:social_app/core/core.dart';
 
 class RootScreen extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -37,8 +37,8 @@ class RootScreen extends StatelessWidget {
                 ),
               ),
         leading: IconButton(
-          icon: const Icon(LucideIcons.squarePlus, size: AppSize.icon),
-          onPressed: () {},
+          icon: const Icon(LucideIcons.plus, size: AppSize.icon),
+          onPressed: () => context.push(AppRoutes.createPost),
         ),
         actions: [
           IconButton(

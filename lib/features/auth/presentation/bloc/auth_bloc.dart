@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/usecases/check_auth_status_usecase.dart';
@@ -5,10 +6,98 @@ import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
-import 'auth_event.dart';
-import 'auth_state.dart';
 
-/// BLoC for managing authentication state
+abstract class AuthEvent extends Equatable {
+  const AuthEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+/// Event to check authentication status
+class AuthCheckRequested extends AuthEvent {}
+
+/// Event for user login
+class AuthLoginRequested extends AuthEvent {
+  final String email;
+  final String password;
+
+  const AuthLoginRequested({required this.email, required this.password});
+
+  @override
+  List<Object?> get props => [email, password];
+}
+
+/// Event for user registration
+class AuthRegisterRequested extends AuthEvent {
+  final String email;
+  final String username;
+  final String password;
+
+  const AuthRegisterRequested({
+    required this.email,
+    required this.username,
+    required this.password,
+  });
+
+  @override
+  List<Object?> get props => [email, username, password];
+}
+
+/// Event for user logout
+class AuthLogoutRequested extends AuthEvent {
+  const AuthLogoutRequested();
+}
+
+/// Event to get current user
+class AuthGetCurrentUserRequested extends AuthEvent {}
+
+/// New: Event state shows last event (for debugging/logging/UI)
+class AuthEventState extends AuthState {
+  final AuthEvent lastEvent;
+
+  const AuthEventState(this.lastEvent);
+
+  @override
+  List<Object?> get props => [lastEvent];
+}
+
+/// Base class for auth states
+abstract class AuthState extends Equatable {
+  const AuthState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+/// Initial auth state
+class AuthInitial extends AuthState {}
+
+/// Loading state
+class AuthLoading extends AuthState {}
+
+/// Authenticated state
+class AuthAuthenticated extends AuthState {
+  final dynamic user; // Changed to dynamic as User may be undefined
+  const AuthAuthenticated(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}
+
+/// Unauthenticated state
+class AuthUnauthenticated extends AuthState {}
+
+/// Error state
+class AuthError extends AuthState {
+  final String message;
+
+  const AuthError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase loginUseCase;
   final RegisterUseCase registerUseCase;
@@ -34,6 +123,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthCheckRequested event,
     Emitter<AuthState> emit,
   ) async {
+    emit(AuthEventState(event));
     emit(AuthLoading());
 
     final isAuthenticated = await checkAuthStatusUseCase();
@@ -53,6 +143,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthLoginRequested event,
     Emitter<AuthState> emit,
   ) async {
+    emit(AuthEventState(event));
     emit(AuthLoading());
 
     final result = await loginUseCase(
@@ -70,6 +161,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthRegisterRequested event,
     Emitter<AuthState> emit,
   ) async {
+    emit(AuthEventState(event));
     emit(AuthLoading());
 
     final result = await registerUseCase(
@@ -88,6 +180,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthLogoutRequested event,
     Emitter<AuthState> emit,
   ) async {
+    emit(AuthEventState(event));
     emit(AuthLoading());
 
     final result = await logoutUseCase();
@@ -102,6 +195,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthGetCurrentUserRequested event,
     Emitter<AuthState> emit,
   ) async {
+    emit(AuthEventState(event));
     emit(AuthLoading());
 
     final result = await getCurrentUserUseCase();
