@@ -3,7 +3,7 @@ class AppConstants {
   AppConstants._();
 
   // API Configuration
-  static const String apiBaseUrl = 'http://172.16.16.211:8080';
+  static const String apiBaseUrl = 'http://172.16.16.102:8080';
   static const int connectionTimeout = 30000; // milliseconds
   static const int receiveTimeout = 30000; // milliseconds
 

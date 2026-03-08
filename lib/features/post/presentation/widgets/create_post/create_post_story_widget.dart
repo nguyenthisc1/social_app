@@ -13,28 +13,42 @@ class CreatePostStoryWidget extends StatefulWidget {
   State<CreatePostStoryWidget> createState() => _CreatePostStoryWidgetState();
 }
 
-class _CreatePostStoryWidgetState extends State<CreatePostStoryWidget> {
+class _CreatePostStoryWidgetState extends State<CreatePostStoryWidget>
+    with AutomaticKeepAliveClientMixin {
   CameraController? _controller;
-  bool _isCameraInitialized = false;
   List<CameraDescription> _cameras = [];
+  bool _isCameraInitialized = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    // Open camera on widget build
-    _initializeCamera();
     context.read<StoryBloc>().add(OpenCamera());
+    print(123);
   }
 
-  Future<void> _initializeCamera() async {
+  Future<void> _initializeCamera(StoryCameraDirection direction) async {
     try {
       _cameras = await availableCameras();
       if (_cameras.isEmpty) {
         debugPrint('No cameras found');
         return;
       }
+
+      final CameraLensDirection lensDirection =
+          direction == StoryCameraDirection.front
+          ? CameraLensDirection.front
+          : CameraLensDirection.back;
+
+      final CameraDescription cameraDescription = _cameras.firstWhere(
+        (camera) => camera.lensDirection == lensDirection,
+        orElse: () => _cameras.first,
+      );
+
       _controller = CameraController(
-        _cameras[0],
+        cameraDescription,
         ResolutionPreset.high,
         enableAudio: false,
       );
@@ -54,53 +68,127 @@ class _CreatePostStoryWidgetState extends State<CreatePostStoryWidget> {
     super.dispose();
   }
 
-  void _onCapture(BuildContext context) async {
-    if (!_isCameraInitialized ||
-        _controller == null ||
-        !_controller!.value.isInitialized)
-      return;
+  Future<void> _onCapture(BuildContext context) async {
+    if (_controller == null || !_controller!.value.isInitialized) return;
     try {
       final photo = await _controller!.takePicture();
       if (!mounted) return;
+      // Send the photo path to the bloc (uncommented for update)
       // context.read<StoryBloc>().add(PhotoCaptured(photo.path));
     } catch (e) {
       debugPrint('Error capturing photo: $e');
     }
   }
 
-  void _onToggleFlash() {
-    if (_controller != null && _isCameraInitialized) {
-      final hasFlash = _controller!.value.flashMode != FlashMode.off;
-      _controller!.setFlashMode(hasFlash ? FlashMode.off : FlashMode.auto);
+  void _onToggleFlash() async {
+    if (_controller != null) {
+      final flashMode = _controller!.value.flashMode; // camera FlashMode
+      FlashMode next;
+      switch (flashMode) {
+        case FlashMode.off:
+          next = FlashMode.auto;
+          break;
+        case FlashMode.auto:
+          next = FlashMode.always;
+          break;
+        case FlashMode.always:
+          next = FlashMode.off;
+          break;
+        case FlashMode.torch:
+          next = FlashMode.off;
+          break;
+      }
+      await _controller!.setFlashMode(next);
       context.read<StoryBloc>().add(ToggleFlash());
-      setState(() {});
+    }
+  }
+
+  Future<void> _switchCamera(StoryCameraDirection direction) async {
+    if (_cameras.isEmpty) {
+      try {
+        _cameras = await availableCameras();
+      } catch (e) {
+        debugPrint('No cameras found during switch: $e');
+        return;
+      }
+    }
+
+    CameraDescription cameraToUse;
+
+    if (direction == StoryCameraDirection.front) {
+      cameraToUse = _cameras.firstWhere(
+        (camera) => camera.lensDirection == CameraLensDirection.front,
+        orElse: () => _cameras.first,
+      );
+    } else {
+      cameraToUse = _cameras.firstWhere(
+        (camera) => camera.lensDirection == CameraLensDirection.back,
+        orElse: () => _cameras.first,
+      );
+    }
+
+    final oldController = _controller;
+
+    setState(() {
+      _isCameraInitialized = false;
+      _controller = null;
+    });
+
+    await oldController?.dispose();
+
+    final newController = CameraController(
+      cameraToUse,
+      ResolutionPreset.high,
+      enableAudio: false,
+    );
+
+    _controller = newController;
+
+    try {
+      await newController.initialize();
+
+      if (mounted) {
+        setState(() {
+          _isCameraInitialized = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error switching camera: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<StoryBloc, StoryState>(
-      builder: (context, state) {
-        // Show loading overlay
-        if (state.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    super.build(context);
 
-        // If image is selected, preview it full screen
+    return BlocConsumer<StoryBloc, StoryState>(
+      listenWhen: (prev, curr) =>
+          prev.cameraDirection != curr.cameraDirection ||
+          prev.openCamera != curr.openCamera,
+      listener: (context, state) async {
+        print("listener openCamera: ${state.openCamera}");
+
+        if (state.openCamera && !_isCameraInitialized) {
+          await _initializeCamera(state.cameraDirection);
+        } else if (state.openCamera) {
+          await _switchCamera(state.cameraDirection);
+        }
+      },
+      builder: (context, state) {
+        final screenHeight = MediaQuery.of(context).size.height;
+        final bottomMargin = screenHeight * 0.10;
+        // Show the image when it's captured
         if (state.imagePath != null) {
           return Stack(
             fit: StackFit.expand,
             children: [
               Image.file(File(state.imagePath!), fit: BoxFit.cover),
-              // Top overlay for actions
               Positioned(
                 top: 0,
                 left: 0,
                 right: 0,
                 child: _HeaderBar(
-                  onClose: () {
-                    Navigator.of(context).pop();
-                  },
+                  onClose: () => Navigator.of(context).pop(),
                   flashMode: state.flashMode,
                   onFlashToggle: _onToggleFlash,
                 ),
@@ -109,13 +197,11 @@ class _CreatePostStoryWidgetState extends State<CreatePostStoryWidget> {
           );
         }
 
-        // Camera view with camera preview when ready
-        if (_isCameraInitialized &&
+        // Show camera if openCamera and initialized
+        if (state.openCamera &&
             _controller != null &&
+            _isCameraInitialized &&
             _controller!.value.isInitialized) {
-          final screenHeight = MediaQuery.of(context).size.height;
-          final bottomMargin = screenHeight * 0.10;
-
           return Container(
             margin: EdgeInsets.only(bottom: bottomMargin),
             child: SafeArea(
@@ -137,21 +223,16 @@ class _CreatePostStoryWidgetState extends State<CreatePostStoryWidget> {
                       ),
                     ),
                   ),
-
-                  // Top header bar
                   Positioned(
                     top: 0,
                     left: 0,
                     right: 0,
                     child: _HeaderBar(
-                      onClose: () {
-                        Navigator.of(context).pop();
-                      },
+                      onClose: () => Navigator.of(context).pop(),
                       flashMode: state.flashMode,
                       onFlashToggle: _onToggleFlash,
                     ),
                   ),
-                  // Bottom capture button
                   Positioned(
                     bottom: AppSize.xl,
                     left: 0,
@@ -170,7 +251,7 @@ class _CreatePostStoryWidgetState extends State<CreatePostStoryWidget> {
                               width: 4,
                             ),
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Icon(
                               Icons.camera,
                               color: Colors.black87,
@@ -187,7 +268,12 @@ class _CreatePostStoryWidgetState extends State<CreatePostStoryWidget> {
           );
         }
 
-        // Initial loading/awaiting camera
+        // Show loading while not initialized or loading in state
+        if (state.loading || !_isCameraInitialized) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // Default fallback loading
         return const Center(child: CircularProgressIndicator());
       },
     );
