@@ -1,6 +1,1 @@
-class PaginationParams {
-  final String? cursor;
-  final int limit;
-
-  const PaginationParams({this.cursor, this.limit = 20});
-}
+export '../../features/comment/domain/value_objects/pagination_params.dart';

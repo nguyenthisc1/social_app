@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:social_app/features/post/presentation/screens/create_post_screen.dart';
+import 'package:social_app/presentation/post/screens/create_post_screen.dart';
 
-import '../../features/auth/presentation/bloc/auth_bloc.dart';
-import '../../features/auth/presentation/screens/login_screen.dart';
-import '../../features/auth/presentation/screens/register_screen.dart';
-import '../../features/auth/presentation/screens/splash_screen.dart';
-import '../../features/screens/presentation/pages/conversations_page.dart';
-import '../../features/screens/presentation/pages/home_page.dart';
-import '../../features/screens/presentation/pages/profile_page.dart';
-import '../../features/screens/presentation/pages/search_page.dart';
-import '../../features/screens/presentation/pages/shop_page.dart';
+import '../../presentation/auth/bloc/auth_bloc.dart';
+import '../../presentation/auth/pages/login_screen.dart';
+import '../../presentation/auth/pages/register_screen.dart';
+import '../../presentation/auth/pages/splash_screen.dart';
+import '../../presentation/conversation/pages/conversations_page.dart';
+import '../../presentation/home/pages/home_page.dart';
+import '../../presentation/profile/pages/profile_page.dart';
+import '../../presentation/search/pages/search_page.dart';
+import '../../presentation/shop/pages/shop_page.dart';
 import '../di/injection_container.dart';
 import '../widgets/root_screen.dart';
 import 'app_routes.dart';

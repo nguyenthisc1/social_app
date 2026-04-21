@@ -1,6 +1,6 @@
-import 'package:social_app/core/entities/pagination_param.dart';
 import 'package:social_app/core/network/base_response.dart';
 import 'package:social_app/features/comment/data/models/comment_model.dart';
+import 'package:social_app/features/comment/domain/value_objects/pagination_params.dart';
 
 abstract class CommentRemoteDataSource {
   Future<BaseResponse<CommentModel>> createComment({

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:social_app/core/entities/author_entity.dart';
 import 'package:social_app/core/utils/date_formatter.dart';
+import 'package:social_app/features/post/domain/entities/author_entity.dart';
 
 class PostModel extends Equatable {
   final String id;
