@@ -1,9 +1,7 @@
 import '../../data/models/user_model.dart';
 import '../entities/user.dart';
 
-/// Mapper class to convert between UserModel and User entity
 class UserMapper {
-  /// Convert UserModel to User entity
   static User fromModel(UserModel model) {
     return User(
       id: model.id,
@@ -18,7 +16,6 @@ class UserMapper {
     );
   }
 
-  /// Convert User entity to UserModel
   static UserModel toModel(User entity) {
     return UserModel(
       id: entity.id,
@@ -33,12 +30,10 @@ class UserMapper {
     );
   }
 
-  /// Convert list of UserModels to list of User entities
   static List<User> fromModelList(List<UserModel> models) {
     return models.map((model) => fromModel(model)).toList();
   }
 
-  /// Convert list of User entities to list of UserModels
   static List<UserModel> toModelList(List<User> entities) {
     return entities.map((entity) => toModel(entity)).toList();
   }

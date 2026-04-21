@@ -83,7 +83,6 @@ lib/
 │       ├── mappers/               # Model ↔ Entity conversion
 │       ├── repositories/          # Abstract repository interfaces
 │       └── usecases/              # Single-action business logic
-│       └── failures/              # failures
 │       └── value_objects/         # value objects
 ├── presentation/<area>/           # UI layer per area
 │   ├── bloc/                      # BLoC classes
