@@ -1,5 +1,5 @@
-import '../../data/models/auth_tokens_model.dart';
-import '../entities/auth_tokens.dart';
+import '../models/auth_tokens_model.dart';
+import '../../domain/entities/auth_tokens.dart';
 
 class AuthTokensMapper {
   static AuthTokens fromModel(AuthTokensModel model) {

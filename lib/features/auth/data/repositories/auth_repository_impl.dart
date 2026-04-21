@@ -1,14 +1,15 @@
 import 'package:dartz/dartz.dart';
+import 'package:social_app/features/auth/data/datasources/auth_remote_data_source.dart';
+
 import '../../../../core/core.dart';
-import '../../domain/entities/user.dart';
 import '../../domain/entities/auth_tokens.dart';
+import '../../domain/entities/user.dart';
+import '../mappers/auth_tokens_mapper.dart';
+import '../mappers/user_mapper.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../domain/mappers/user_mapper.dart';
-import '../../domain/mappers/auth_tokens_mapper.dart';
-import '../datasources/auth_remote_data_source.dart';
 import '../datasources/auth_local_data_source.dart';
-import '../models/user_model.dart';
 import '../models/auth_tokens_model.dart';
+import '../models/user_model.dart';
 
 /// Implementation of AuthRepository
 class AuthRepositoryImpl implements AuthRepository {
