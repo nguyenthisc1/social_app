@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:social_app/core/core.dart';
-import 'package:social_app/presentation/post/bloc/create_post_story_bloc.dart';
-import 'package:social_app/presentation/post/widgets/create_post/create_post_news_widget.dart';
-import 'package:social_app/presentation/post/widgets/create_post/create_post_story_widget.dart';
+import 'package:social_app/presentations/post/bloc/create_post_story_bloc.dart';
+import 'package:social_app/presentations/post/widgets/create_post/create_post_news_widget.dart';
+import 'package:social_app/presentations/post/widgets/create_post/create_post_story_widget.dart';
 
 class CreatePostWidget extends StatefulWidget {
   const CreatePostWidget({super.key});

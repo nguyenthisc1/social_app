@@ -4,7 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/core.dart';
 import 'core/l10n/app_localizations.dart';
-import 'presentation/auth/bloc/auth_bloc.dart';
+import 'presentations/auth/bloc/auth_bloc.dart';
 
 void main() async {
   // Ensure Flutter is initialized

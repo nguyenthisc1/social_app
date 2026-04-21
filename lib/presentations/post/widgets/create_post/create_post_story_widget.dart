@@ -4,7 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/core/core.dart';
-import 'package:social_app/presentation/post/bloc/create_post_story_bloc.dart';
+import 'package:social_app/presentations/post/bloc/create_post_story_bloc.dart';
 
 class CreatePostStoryWidget extends StatefulWidget {
   const CreatePostStoryWidget({super.key});
