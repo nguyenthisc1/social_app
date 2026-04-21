@@ -1,5 +1,5 @@
-import '../models/user_model.dart';
-import '../../domain/entities/user.dart';
+import '../../../user/data/models/user_model.dart';
+import '../../../user/domain/entites/user.dart';
 
 class UserMapper {
   static User fromModel(UserModel model) {

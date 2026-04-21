@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/core.dart';
-import '../entities/user.dart';
+import '../../../user/domain/entites/user.dart';
 import '../repositories/auth_repository.dart';
 
 /// Use case to get current authenticated user

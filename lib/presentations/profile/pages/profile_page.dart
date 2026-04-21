@@ -30,7 +30,7 @@ class ProfilePage extends StatelessWidget {
                               theme.colorScheme.surfaceContainerHighest,
                           child: ClipOval(
                             child: Image.network(
-                              user?.avatarUrl! ?? '',
+                              user?.avatarUrl ?? '',
                               width: 80,
                               height: 80,
                               fit: BoxFit.cover,

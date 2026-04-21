@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:social_app/core/services/firebase/firebase_option.dart';
 
 class FirebaseService {
   FirebaseService._();
@@ -8,6 +9,8 @@ class FirebaseService {
       return Firebase.app();
     }
 
-    return Firebase.initializeApp();
+    return Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
 }

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:social_app/core/errors/exceptions.dart';
 import 'package:social_app/core/network/base_response.dart';
 import 'package:social_app/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:social_app/features/auth/data/models/user_model.dart';
+import 'package:social_app/features/user/data/models/user_model.dart';
 
 class AuthFirebaseDataSource implements AuthRemoteDataSource {
   AuthFirebaseDataSource({

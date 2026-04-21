@@ -1,5 +1,5 @@
 import 'package:social_app/core/network/base_response.dart';
-import 'package:social_app/features/auth/data/models/user_model.dart';
+import 'package:social_app/features/user/data/models/user_model.dart';
 
 abstract interface class AuthRemoteDataSource {
   /// Login with email and password
