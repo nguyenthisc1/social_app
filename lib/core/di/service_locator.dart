@@ -1,7 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_app/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/auth_firebase_data_source.dart';
 import 'package:social_app/features/post/data/datasources/post_local_data_source.dart';
 import 'package:social_app/features/post/data/datasources/post_remote_data_source.dart';
 import 'package:social_app/features/post/data/repositories/post_repository_impl.dart';
@@ -15,7 +21,6 @@ import 'package:social_app/features/post/domain/usecases/update_post_usecase.dar
 import 'package:social_app/presentations/post/bloc/post_bloc.dart';
 
 import 'package:social_app/features/auth/data/datasources/auth_local_data_source.dart';
-import 'package:social_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:social_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:social_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:social_app/features/auth/domain/usecases/check_auth_status_usecase.dart';
@@ -49,6 +54,14 @@ Future<void> initializeDependencies() async {
   // Connectivity
   sl.registerLazySingleton<Connectivity>(() => Connectivity());
 
+  // Firebase
+  sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+  sl.registerLazySingleton<FirebaseFirestore>(
+    () => FirebaseFirestore.instance,
+  );
+  sl.registerLazySingleton<FirebaseStorage>(() => FirebaseStorage.instance);
+  sl.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
+
   // ============================================================================
   // Core Dependencies
   // ============================================================================
@@ -80,7 +93,10 @@ Future<void> initializeDependencies() async {
 
   // Auth Data Sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(apiClient: sl()),
+    () => AuthFirebaseDataSource(
+      firebaseAuth: sl<FirebaseAuth>(),
+      firestore: sl<FirebaseFirestore>(),
+    ),
   );
 
   sl.registerLazySingleton<AuthLocalDataSource>(

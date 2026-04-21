@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:social_app/core/services/firebase/firebase_service.dart';
 
 import 'core/core.dart';
 import 'core/l10n/app_localizations.dart';
@@ -9,7 +10,7 @@ import 'presentations/auth/bloc/auth_bloc.dart';
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
-
+  await FirebaseService.initialize();
   await InjectionContainer.init();
 
   runApp(const MyApp());
