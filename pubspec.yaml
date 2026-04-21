@@ -51,6 +51,7 @@ dependencies:
   # Network & API
   http: ^1.6.0
   connectivity_plus: ^7.0.0
+  crypto: ^3.0.7
   
   # Date & Time
   intl: ^0.20.1
