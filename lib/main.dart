@@ -10,8 +10,8 @@ import 'presentations/auth/bloc/auth_bloc.dart';
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
-  await FirebaseService.initialize();
   await InjectionContainer.init();
+  await FirebaseService.initialize();
 
   runApp(const MyApp());
 }
