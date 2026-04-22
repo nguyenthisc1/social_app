@@ -1,7 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:social_app/core/core.dart';
+import 'package:social_app/core/services/firebase/firebase_seed_service.dart';
+import 'package:social_app/core/utils/extensions.dart';
 
 class RootScreen extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -41,6 +45,12 @@ class RootScreen extends StatelessWidget {
           onPressed: () => context.push(AppRoutes.createPost),
         ),
         actions: [
+          if (kDebugMode)
+            IconButton(
+              icon: const Icon(LucideIcons.databaseZap, size: AppSize.icon),
+              tooltip: 'Seed sample chat data',
+              onPressed: () => _seedSampleData(context),
+            ),
           IconButton(
             icon: const Icon(LucideIcons.heart, size: AppSize.icon),
             onPressed: () {},
@@ -111,5 +121,16 @@ class RootScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _seedSampleData(BuildContext context) async {
+    try {
+      await sl<FirebaseSeedService>().seedAllIfEmpty();
+      final projectId = Firebase.app().options.projectId;
+      // ignore: use_build_context_synchronously
+      context.showSnackBar('Seed completed on project: $projectId');
+    } catch (error) {
+      context.showSnackBar('Seed failed: $error');
+    }
   }
 }

@@ -8,7 +8,7 @@ import '../../domain/entities/auth_tokens.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_data_source.dart';
 import '../mappers/auth_tokens_mapper.dart';
-import '../mappers/user_mapper.dart';
+import '../../../user/data/mappers/user_mapper.dart';
 import '../models/auth_tokens_model.dart';
 
 /// Implementation of AuthRepository
@@ -108,7 +108,7 @@ class AuthRepositoryImpl implements AuthRepository {
       await localDataSource.cacheUser(userModel);
       await localDataSource.cacheTokens(tokensModel);
 
-      return Right(UserMapper.fromModel(userModel));
+      return Right(UserMapper.toEntity(userModel));
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
@@ -158,7 +158,7 @@ class AuthRepositoryImpl implements AuthRepository {
       await localDataSource.cacheUser(userModel);
       await localDataSource.cacheTokens(tokensModel);
 
-      return Right(UserMapper.fromModel(userModel));
+      return Right(UserMapper.toEntity(userModel));
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
@@ -211,13 +211,13 @@ class AuthRepositoryImpl implements AuthRepository {
             final userModel = response.data;
             if (userModel != null) {
               await localDataSource.cacheUser(userModel);
-              return Right(UserMapper.fromModel(userModel));
+              return Right(UserMapper.toEntity(userModel));
             }
           } catch (_) {
-            return Right(UserMapper.fromModel(cachedUser));
+            return Right(UserMapper.toEntity(cachedUser));
           }
         }
-        return Right(UserMapper.fromModel(cachedUser));
+        return Right(UserMapper.toEntity(cachedUser));
       }
 
       if (!await networkInfo.isConnected) {
@@ -237,7 +237,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       await localDataSource.cacheUser(userModel);
-      return Right(UserMapper.fromModel(userModel));
+      return Right(UserMapper.toEntity(userModel));
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
@@ -339,7 +339,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       await localDataSource.cacheUser(userModel);
-      return Right(UserMapper.fromModel(userModel));
+      return Right(UserMapper.toEntity(userModel));
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
