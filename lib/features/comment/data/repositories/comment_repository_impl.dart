@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:social_app/core/core.dart';
-import 'package:social_app/core/entities/pagination_param.dart';
 import 'package:social_app/core/network/base_response.dart';
 import 'package:social_app/features/comment/data/datasources/comment_remote_data_source.dart';
 import 'package:social_app/features/comment/data/models/comment_model.dart';
 import 'package:social_app/features/comment/domain/entities/comment_entity.dart';
 import 'package:social_app/features/comment/domain/mappers/comment_mapper.dart';
 import 'package:social_app/features/comment/domain/repositories/comment_repository.dart';
+import 'package:social_app/features/comment/domain/value_objects/pagination_params.dart';
 
 class CommentRepositoryImpl extends CommentRepository {
   final CommentRemoteDataSource remote;

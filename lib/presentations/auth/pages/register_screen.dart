@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:social_app/core/widgets/custom_button.dart';
 import 'package:social_app/core/widgets/custom_text_field.dart';
 import '../../../core/core.dart';
-import '../bloc/auth_bloc.dart';
+import '../../../features/auth/application/bloc/auth_bloc.dart';
 
 /// Register screen
 class RegisterScreen extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/core/widgets/loading_indicator.dart';
 import '../../../core/core.dart';
-import '../bloc/auth_bloc.dart';
+import '../../../features/auth/application/bloc/auth_bloc.dart';
 
 /// Splash screen — dispatches auth check; router handles navigation.
 class SplashScreen extends StatefulWidget {
