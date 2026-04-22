@@ -1,28 +1,41 @@
+import 'package:social_app/features/user/data/datasources/user_remote_data_source.dart';
+import 'package:social_app/features/user/data/mappers/user_mapper.dart';
 import 'package:social_app/features/user/domain/entites/user.dart';
 import 'package:social_app/features/user/domain/repositories/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
+  final UserRemoteDataSource _remoteDataSource;
+
+  const UserRepositoryImpl({required UserRemoteDataSource remoteDataSource})
+    : _remoteDataSource = remoteDataSource;
+
   @override
-  Future<User?> getUserById(String id) {
-    // TODO: implement getUserById
-    throw UnimplementedError();
+  Future<User?> getUserById(String id) async {
+    final model = await _remoteDataSource.getUserById(id);
+
+    if (model != null) {
+      return UserMapper.toEntity(model);
+    }
+
+    return null;
   }
 
   @override
-  Future<User> getUserProfile() {
-    // TODO: implement getUserProfile
-    throw UnimplementedError();
+  Future<User> getUserProfile() async {
+    final model = await _remoteDataSource.getUserProfile();
+
+    return UserMapper.toEntity(model);
   }
 
   @override
-  Future<List<User>> searchUser(String search) {
-    // TODO: implement searchUser
-    throw UnimplementedError();
+  Future<List<User>> searchUser(String search) async {
+    final models = await _remoteDataSource.searchUser(search);
+
+    return models.map(UserMapper.toEntity).toList();
   }
 
   @override
   Future<User> updateUserProfile(User user) {
-    // TODO: implement updateUserProfile
     throw UnimplementedError();
   }
 }

@@ -1,8 +1,10 @@
-import '../../../user/data/models/user_model.dart';
-import '../../../user/domain/entites/user.dart';
+import '../models/user_model.dart';
+import '../../domain/entites/user.dart';
 
 class UserMapper {
-  static User fromModel(UserModel model) {
+  const UserMapper._();
+
+  static User toEntity(UserModel model) {
     return User(
       id: model.id,
       username: model.username,
@@ -30,8 +32,8 @@ class UserMapper {
     );
   }
 
-  static List<User> fromModelList(List<UserModel> models) {
-    return models.map((model) => fromModel(model)).toList();
+  static List<User> toEntityList(List<UserModel> models) {
+    return models.map((model) => toEntity(model)).toList();
   }
 
   static List<UserModel> toModelList(List<User> entities) {
