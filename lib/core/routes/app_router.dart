@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:social_app/core/services/firebase/firebase_seed_service.dart';
+import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
+import 'package:social_app/presentations/conversation/pages/conversation_detail_page.dart';
 import 'package:social_app/presentations/post/screens/create_post_screen.dart';
 
-import '../../presentations/auth/bloc/auth_bloc.dart';
+import '../../features/auth/application/bloc/auth_bloc.dart';
 import '../../presentations/auth/pages/login_screen.dart';
 import '../../presentations/auth/pages/register_screen.dart';
 import '../../presentations/auth/pages/splash_screen.dart';
@@ -105,7 +109,10 @@ class AppRouter {
               GoRoute(
                 path: AppRoutes.conversations,
                 name: 'conversations',
-                builder: (context, state) => const ConversationsPage(),
+                builder: (context, state) => BlocProvider(
+                  create: (context) => sl<ConversationCubit>()..loadConversations(),
+                  child: const ConversationsPage(),
+                ),
               ),
             ],
           ),
@@ -261,11 +268,8 @@ class AppRouter {
         name: 'chat',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
-          final userId = state.pathParameters['id']!;
-          return _PlaceholderScreen(
-            title: 'Chat',
-            subtitle: 'User ID: $userId',
-          );
+          final conversationId = state.pathParameters['id']!;
+          return ConversationDetailPage(conversationId: conversationId);
         },
       ),
     ],
@@ -304,7 +308,6 @@ class AppRouter {
     final authBloc = sl<AuthBloc>();
     final authState = authBloc.state;
     final location = state.matchedLocation;
-
     final isOnSplash = location == AppRoutes.splash;
     final isOnAuthRoute =
         location == AppRoutes.login ||

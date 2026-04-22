@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:social_app/core/services/firebase/firebase_service.dart';
+import 'package:social_app/features/user/application/cubit/user_cubit.dart';
 
 import 'core/core.dart';
 import 'core/l10n/app_localizations.dart';
-import 'presentations/auth/bloc/auth_bloc.dart';
+import 'features/auth/application/bloc/auth_bloc.dart';
 
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
-  await InjectionContainer.init();
   await FirebaseService.initialize();
+  await InjectionContainer.init();
 
   runApp(const MyApp());
 }
@@ -25,11 +26,17 @@ class MyApp extends StatelessWidget {
     final themeManager = sl<ThemeManager>();
     final localeManager = sl<LocaleManager>();
 
-    return BlocProvider(
-      create: (_) => sl<AuthBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(create: (_) => sl<AuthBloc>()),
+        BlocProvider<UserCubit>(create: (_) => sl<UserCubit>()..getProfile()),
+      ],
       child: AnimatedBuilder(
         animation: Listenable.merge([themeManager, localeManager]),
         builder: (context, _) {
+
+          print(context.read<UserCubit>().state.profile);
+
           return MaterialApp.router(
             localizationsDelegates: [
               AppLocalizations.delegate,

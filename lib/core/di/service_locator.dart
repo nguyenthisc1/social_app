@@ -17,6 +17,8 @@ import 'package:social_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:social_app/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:social_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:social_app/features/conversation/data/datasources/conversation_firebase_data_source_impl.dart';
+import 'package:social_app/features/conversation/data/datasources/conversation_local_data_source.dart';
+import 'package:social_app/features/conversation/data/datasources/conversation_local_data_source_impl.dart';
 import 'package:social_app/features/conversation/data/datasources/conversation_remote_data_source.dart';
 import 'package:social_app/features/conversation/data/repositories/conversation_repository_impl.dart';
 import 'package:social_app/features/conversation/domain/repositories/conversation_repository.dart';
@@ -30,6 +32,7 @@ import 'package:social_app/features/message/data/repositories/message_repository
 import 'package:social_app/features/message/domain/repositories/message_repository.dart';
 import 'package:social_app/features/message/domain/usecases/get_messages_by_conversation_usecase.dart';
 import 'package:social_app/features/message/domain/usecases/send_message_usecase.dart';
+import 'package:social_app/features/message/domain/usecases/watch_messages_by_conversation_usecase.dart';
 import 'package:social_app/features/post/data/datasources/post_local_data_source.dart';
 import 'package:social_app/features/post/data/datasources/post_remote_data_source.dart';
 import 'package:social_app/features/post/data/repositories/post_repository_impl.dart';
@@ -40,18 +43,22 @@ import 'package:social_app/features/post/domain/usecases/get_home_post_usecase.d
 import 'package:social_app/features/post/domain/usecases/get_post_usecase.dart';
 import 'package:social_app/features/post/domain/usecases/get_posts_by_user_usecase.dart';
 import 'package:social_app/features/post/domain/usecases/update_post_usecase.dart';
+import 'package:social_app/features/user/application/cubit/user_cubit.dart';
 import 'package:social_app/features/user/data/datasources/user_firebase_data_source.dart';
 import 'package:social_app/features/user/data/datasources/user_remote_data_source.dart';
 import 'package:social_app/features/user/data/repositories/user_repository_impl.dart';
 import 'package:social_app/features/user/domain/repositories/user_repository.dart';
 import 'package:social_app/features/user/domain/usecases/get_user_by_id_usecase.dart';
+import 'package:social_app/features/user/domain/usecases/get_user_profile_usecase.dart';
 import 'package:social_app/features/user/domain/usecases/search_user_profile_usecase.dart';
 import 'package:social_app/features/user/domain/usecases/update_user_profile_usecase.dart';
-import 'package:social_app/presentations/auth/bloc/auth_bloc.dart';
+import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
+import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/presentations/post/bloc/post_bloc.dart';
 
 import '../locale/locale_manager.dart';
 import '../network/network.dart';
+import '../services/firebase/firebase_seed_service.dart';
 import '../theme/theme.dart';
 import '../utils/constants.dart';
 
@@ -105,6 +112,11 @@ Future<void> initializeDependencies() async {
   // Locale Manager
   sl.registerLazySingleton<LocaleManager>(() => LocaleManager(sl()));
 
+  // Firebase Seed Service
+  sl.registerLazySingleton<FirebaseSeedService>(
+    () => FirebaseSeedService(firestore: sl<FirebaseFirestore>()),
+  );
+
   // ============================================================================
   // Data Sources
   // ============================================================================
@@ -144,6 +156,10 @@ Future<void> initializeDependencies() async {
         ConversationFirebaseDataSourceImpl(firestore: sl<FirebaseFirestore>()),
   );
 
+  sl.registerLazySingleton<ConversationLocalDataSource>(
+    () => ConversationLocalDataSourceImpl(),
+  );
+
   // Message Data Sources
   sl.registerLazySingleton<MessageRemoteDataSource>(
     () => MessageFirebaseDataSource(firestore: sl<FirebaseFirestore>()),
@@ -168,11 +184,17 @@ Future<void> initializeDependencies() async {
   );
 
   // User Repository
-  sl.registerLazySingleton<UserRepository>(() => sl<UserRepositoryImpl>());
+  sl.registerLazySingleton<UserRepository>(
+    () => UserRepositoryImpl(remoteDataSource: sl()),
+  );
 
   // Conversation Repository
   sl.registerLazySingleton<ConversationRepository>(
-    () => sl<ConversationRepositoryImpl>(),
+    () => ConversationRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
   );
 
   // Message Repository
@@ -201,7 +223,7 @@ Future<void> initializeDependencies() async {
 
   // User Use Cases
   sl.registerLazySingleton(() => GetUserProfileUsecase(sl<UserRepository>()));
-  sl.registerLazySingleton(() => GetUserProfileUsecase(sl<UserRepository>()));
+  sl.registerLazySingleton(() => GetUserByIdUsecase(sl<UserRepository>()));
   sl.registerLazySingleton(
     () => SearchUserProfileUsecase(sl<UserRepository>()),
   );
@@ -218,6 +240,7 @@ Future<void> initializeDependencies() async {
   // Message Use Cases
   sl.registerLazySingleton(() => GetMessagesByConversationUsecase(sl()));
   sl.registerLazySingleton(() => SendMessageUsecase(sl()));
+  sl.registerLazySingleton(() => WatchMessagesByConversationUseCase(sl()));
 
   // ============================================================================
   // State Management (BLoC/Cubit/Provider)
@@ -234,8 +257,18 @@ Future<void> initializeDependencies() async {
     ),
   );
 
-  // Post BLoC
+  // User Bloc
   sl.registerLazySingleton(
+    () => UserCubit(
+      getUserByIdUsecase: sl(),
+      getUserProfileUsecase: sl(),
+      searchUserProfileUsecase: sl(),
+      updateUserProfileUsecase: sl(),
+    ),
+  );
+
+  // Post BLoC
+  sl.registerFactory(
     () => PostBloc(
       createPostUsecase: sl(),
       getHomePostUsecase: sl(),
@@ -243,6 +276,16 @@ Future<void> initializeDependencies() async {
       getPostsByUserUsecase: sl(),
       updatePostUsecase: sl(),
       deletePostUsecase: sl(),
+    ),
+  );
+
+  // Conversation Cubit
+  sl.registerFactory(
+    () => ConversationCubit(
+      getConversationUsecase: sl(),
+      getConversationsUsecase: sl(),
+      createConversationUsecase: sl(),
+      updateConversationsUsecase: sl(),
     ),
   );
 }
