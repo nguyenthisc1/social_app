@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.thinguyen.social</string>
+	<string>com.thinguyen.socialApp</string>
 	<key>PROJECT_ID</key>
 	<string>trading-784d6</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:386045576669:ios:df95f210004bd114d72234</string>
+	<string>1:386045576669:ios:eea992b575073054d72234</string>
 </dict>
 </plist>

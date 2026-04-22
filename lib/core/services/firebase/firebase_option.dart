@@ -46,11 +46,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAXRYeITZf23MLq7WJyULxDcYmd9pmbGmA',
-    appId: '1:386045576669:ios:df95f210004bd114d72234',
+    appId: '1:386045576669:ios:eea992b575073054d72234',
     messagingSenderId: '386045576669',
     projectId: 'trading-784d6',
     storageBucket: 'trading-784d6.firebasestorage.app',
-    iosBundleId: 'com.thinguyen.social',
+    iosBundleId: 'com.thinguyen.socialApp',
     androidClientId: 'YOUR_IOS_ANDROID_CLIENT_ID',
   );
 }
