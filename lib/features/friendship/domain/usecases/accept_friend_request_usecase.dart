@@ -7,7 +7,7 @@ import 'package:social_app/features/friendship/domain/repositories/friendship_re
 class AcceptFriendRequestUsecase {
   final FriendshipRepository repository;
 
-  AcceptFriendRequestUsecase({required this.repository});
+  AcceptFriendRequestUsecase(this.repository);
 
   /// Accept a friend request
   Future<Either<Failure, FriendshipResponseEntity>> call({

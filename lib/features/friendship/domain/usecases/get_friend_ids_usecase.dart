@@ -6,7 +6,7 @@ import 'package:social_app/features/friendship/domain/repositories/friendship_re
 class GetFriendIdsUsecase {
   final FriendshipRepository repository;
 
-  GetFriendIdsUsecase({required this.repository});
+  GetFriendIdsUsecase(this.repository);
 
   /// Get list of friend IDs
   Future<Either<Failure, List<String>>> call() async {

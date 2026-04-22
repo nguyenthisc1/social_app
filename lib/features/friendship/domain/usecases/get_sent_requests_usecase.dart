@@ -7,7 +7,7 @@ import 'package:social_app/features/friendship/domain/repositories/friendship_re
 class GetSentRequestsUsecase {
   final FriendshipRepository repository;
 
-  GetSentRequestsUsecase({required this.repository});
+  GetSentRequestsUsecase(this.repository);
 
   /// Get all friend requests sent by current user
   Future<Either<Failure, List<FriendRequestEntity>>> call() async {

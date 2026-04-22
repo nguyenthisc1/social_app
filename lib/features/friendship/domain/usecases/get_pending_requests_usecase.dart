@@ -7,7 +7,7 @@ import 'package:social_app/features/friendship/domain/repositories/friendship_re
 class GetPendingRequestsUsecase {
   final FriendshipRepository repository;
 
-  GetPendingRequestsUsecase({required this.repository});
+  GetPendingRequestsUsecase(this.repository);
 
   /// Get all pending friend requests received by current user
   Future<Either<Failure, List<FriendRequestEntity>>> call() async {

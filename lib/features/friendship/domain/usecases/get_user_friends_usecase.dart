@@ -7,7 +7,7 @@ import 'package:social_app/features/friendship/domain/repositories/friendship_re
 class GetUserFriendsUsecase {
   final FriendshipRepository repository;
 
-  GetUserFriendsUsecase({required this.repository});
+  GetUserFriendsUsecase(this.repository);
 
   /// Get friends list for a specific user
   Future<Either<Failure, List<FriendEntity>>> call({

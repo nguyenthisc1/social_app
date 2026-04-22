@@ -7,16 +7,13 @@ import 'package:social_app/features/friendship/domain/repositories/friendship_re
 class CheckFriendshipStatusUsecase {
   final FriendshipRepository repository;
 
-  CheckFriendshipStatusUsecase({required this.repository});
+  CheckFriendshipStatusUsecase(this.repository);
 
   /// Check if two users are friends
   Future<Either<Failure, FriendshipStatusEntity>> call({
     required String userAId,
     required String userBId,
   }) async {
-    return await repository.isFriend(
-      userAId: userAId,
-      userBId: userBId,
-    );
+    return await repository.isFriend(userAId: userAId, userBId: userBId);
   }
 }
