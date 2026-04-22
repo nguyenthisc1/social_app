@@ -50,4 +50,19 @@ class MessageFirebaseDataSource implements MessageRemoteDataSource {
 
     return MessageModel.fromJson(data);
   }
+
+  @override
+  Stream<List<MessageModel>> watchMessagesByConversation(String conversationId) {
+    return _firestore
+        .collection('messages')
+        .where('conversationId', isEqualTo: conversationId)
+        .orderBy('createdAt')
+        .snapshots()
+        .map(
+          (querySnapshot) => querySnapshot.docs.map((doc) {
+            final data = {...doc.data(), 'id': doc.id};
+            return MessageModel.fromJson(data);
+          }).toList(),
+        );
+  }
 }

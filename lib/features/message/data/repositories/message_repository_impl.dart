@@ -39,4 +39,13 @@ class MessageRepositoryImpl implements MessageRepository {
 
     return MessageMapper.toEntity((model));
   }
+
+  @override
+  Stream<List<MessageEntity>> watchMessagesByConversation(
+    String conversationId,
+  ) {
+    final models = _remoteDataSource.watchMessagesByConversation(conversationId);
+
+    return models.map((models) => models.map(MessageMapper.toEntity).toList());
+  }
 }

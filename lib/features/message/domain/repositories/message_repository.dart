@@ -7,4 +7,5 @@ abstract interface class MessageRepository {
     required String currentUserId,
   });
   Future<List<MessageEntity>> getMessagesByConversation(String conversationId);
+  Stream<List<MessageEntity>> watchMessagesByConversation(String conversationId);
 }

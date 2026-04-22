@@ -7,4 +7,5 @@ abstract interface class MessageRemoteDataSource {
     required String currentUserId,
   });
   Future<List<MessageModel>> getMessagesByConversation(String conversationId);
+  Stream<List<MessageModel>> watchMessagesByConversation(String conversationId);
 }
