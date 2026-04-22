@@ -1,0 +1,32 @@
+import 'package:social_app/features/message/data/models/message_model.dart';
+import 'package:social_app/features/message/domain/entites/message_entity.dart';
+
+class MessageMapper {
+  const MessageMapper._();
+
+  static MessageEntity toEntity(MessageModel model) {
+    return MessageEntity(
+      id: model.id,
+      conversationId: model.conversationId,
+      createdAt: model.createdAt,
+      fileName: model.fileName,
+      fileUrl: model.fileUrl,
+      senderId: model.senderId,
+      type: model.type,
+      text: model.text,
+    );
+  }
+
+  static MessageModel toModel(MessageEntity entity) {
+    return MessageModel(
+      id: entity.id,
+      conversationId: entity.conversationId,
+      text: entity.text,
+      fileName: entity.fileName,
+      fileUrl: entity.fileUrl,
+      senderId: entity.senderId,
+      type: entity.type,
+      createdAt: entity.createdAt,
+    );
+  }
+}
