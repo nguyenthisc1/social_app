@@ -16,7 +16,9 @@ class MessageSeedData {
         fileUrl: null,
         senderId: UserSeedData.userOneId,
         type: 'text',
+        status: 'sent',
         createdAt: _timestamp(2026, 4, 21, 13, 2),
+        clientMessageId: '',
       ),
       MessageModel(
         id: 'message_alice_bob_2',
@@ -26,7 +28,9 @@ class MessageSeedData {
         fileUrl: null,
         senderId: UserSeedData.userTwoId,
         type: 'text',
+        status: 'sent',
         createdAt: _timestamp(2026, 4, 21, 13, 7),
+        clientMessageId: '',
       ),
       MessageModel(
         id: 'message_alice_bob_3',
@@ -36,7 +40,9 @@ class MessageSeedData {
         fileUrl: null,
         senderId: UserSeedData.userOneId,
         type: 'text',
+        status: 'sent',
         createdAt: _timestamp(2026, 4, 21, 13, 12),
+        clientMessageId: '',
       ),
       MessageModel(
         id: 'message_alice_bob_4',
@@ -46,7 +52,9 @@ class MessageSeedData {
         fileUrl: null,
         senderId: UserSeedData.userTwoId,
         type: 'text',
+        status: 'sent',
         createdAt: _timestamp(2026, 4, 21, 13, 18),
+        clientMessageId: '',
       ),
       MessageModel(
         id: 'message_alice_charlie_1',
@@ -56,7 +64,9 @@ class MessageSeedData {
         fileUrl: null,
         senderId: UserSeedData.userOneId,
         type: 'text',
+        status: 'sent',
         createdAt: _timestamp(2026, 4, 21, 19, 31),
+        clientMessageId: '',
       ),
       MessageModel(
         id: 'message_alice_charlie_2',
@@ -66,7 +76,9 @@ class MessageSeedData {
         fileUrl: null,
         senderId: UserSeedData.userThreeId,
         type: 'text',
+        status: 'sent',
         createdAt: _timestamp(2026, 4, 21, 19, 39),
+        clientMessageId: '',
       ),
       MessageModel(
         id: 'message_alice_charlie_3',
@@ -76,7 +88,9 @@ class MessageSeedData {
         fileUrl: null,
         senderId: UserSeedData.userOneId,
         type: 'text',
+        status: 'sent',
         createdAt: _timestamp(2026, 4, 21, 19, 45),
+        clientMessageId: '',
       ),
       MessageModel(
         id: 'message_alice_charlie_4',
@@ -86,7 +100,9 @@ class MessageSeedData {
         fileUrl: null,
         senderId: UserSeedData.userThreeId,
         type: 'text',
+        status: 'sent',
         createdAt: _timestamp(2026, 4, 21, 19, 52),
+        clientMessageId: '',
       ),
       MessageModel(
         id: 'message_bob_diana_1',
@@ -96,7 +112,9 @@ class MessageSeedData {
         fileUrl: null,
         senderId: UserSeedData.userTwoId,
         type: 'text',
+        status: 'sent',
         createdAt: _timestamp(2026, 4, 22, 7, 47),
+        clientMessageId: '',
       ),
       MessageModel(
         id: 'message_bob_diana_2',
@@ -106,14 +124,20 @@ class MessageSeedData {
         fileUrl: 'https://example.com/files/cover-preview.png',
         senderId: UserSeedData.userThreeId,
         type: 'image',
+        status: 'sent',
         createdAt: _timestamp(2026, 4, 22, 8, 12),
+        clientMessageId: '',
       ),
     ];
   }
 
-  static Timestamp _timestamp(int year, int month, int day, int hour, int minute) {
-    return Timestamp.fromDate(
-      DateTime(year, month, day, hour, minute),
-    );
+  static Timestamp _timestamp(
+    int year,
+    int month,
+    int day,
+    int hour,
+    int minute,
+  ) {
+    return Timestamp.fromDate(DateTime(year, month, day, hour, minute));
   }
 }

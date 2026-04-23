@@ -28,12 +28,12 @@ class MessageRepositoryImpl implements MessageRepository {
   @override
   Future<MessageEntity> sendMessage({
     required String conversationId,
-    required String text,
+    required MessageEntity message,
     required String currentUserId,
   }) async {
     final model = await _remoteDataSource.sendMessage(
       conversationId: conversationId,
-      text: text,
+      message: message,
       currentUserId: currentUserId,
     );
 
@@ -44,7 +44,9 @@ class MessageRepositoryImpl implements MessageRepository {
   Stream<List<MessageEntity>> watchMessagesByConversation(
     String conversationId,
   ) {
-    final models = _remoteDataSource.watchMessagesByConversation(conversationId);
+    final models = _remoteDataSource.watchMessagesByConversation(
+      conversationId,
+    );
 
     return models.map((models) => models.map(MessageMapper.toEntity).toList());
   }

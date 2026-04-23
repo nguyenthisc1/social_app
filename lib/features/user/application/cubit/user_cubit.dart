@@ -72,12 +72,7 @@ class UserCubit extends Cubit<UserState> {
       }
     }
 
-    emit(
-      state.copyWith(
-        clearError: true,
-        usersById: nextUsersById,
-      ),
-    );
+    emit(state.copyWith(clearError: true, usersById: nextUsersById));
   }
 
   User? getCachedUser(String id) {

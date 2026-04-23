@@ -8,12 +8,12 @@ class SendMessageUsecase {
 
   Future<MessageEntity> call({
     required String conversationId,
-    required String text,
+    required MessageEntity message,
     required String currentUserId,
   }) {
     return _messageRepository.sendMessage(
       conversationId: conversationId,
-      text: text,
+      message: message,
       currentUserId: currentUserId,
     );
   }

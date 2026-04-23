@@ -79,7 +79,6 @@ class StoryBloc extends Bloc<StoryEvent, StoryState> {
   }
 
   Future<void> _onOpenCamera(OpenCamera event, Emitter<StoryState> emit) async {
-      print("bloc open camera");
     emit(state.copyWith(loading: true, error: null));
     try {
       emit(state.copyWith(loading: false, openCamera: true));
