@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
 import 'package:social_app/features/auth/data/datasources/auth_firebase_data_source.dart';
 import 'package:social_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:social_app/features/auth/data/datasources/auth_remote_data_source.dart';
@@ -16,6 +17,8 @@ import 'package:social_app/features/auth/domain/usecases/get_current_user_usecas
 import 'package:social_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:social_app/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:social_app/features/auth/domain/usecases/register_usecase.dart';
+import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
+import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
 import 'package:social_app/features/conversation/data/datasources/conversation_firebase_data_source_impl.dart';
 import 'package:social_app/features/conversation/data/datasources/conversation_local_data_source.dart';
 import 'package:social_app/features/conversation/data/datasources/conversation_local_data_source_impl.dart';
@@ -26,6 +29,7 @@ import 'package:social_app/features/conversation/domain/usecases/create_conversa
 import 'package:social_app/features/conversation/domain/usecases/get_conversation_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/update_conversation_usecase.dart';
+import 'package:social_app/features/message/application/cubit/meesage_cubit.dart';
 import 'package:social_app/features/message/data/datasources/message_firebase_data_source.dart';
 import 'package:social_app/features/message/data/datasources/message_remote_data_source.dart';
 import 'package:social_app/features/message/data/repositories/message_repository_impl.dart';
@@ -52,8 +56,6 @@ import 'package:social_app/features/user/domain/usecases/get_user_by_id_usecase.
 import 'package:social_app/features/user/domain/usecases/get_user_profile_usecase.dart';
 import 'package:social_app/features/user/domain/usecases/search_user_profile_usecase.dart';
 import 'package:social_app/features/user/domain/usecases/update_user_profile_usecase.dart';
-import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
-import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/presentations/post/bloc/post_bloc.dart';
 
 import '../locale/locale_manager.dart';
@@ -199,7 +201,7 @@ Future<void> initializeDependencies() async {
 
   // Message Repository
   sl.registerLazySingleton<MessageRepository>(
-    () => sl<MessageRepositoryImpl>(),
+    () => MessageRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // ============================================================================
@@ -279,13 +281,26 @@ Future<void> initializeDependencies() async {
     ),
   );
 
-  // Conversation Cubit
-  sl.registerFactory(
+  // Conversations Cubit
+  sl.registerLazySingleton(
     () => ConversationCubit(
       getConversationUsecase: sl(),
       getConversationsUsecase: sl(),
       createConversationUsecase: sl(),
       updateConversationsUsecase: sl(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => ConversationDetailCubit(getConversationUsecase: sl()),
+  );
+
+  // Message Cubit
+  sl.registerFactory(
+    () => MessageCubit(
+      getMessagesByConversationUsecase: sl(),
+      watchMessagesByConversationUseCase: sl(),
+      sendMessageUsecase: sl(),
     ),
   );
 }
