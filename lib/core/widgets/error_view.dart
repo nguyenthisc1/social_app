@@ -26,44 +26,46 @@ class ErrorView extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSize.xs),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon ?? LucideIcons.triangleAlert,
-              size: 14,
-              color: colorScheme.error,
-            ),
-            const SizedBox(height: AppSize.md),
-            Text(
-              title,
-              style: AppTextStyles.headlineSmall.copyWith(
-                color: colorScheme.onSurface,
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSize.xs),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon ?? LucideIcons.triangleAlert,
+                size: 14,
+                color: colorScheme.error,
               ),
-              textAlign: TextAlign.center,
-            ),
-            if (message != null) ...[
-              const SizedBox(height: AppSize.sm),
+              const SizedBox(height: AppSize.md),
               Text(
-                message!,
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+                title,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  color: colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
               ),
+              if (message != null) ...[
+                const SizedBox(height: AppSize.sm),
+                Text(
+                  message!,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+              if (onRetry != null) ...[
+                const SizedBox(height: AppSize.xl),
+                OutlinedButton.icon(
+                  onPressed: onRetry,
+                  icon: const Icon(LucideIcons.refreshCw),
+                  label: Text(retryLabel),
+                ),
+              ],
             ],
-            if (onRetry != null) ...[
-              const SizedBox(height: AppSize.xl),
-              OutlinedButton.icon(
-                onPressed: onRetry,
-                icon: const Icon(LucideIcons.refreshCw),
-                label: Text(retryLabel),
-              ),
-            ],
-          ],
+          ),
         ),
       ),
     );
