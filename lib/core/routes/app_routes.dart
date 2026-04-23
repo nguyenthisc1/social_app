@@ -44,7 +44,6 @@ class AppRoutes {
   static const String about = '/settings/about';
 
   // Chat/Messages routes
-  static const String messages = '/messages';
   static const String chat = '/chat';
 
   // Other routes
