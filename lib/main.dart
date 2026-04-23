@@ -28,15 +28,15 @@ class MyApp extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(create: (_) => sl<AuthBloc>()),
-        BlocProvider<UserCubit>(create: (_) => sl<UserCubit>()..getProfile()),
+        BlocProvider<AuthBloc>(lazy: false, create: (_) => sl<AuthBloc>()),
+        BlocProvider<UserCubit>(
+          lazy: false,
+          create: (_) => sl<UserCubit>()..getProfile(),
+        ),
       ],
       child: AnimatedBuilder(
         animation: Listenable.merge([themeManager, localeManager]),
         builder: (context, _) {
-
-          print(context.read<UserCubit>().state.profile);
-
           return MaterialApp.router(
             localizationsDelegates: [
               AppLocalizations.delegate,
