@@ -33,4 +33,26 @@ class ConversationEntity extends Equatable {
     unreadCountMap,
     createdAt,
   ];
+
+  ConversationEntity copyWith({
+    String? id,
+    List<String>? memberIds,
+    String? lastMessage,
+    Timestamp? lastMessageAt,
+    String? lastMessageType,
+    String? lastSenderId,
+    Map<String, int>? unreadCountMap,
+    Timestamp? createdAt,
+  }) {
+    return ConversationEntity(
+      id: id ?? this.id,
+      memberIds: memberIds ?? this.memberIds,
+      lastMessage: lastMessage ?? this.lastMessage,
+      lastMessageAt: lastMessageAt ?? this.lastMessageAt,
+      lastMessageType: lastMessageType ?? this.lastMessageType,
+      lastSenderId: lastSenderId ?? this.lastSenderId,
+      unreadCountMap: unreadCountMap ?? this.unreadCountMap,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

@@ -14,8 +14,6 @@ class ConversationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return BlocConsumer<ConversationCubit, ConversationState>(
       listener: (context, state) {
         if (state.errorMessage != null) {
@@ -40,13 +38,13 @@ class ConversationsPage extends StatelessWidget {
           separatorBuilder: (_, _) => Divider(
             height: 1,
             indent: 76,
-            color: theme.colorScheme.outline.withAlpha(30),
+            color: context.colorScheme.outline.withAlpha(30),
           ),
           itemBuilder: (context, index) {
             final conversation = state.conversations[index];
-            final otherUserId = conversation.memberIds.where(
-              (id) => id != state.currentUserId,
-            ).firstOrNull;
+            final otherUserId = conversation.memberIds
+                .where((id) => id != state.currentUserId)
+                .firstOrNull;
             final otherUser = otherUserId == null
                 ? null
                 : userState.usersById[otherUserId];
@@ -65,15 +63,12 @@ class ConversationsPage extends StatelessWidget {
               ),
               leading: CircleAvatar(
                 radius: 26,
-                backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                child: Text(
-                  avatarLabel,
-                  style: theme.textTheme.titleMedium,
-                ),
+                backgroundColor: context.colorScheme.surfaceContainerHighest,
+                child: Text(avatarLabel, style: context.textTheme.titleMedium),
               ),
               title: Text(
                 title,
-                style: theme.textTheme.titleSmall?.copyWith(
+                style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: isUnread ? FontWeight.w700 : FontWeight.w500,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -82,10 +77,10 @@ class ConversationsPage extends StatelessWidget {
                 conversation.lastMessage ?? '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodySmall?.copyWith(
+                style: context.textTheme.bodySmall?.copyWith(
                   color: isUnread
-                      ? theme.colorScheme.onSurface
-                      : theme.colorScheme.outline,
+                      ? context.colorScheme.onSurface
+                      : context.colorScheme.outline,
                   fontWeight: isUnread ? FontWeight.w500 : FontWeight.w400,
                 ),
               ),
@@ -97,9 +92,11 @@ class ConversationsPage extends StatelessWidget {
                   Text(
                     conversation.lastMessageAt == null
                         ? ''
-                        : _formatMessageTime(conversation.lastMessageAt!.toDate()),
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.outline,
+                        : _formatMessageTime(
+                            conversation.lastMessageAt!.toDate(),
+                          ),
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colorScheme.outline,
                     ),
                   ),
                   if (isUnread) ...[
@@ -109,7 +106,7 @@ class ConversationsPage extends StatelessWidget {
                       height: 8,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: theme.colorScheme.primary,
+                        color: context.colorScheme.primary,
                       ),
                     ),
                   ],
