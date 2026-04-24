@@ -48,6 +48,7 @@ class ConversationsPage extends StatelessWidget {
             final otherUser = otherUserId == null
                 ? null
                 : userState.usersById[otherUserId];
+                print(otherUser);
             final title = otherUser?.username ?? otherUserId ?? 'Unknown user';
             final avatarLabel = title.isNotEmpty
                 ? title.characters.first.toUpperCase()
@@ -74,7 +75,9 @@ class ConversationsPage extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               subtitle: Text(
-                conversation.lastMessage ?? '',
+                unreadCount > 1
+                    ? '$unreadCount new messages'
+                    : conversation.lastMessage ?? '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.textTheme.bodySmall?.copyWith(
