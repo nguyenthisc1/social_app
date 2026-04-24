@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
+import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart';
 import 'package:social_app/features/conversation/domain/usecases/create_conversation_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversation_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
@@ -92,6 +93,38 @@ class ConversationCubit extends Cubit<ConversationState> {
     } catch (error) {
       emit(state.copyWith(errorMessage: error.toString(), clearError: false));
     }
+  }
+
+  void updateLocalUnreadCountConversation(
+    String currentUserId,
+    ConversationEntity conversation,
+  ) {
+    try {
+      emit(
+        state.copyWith(
+          conversations: state.conversations.map((c) {
+            if (c.id == conversation.id) {
+              final updatedMap = Map<String, int>.from(c.unreadCountMap)
+                ..[currentUserId] = 0;
+              return c.copyWith(unreadCountMap: updatedMap);
+            }
+            return c;
+          }).toList(),
+        ),
+      );
+    } catch (error) {
+      emit(state.copyWith(errorMessage: error.toString(), clearError: false));
+    }
+  }
+
+  int getTotalUnreadCount(ConversationState state) {
+    if (state.currentUserId.isEmpty) return 0;
+
+    return state.conversations.fold<int>(
+      0,
+      (total, conversation) =>
+          total + (conversation.unreadCountMap[state.currentUserId] ?? 0),
+    );
   }
 
   void clear() {

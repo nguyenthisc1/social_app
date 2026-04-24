@@ -48,8 +48,9 @@ class ConversationRepositoryImpl implements ConversationRepository {
   @override
   Future<ConversationEntity> updateConversation(
     ConversationEntity conversation,
-  ) {
-    // TODO: implement updateConversation
-    throw UnimplementedError();
+  ) async {
+    final model = await _remoteDataSource.updateConversation(conversation);
+
+    return ConversationMapper.toEntity(model);
   }
 }
