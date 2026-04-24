@@ -60,6 +60,9 @@ dependencies:
   shared_preferences: ^2.3.5
   unique_device_identifier: ^2.0.4
   hive: ^2.2.3
+
+  # Path
+  path_provider: ^2.1.5
   
   # UI
   google_fonts: ^6.2.1
