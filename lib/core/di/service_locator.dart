@@ -4,9 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
 import 'package:social_app/features/auth/data/datasources/local/shared-preferences/auth_preferences_local_data_source.dart';
@@ -34,6 +32,8 @@ import 'package:social_app/features/conversation/domain/usecases/get_conversatio
 import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/update_conversation_usecase.dart';
 import 'package:social_app/features/message/application/cubit/meesage_cubit.dart';
+import 'package:social_app/features/message/data/datasources/local/hive/message_hive_local_data_source.dart';
+import 'package:social_app/features/message/data/datasources/local/message_local_data_source.dart';
 import 'package:social_app/features/message/data/datasources/remote/firebase/message_firebase_data_source.dart';
 import 'package:social_app/features/message/data/datasources/remote/message_remote_data_source.dart';
 import 'package:social_app/features/message/data/repositories/message_repository_impl.dart';
@@ -89,13 +89,6 @@ Future<void> initializeDependencies() async {
   final sharedPreferences = await SharedPreferences.getInstance();
 
   sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
-
-  // Hive
-  // sl.registerLazySingleton<Hive>()
-  final appDocumentDirectory = await path_provider
-      .getApplicationDocumentsDirectory();
-  Hive.init(appDocumentDirectory.path);
-  // No need to inject Hive as a singleton.
 
   // HTTP Client
   sl.registerLazySingleton<http.Client>(() => http.Client());
@@ -189,6 +182,10 @@ Future<void> initializeDependencies() async {
     () => MessageFirebaseDataSource(firestore: sl<FirebaseFirestore>()),
   );
 
+  sl.registerLazySingleton<MessageLocalDataSource>(
+    () => MessageHiveLocalDataSource(),
+  );
+
   // Notification
   sl.registerLazySingleton<NotificationRemoteDataSource>(
     () => NotificationFirebaseDataSource(
@@ -225,13 +222,15 @@ Future<void> initializeDependencies() async {
     () => ConversationRepositoryImpl(
       remoteDataSource: sl(),
       localDataSource: sl(),
-      networkInfo: sl(),
     ),
   );
 
   // Message Repository
   sl.registerLazySingleton<MessageRepository>(
-    () => MessageRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
+    () => MessageRepositoryImpl(
+      localDataSource: sl(),
+      remoteDataSource: sl(),
+    ),
   );
 
   // Notification

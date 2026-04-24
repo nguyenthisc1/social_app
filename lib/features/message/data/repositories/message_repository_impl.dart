@@ -1,4 +1,6 @@
-import 'package:social_app/core/core.dart';
+import 'dart:async';
+
+import 'package:social_app/features/message/data/datasources/local/message_local_data_source.dart';
 import 'package:social_app/features/message/data/datasources/remote/message_remote_data_source.dart';
 import 'package:social_app/features/message/data/mappers/message_mapper.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
@@ -6,23 +8,30 @@ import 'package:social_app/features/message/domain/repositories/message_reposito
 
 class MessageRepositoryImpl implements MessageRepository {
   const MessageRepositoryImpl({
+    required MessageLocalDataSource localDataSource,
     required MessageRemoteDataSource remoteDataSource,
-    required NetworkInfo networkInfo,
-  }) : _remoteDataSource = remoteDataSource,
-       _networkInfo = networkInfo;
+  }) : _localDataSource = localDataSource,
+       _remoteDataSource = remoteDataSource;
 
+  final MessageLocalDataSource _localDataSource;
   final MessageRemoteDataSource _remoteDataSource;
-  final NetworkInfo _networkInfo;
 
   @override
   Future<List<MessageEntity>> getMessagesByConversation(
     String conversationId,
   ) async {
-    final models = await _remoteDataSource.getMessagesByConversation(
-      conversationId,
-    );
-
-    return models.map(MessageMapper.toEntity).toList();
+    try {
+      final models = await _remoteDataSource.getMessagesByConversation(
+        conversationId,
+      );
+      await _localDataSource.cacheMessages(conversationId, models);
+      return models.map(MessageMapper.toEntity).toList();
+    } catch (_) {
+      final cachedModels = await _localDataSource.getCachedMessages(
+        conversationId,
+      );
+      return cachedModels.map(MessageMapper.toEntity).toList();
+    }
   }
 
   @override
@@ -36,6 +45,7 @@ class MessageRepositoryImpl implements MessageRepository {
       message: message,
       currentUserId: currentUserId,
     );
+    await _localDataSource.upsertMessage(conversationId, model);
 
     return MessageMapper.toEntity((model));
   }
@@ -43,11 +53,19 @@ class MessageRepositoryImpl implements MessageRepository {
   @override
   Stream<List<MessageEntity>> watchMessagesByConversation(
     String conversationId,
-  ) {
-    final models = _remoteDataSource.watchMessagesByConversation(
+  ) async* {
+    final cachedModels = await _localDataSource.getCachedMessages(
       conversationId,
     );
+    if (cachedModels.isNotEmpty) {
+      yield cachedModels.map(MessageMapper.toEntity).toList();
+    }
 
-    return models.map((models) => models.map(MessageMapper.toEntity).toList());
+    await for (final models in _remoteDataSource.watchMessagesByConversation(
+      conversationId,
+    )) {
+      await _localDataSource.cacheMessages(conversationId, models);
+      yield models.map(MessageMapper.toEntity).toList();
+    }
   }
 }
