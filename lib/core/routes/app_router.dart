@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
 import 'package:social_app/features/message/application/cubit/meesage_cubit.dart';
 import 'package:social_app/presentations/conversation/pages/conversation_detail_page.dart';
@@ -110,11 +109,7 @@ class AppRouter {
               GoRoute(
                 path: AppRoutes.conversations,
                 name: 'conversations',
-                builder: (context, state) => BlocProvider(
-                  create: (context) =>
-                      sl<ConversationCubit>()..loadConversations(),
-                  child: const ConversationsPage(),
-                ),
+                builder: (context, state) => const ConversationsPage(),
               ),
             ],
           ),

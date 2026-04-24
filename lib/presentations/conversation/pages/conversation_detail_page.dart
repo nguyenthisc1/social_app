@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:social_app/core/di/injection_container.dart';
 import 'package:social_app/core/theme/app_size.dart';
 import 'package:social_app/core/utils/extensions.dart';
 import 'package:social_app/core/widgets/error_view.dart';
@@ -10,7 +9,6 @@ import 'package:social_app/core/widgets/loading_indicator.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_state.dart';
-import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart';
 import 'package:social_app/features/message/application/cubit/meesage_cubit.dart';
 import 'package:social_app/features/message/application/cubit/message_state.dart';
 import 'package:social_app/features/message/domain/entites/message_delivery_status.dart';
@@ -31,7 +29,8 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
   final TextEditingController _inputController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _hasText = false;
-  final currentUserId = sl<UserCubit>().state.profile?.id;
+
+  String? get currentUserId => context.read<UserCubit>().state.profile?.id;
 
   @override
   void initState() {
@@ -92,7 +91,9 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
       currentUserId: currentUserId!,
     );
 
-    sl<ConversationCubit>().updateNewMessageConversationLocal(newMessage);
+    context.read<ConversationCubit>().updateNewMessageConversationLocal(
+      newMessage,
+    );
 
     setState(() {
       _inputController.clear();

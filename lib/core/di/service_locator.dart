@@ -37,6 +37,14 @@ import 'package:social_app/features/message/domain/repositories/message_reposito
 import 'package:social_app/features/message/domain/usecases/get_messages_by_conversation_usecase.dart';
 import 'package:social_app/features/message/domain/usecases/send_message_usecase.dart';
 import 'package:social_app/features/message/domain/usecases/watch_messages_by_conversation_usecase.dart';
+import 'package:social_app/features/notification/application/cubit/notification_cubit.dart';
+import 'package:social_app/features/notification/data/datasources/notification_firebase_data_source_impl.dart';
+import 'package:social_app/features/notification/data/datasources/notification_remote_data_source.dart';
+import 'package:social_app/features/notification/data/repositories/notification_repository_impl.dart';
+import 'package:social_app/features/notification/domain/repositories/notification_repository.dart';
+import 'package:social_app/features/notification/domain/usecases/get_fcm_token_usecase.dart';
+import 'package:social_app/features/notification/domain/usecases/request_notification_permission_usecase.dart';
+import 'package:social_app/features/notification/domain/usecases/sync_fcm_token_usecase.dart';
 import 'package:social_app/features/post/data/datasources/post_local_data_source.dart';
 import 'package:social_app/features/post/data/datasources/post_remote_data_source.dart';
 import 'package:social_app/features/post/data/repositories/post_repository_impl.dart';
@@ -167,6 +175,14 @@ Future<void> initializeDependencies() async {
     () => MessageFirebaseDataSource(firestore: sl<FirebaseFirestore>()),
   );
 
+  // Notification
+  sl.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationFirebaseDataSource(
+      firestore: sl<FirebaseFirestore>(),
+      firebaseMessaging: sl<FirebaseMessaging>(),
+    ),
+  );
+
   // ============================================================================
   // Repositories
   // ============================================================================
@@ -202,6 +218,11 @@ Future<void> initializeDependencies() async {
   // Message Repository
   sl.registerLazySingleton<MessageRepository>(
     () => MessageRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
+  );
+
+  // Notification
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(remoteDataSource: sl()),
   );
 
   // ============================================================================
@@ -244,6 +265,11 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => SendMessageUsecase(sl()));
   sl.registerLazySingleton(() => WatchMessagesByConversationUseCase(sl()));
 
+  // Notification Use Cases
+  sl.registerLazySingleton(() => GetFcmTokenUsecase(sl()));
+  sl.registerLazySingleton(() => RequestNotificationPermissionUsecase(sl()));
+  sl.registerLazySingleton(() => SyncFcmTokenUsecase(sl()));
+
   // ============================================================================
   // State Management (BLoC/Cubit/Provider)
   // ============================================================================
@@ -259,8 +285,8 @@ Future<void> initializeDependencies() async {
     ),
   );
 
-  // User Bloc
-  sl.registerLazySingleton(
+  // User Cubit
+  sl.registerFactory(
     () => UserCubit(
       getUserByIdUsecase: sl(),
       getUserProfileUsecase: sl(),
@@ -282,7 +308,7 @@ Future<void> initializeDependencies() async {
   );
 
   // Conversations Cubit
-  sl.registerLazySingleton(
+  sl.registerFactory(
     () => ConversationCubit(
       getConversationUsecase: sl(),
       getConversationsUsecase: sl(),
@@ -301,6 +327,15 @@ Future<void> initializeDependencies() async {
       getMessagesByConversationUsecase: sl(),
       watchMessagesByConversationUseCase: sl(),
       sendMessageUsecase: sl(),
+    ),
+  );
+
+  // Notification Cubit
+  sl.registerFactory(
+    () => NotificationCubit(
+      getFcmTokenUsecase: sl(),
+      requestPermissionUsecase: sl(),
+      syncFcmTokenUsecase: sl(),
     ),
   );
 }

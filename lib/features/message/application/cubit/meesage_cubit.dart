@@ -119,4 +119,8 @@ class MessageCubit extends Cubit<MessageState> {
     await _subscription?.cancel();
     return super.close();
   }
+
+  void clear() {
+    emit(MessageState.initial());
+  }
 }

@@ -1,12 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/core/di/service_locator.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
 import 'package:social_app/features/conversation/domain/usecases/create_conversation_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversation_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/update_conversation_usecase.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
-import 'package:social_app/features/user/application/cubit/user_cubit.dart';
 
 class ConversationCubit extends Cubit<ConversationState> {
   final GetConversationUsecase _getConversationUsecase;
@@ -25,32 +23,26 @@ class ConversationCubit extends Cubit<ConversationState> {
        _updateConversationsUsecase = updateConversationsUsecase,
        super(ConversationState.initial());
 
-  Future<void> loadConversations() async {
-    final currentUserResult = sl<UserCubit>().state;
-
-    if (currentUserResult.profile != null) {
-      emit(state.copyWith(currentUserId: currentUserResult.profile!.id));
-      await getConversations();
-    }
+  Future<void> loadConversationsForUser(String currentUserId) async {
+    emit(state.copyWith(currentUserId: currentUserId));
+    await getConversations();
   }
 
   Future<void> getConversations() async {
+    if (state.currentUserId.isEmpty) {
+      emit(state.copyWith(isLoading: false));
+      return;
+    }
+
     emit(state.copyWith(isLoading: true));
     try {
-      final conversaions = await _getConversationsUsecase(state.currentUserId);
-      final otherUserIds = conversaions
-          .expand((conversation) => conversation.memberIds)
-          .where((id) => id != state.currentUserId)
-          .toSet()
-          .toList();
-
-      await sl<UserCubit>().preloadUsers(otherUserIds);
+      final conversations = await _getConversationsUsecase(state.currentUserId);
 
       emit(
         state.copyWith(
           isLoading: false,
           clearError: true,
-          conversations: conversaions,
+          conversations: conversations,
         ),
       );
     } catch (error) {
@@ -100,5 +92,9 @@ class ConversationCubit extends Cubit<ConversationState> {
     } catch (error) {
       emit(state.copyWith(errorMessage: error.toString(), clearError: false));
     }
+  }
+
+  void clear() {
+    emit(ConversationState.initial());
   }
 }

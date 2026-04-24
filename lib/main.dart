@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:social_app/core/services/firebase/firebase_service.dart';
-import 'package:social_app/features/user/application/cubit/user_cubit.dart';
 
 import 'core/core.dart';
 import 'core/l10n/app_localizations.dart';
+import 'core/widgets/session_scope.dart';
 import 'features/auth/application/bloc/auth_bloc.dart';
 
 void main() async {
@@ -29,15 +29,21 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(lazy: false, create: (_) => sl<AuthBloc>()),
-        BlocProvider<UserCubit>(
-          lazy: false,
-          create: (_) => sl<UserCubit>()..getProfile(),
-        ),
       ],
       child: AnimatedBuilder(
         animation: Listenable.merge([themeManager, localeManager]),
         builder: (context, _) {
           return MaterialApp.router(
+            builder: (context, child) {
+              final authState = context.watch<AuthBloc>().state;
+              final isAuthenticated = authState is AuthAuthenticated;
+
+              return SessionScope(
+                key: ValueKey('session-$isAuthenticated'),
+                isAuthenticated: isAuthenticated,
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
             localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,

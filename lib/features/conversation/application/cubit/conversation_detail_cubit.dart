@@ -32,4 +32,8 @@ class ConversationDetailCubit extends Cubit<ConversationDetailState> {
       );
     }
   }
+
+  void clear() {
+    emit(ConversationDetailState.initial());
+  }
 }
