@@ -5,5 +5,7 @@ abstract interface class UserLocalDataSource {
 
   Future<UserModel?> getCachedUser();
 
+  Future<List<UserModel>> getCachedUsersByIds(List<String> ids);
+
   Future<void> clearCachedUser();
 }
