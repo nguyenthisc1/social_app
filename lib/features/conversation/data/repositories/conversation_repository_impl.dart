@@ -1,4 +1,3 @@
-import 'package:social_app/core/network/network_info.dart';
 import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
 import 'package:social_app/features/conversation/data/datasources/remote/conversation_remote_data_source.dart';
 import 'package:social_app/features/conversation/data/mappers/conversation_mapper.dart';
@@ -8,15 +7,12 @@ import 'package:social_app/features/conversation/domain/repositories/conversatio
 class ConversationRepositoryImpl implements ConversationRepository {
   final ConversationRemoteDataSource _remoteDataSource;
   final ConversationLocalDataSource _localDataSource;
-  final NetworkInfo _networkInfo;
 
   const ConversationRepositoryImpl({
     required ConversationRemoteDataSource remoteDataSource,
     required ConversationLocalDataSource localDataSource,
-    required NetworkInfo networkInfo,
   }) : _remoteDataSource = remoteDataSource,
-       _localDataSource = localDataSource,
-       _networkInfo = networkInfo;
+       _localDataSource = localDataSource;
 
   @override
   Future<ConversationEntity> createConversation(List<String> memberIds) async {
@@ -29,9 +25,16 @@ class ConversationRepositoryImpl implements ConversationRepository {
   Future<List<ConversationEntity>> getConversations(
     String currentUserId,
   ) async {
-    final models = await _remoteDataSource.getConversations(currentUserId);
-
-    return models.map(ConversationMapper.toEntity).toList();
+    try {
+      final models = await _remoteDataSource.getConversations(currentUserId);
+      await _localDataSource.cacheConversations(currentUserId, models);
+      return models.map(ConversationMapper.toEntity).toList();
+    } catch (_) {
+      final cachedModels = await _localDataSource.getCachedConversations(
+        currentUserId,
+      );
+      return cachedModels.map(ConversationMapper.toEntity).toList();
+    }
   }
 
   @override
