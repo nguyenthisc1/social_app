@@ -1,5 +1,5 @@
 import 'package:social_app/core/core.dart';
-import 'package:social_app/features/message/data/datasources/message_remote_data_source.dart';
+import 'package:social_app/features/message/data/datasources/remote/message_remote_data_source.dart';
 import 'package:social_app/features/message/data/mappers/message_mapper.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
 import 'package:social_app/features/message/domain/repositories/message_repository.dart';

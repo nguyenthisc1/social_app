@@ -9,9 +9,10 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
-import 'package:social_app/features/auth/data/datasources/auth_firebase_data_source.dart';
-import 'package:social_app/features/auth/data/datasources/auth_local_data_source.dart';
-import 'package:social_app/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/local/shared-preferences/auth_preferences_local_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/remote/firebase/auth_firebase_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/remote/auth_remote_data_source.dart';
 import 'package:social_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:social_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:social_app/features/auth/domain/usecases/check_auth_status_usecase.dart';
@@ -33,16 +34,16 @@ import 'package:social_app/features/conversation/domain/usecases/get_conversatio
 import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/update_conversation_usecase.dart';
 import 'package:social_app/features/message/application/cubit/meesage_cubit.dart';
-import 'package:social_app/features/message/data/datasources/message_firebase_data_source.dart';
-import 'package:social_app/features/message/data/datasources/message_remote_data_source.dart';
+import 'package:social_app/features/message/data/datasources/remote/firebase/message_firebase_data_source.dart';
+import 'package:social_app/features/message/data/datasources/remote/message_remote_data_source.dart';
 import 'package:social_app/features/message/data/repositories/message_repository_impl.dart';
 import 'package:social_app/features/message/domain/repositories/message_repository.dart';
 import 'package:social_app/features/message/domain/usecases/get_messages_by_conversation_usecase.dart';
 import 'package:social_app/features/message/domain/usecases/send_message_usecase.dart';
 import 'package:social_app/features/message/domain/usecases/watch_messages_by_conversation_usecase.dart';
 import 'package:social_app/features/notification/application/cubit/notification_cubit.dart';
-import 'package:social_app/features/notification/data/datasources/notification_firebase_data_source_impl.dart';
-import 'package:social_app/features/notification/data/datasources/notification_remote_data_source.dart';
+import 'package:social_app/features/notification/data/datasources/remote/firebase/notification_firebase_data_source_impl.dart';
+import 'package:social_app/features/notification/data/datasources/remote/notification_remote_data_source.dart';
 import 'package:social_app/features/notification/data/repositories/notification_repository_impl.dart';
 import 'package:social_app/features/notification/domain/repositories/notification_repository.dart';
 import 'package:social_app/features/notification/domain/usecases/get_fcm_token_usecase.dart';
@@ -153,7 +154,7 @@ Future<void> initializeDependencies() async {
   );
 
   sl.registerLazySingleton<AuthLocalDataSource>(
-    () => AuthLocalDataSourceImpl(sharedPreferences: sl()),
+    () => AuthPreferencesLocalDataSource(sharedPreferences: sl()),
   );
 
   // Post Data Sources

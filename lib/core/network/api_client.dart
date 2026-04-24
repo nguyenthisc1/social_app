@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:social_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
 
 import '../errors/exceptions.dart';
 import '../utils/device_service.dart';

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:social_app/features/notification/data/datasources/notification_remote_data_source.dart';
+import 'package:social_app/features/notification/data/datasources/remote/notification_remote_data_source.dart';
 import 'package:social_app/features/notification/domain/notification_exeptions.dart';
 
 class NotificationFirebaseDataSource implements NotificationRemoteDataSource {

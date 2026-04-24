@@ -1,4 +1,4 @@
-import 'package:social_app/features/notification/data/datasources/notification_remote_data_source.dart';
+import 'package:social_app/features/notification/data/datasources/remote/notification_remote_data_source.dart';
 import 'package:social_app/features/notification/domain/repositories/notification_repository.dart';
 
 class NotificationRepositoryImpl implements NotificationRepository {

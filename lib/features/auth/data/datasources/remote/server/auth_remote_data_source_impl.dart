@@ -1,8 +1,8 @@
 import 'package:social_app/core/core.dart';
 import 'package:social_app/core/network/base_response.dart';
-import 'package:social_app/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/remote/auth_remote_data_source.dart';
 
-import '../../../user/data/models/user_model.dart';
+import '../../../../../user/data/models/user_model.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final ApiClient apiClient;

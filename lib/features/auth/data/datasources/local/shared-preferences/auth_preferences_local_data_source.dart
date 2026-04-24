@@ -1,29 +1,17 @@
 import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../user/data/models/user_model.dart';
-import '../models/auth_tokens_model.dart';
+import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
+import 'package:social_app/features/auth/data/models/auth_tokens_model.dart';
+import 'package:social_app/features/user/data/models/user_model.dart';
 
-/// Local data source for authentication
-abstract class AuthLocalDataSource {
-  Future<void> cacheUser(UserModel user);
-  Future<UserModel?> getCachedUser();
-  Future<void> clearCachedUser();
-
-  Future<void> cacheTokens(AuthTokensModel tokens);
-  Future<AuthTokensModel?> getCachedTokens();
-  Future<void> clearCachedTokens();
-
-  Future<void> clearAllData();
-}
-
-/// Implementation of AuthLocalDataSource
-class AuthLocalDataSourceImpl implements AuthLocalDataSource {
+class AuthPreferencesLocalDataSource implements AuthLocalDataSource {
   final SharedPreferences sharedPreferences;
 
   static const String _cachedUserKey = 'CACHED_USER';
   static const String _cachedTokensKey = 'CACHED_TOKENS';
 
-  AuthLocalDataSourceImpl({required this.sharedPreferences});
+  AuthPreferencesLocalDataSource({required this.sharedPreferences});
 
   @override
   Future<void> cacheUser(UserModel user) async {
@@ -75,10 +63,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<void> clearAllData() async {
-    await Future.wait([
-      clearCachedUser(),
-      clearCachedTokens(),
-    ]);
+    await Future.wait([clearCachedUser(), clearCachedTokens()]);
   }
 }
-

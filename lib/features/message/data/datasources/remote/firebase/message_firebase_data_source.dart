@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:social_app/features/message/data/datasources/message_remote_data_source.dart';
+import 'package:social_app/features/message/data/datasources/remote/message_remote_data_source.dart';
 import 'package:social_app/features/message/data/mappers/message_mapper.dart';
 import 'package:social_app/features/message/data/models/message_model.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
