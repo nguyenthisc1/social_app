@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:social_app/core/utils/validators.dart';
 import 'package:social_app/core/widgets/custom_button.dart';
 import 'package:social_app/core/widgets/custom_text_field.dart';
 

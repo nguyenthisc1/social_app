@@ -9,16 +9,58 @@ import 'package:social_app/features/conversation/application/cubit/conversation_
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
 import 'package:social_app/features/user/application/cubit/user_cubit.dart';
 
-class ConversationsPage extends StatelessWidget {
+class ConversationsPage extends StatefulWidget {
   const ConversationsPage({super.key});
+
+  @override
+  State<ConversationsPage> createState() => _ConversationsPageState();
+}
+
+class _ConversationsPageState extends State<ConversationsPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _preloadConversationUsers();
+    });
+  }
+
+  void _preloadConversationUsers() {
+    final userCubit = context.read<UserCubit>();
+    final conversationState = context.read<ConversationCubit>().state;
+    final currentUserId = userCubit.state.profile?.id;
+
+    if (currentUserId == null || conversationState.conversations.isEmpty) {
+      return;
+    }
+
+    final otherUserIds = conversationState.conversations
+        .expand((conversation) => conversation.memberIds)
+        .where((memberId) => memberId != currentUserId)
+        .toSet()
+        .toList();
+
+    if (otherUserIds.isNotEmpty) {
+      userCubit.preloadUsers(otherUserIds);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ConversationCubit, ConversationState>(
+      listenWhen: (previous, current) =>
+          previous.conversations != current.conversations ||
+          previous.errorMessage != current.errorMessage,
+
       listener: (context, state) {
-        if (state.errorMessage != null) {
+        if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
           context.showSnackBar(state.errorMessage!, isError: true);
+
+          print(state.errorMessage);
         }
+
+        _preloadConversationUsers();
       },
 
       builder: (context, state) {
@@ -42,13 +84,14 @@ class ConversationsPage extends StatelessWidget {
           ),
           itemBuilder: (context, index) {
             final conversation = state.conversations[index];
+
+            // Other User conversation
             final otherUserId = conversation.memberIds
                 .where((id) => id != state.currentUserId)
                 .firstOrNull;
             final otherUser = otherUserId == null
                 ? null
                 : userState.usersById[otherUserId];
-                print(otherUser);
             final title = otherUser?.username ?? otherUserId ?? 'Unknown user';
             final avatarLabel = title.isNotEmpty
                 ? title.characters.first.toUpperCase()

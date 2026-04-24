@@ -36,7 +36,10 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
   void initState() {
     super.initState();
     _inputController.addListener(_onInputChanged);
-    // WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => updateUnreadCountConversation(),
+    );
   }
 
   @override
@@ -104,6 +107,34 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
     // );
   }
 
+  void updateUnreadCountConversation() {
+    final conversationState = context.read<ConversationDetailCubit>().state;
+
+    if (currentUserId == null || conversationState.conversation == null) {
+      return;
+    }
+    print('state ${conversationState.currentUserId}');
+
+    final newUnreadCount = Map<String, int>.from(
+      conversationState.conversation!.unreadCountMap,
+    );
+
+    newUnreadCount[currentUserId!] = 0;
+
+    final updatedConversation = conversationState.conversation!.copyWith(
+      unreadCountMap: newUnreadCount,
+    );
+
+    context.read<ConversationDetailCubit>().updateUnreadCountConversation(
+      updatedConversation,
+    );
+
+    context.read<ConversationCubit>().updateLocalUnreadCountConversation(
+      currentUserId!,
+      updatedConversation,
+    );
+  }
+
   String _formatTime(DateTime dt) {
     final now = DateTime.now();
     final diff = now.difference(dt);
@@ -118,10 +149,17 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ConversationDetailCubit, ConversationDetailState>(
+      listenWhen: (previous, current) =>
+          previous.conversation?.id != current.conversation?.id ||
+          previous.currentUserId != current.currentUserId ||
+          previous.errorMessage != current.errorMessage,
+
       listener: (BuildContext context, state) {
         if (state.errorMessage != null) {
           context.showSnackBar(state.errorMessage!, isError: true);
         }
+
+        updateUnreadCountConversation();
       },
       builder: (BuildContext context, state) {
         if (state.isLoading) {
@@ -278,7 +316,6 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
       itemBuilder: (context, index) {
         final message = messages[index];
         final isMine = message.senderId == currentUserId;
-
         final isLastFromSender =
             index == messages.length - 1 ||
             messages[index + 1].senderId != message.senderId;
@@ -303,7 +340,8 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
             MessageBubbleWidget(
               message: message,
               isMine: isMine,
-              showAvatar: !isMine && isLastFromSender,
+              // showAvatar: !isMine && isLastFromSender,
+              showAvatar: !isMine,
               timeLabel: _formatTime(currentMessageDay),
             ),
           ],

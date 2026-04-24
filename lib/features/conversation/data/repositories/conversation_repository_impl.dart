@@ -1,6 +1,6 @@
 import 'package:social_app/core/network/network_info.dart';
-import 'package:social_app/features/conversation/data/datasources/conversation_local_data_source.dart';
-import 'package:social_app/features/conversation/data/datasources/conversation_remote_data_source.dart';
+import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
+import 'package:social_app/features/conversation/data/datasources/remote/conversation_remote_data_source.dart';
 import 'package:social_app/features/conversation/data/mappers/conversation_mapper.dart';
 import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart';
 import 'package:social_app/features/conversation/domain/repositories/conversation_repository.dart';
@@ -48,8 +48,9 @@ class ConversationRepositoryImpl implements ConversationRepository {
   @override
   Future<ConversationEntity> updateConversation(
     ConversationEntity conversation,
-  ) {
-    // TODO: implement updateConversation
-    throw UnimplementedError();
+  ) async {
+    final model = await _remoteDataSource.updateConversation(conversation);
+
+    return ConversationMapper.toEntity(model);
   }
 }

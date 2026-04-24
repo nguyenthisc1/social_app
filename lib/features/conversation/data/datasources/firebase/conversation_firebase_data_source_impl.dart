@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:social_app/features/conversation/data/datasources/conversation_remote_data_source.dart';
+import 'package:flutter/foundation.dart';
+import 'package:social_app/features/conversation/data/datasources/remote/conversation_remote_data_source.dart';
+import 'package:social_app/features/conversation/data/mappers/conversation_mapper.dart';
 import 'package:social_app/features/conversation/data/models/conversation_model.dart';
 import 'package:social_app/features/conversation/domain/conversation_exeptions.dart';
+import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart';
 
 class ConversationFirebaseDataSourceImpl
     implements ConversationRemoteDataSource {
@@ -64,23 +66,37 @@ class ConversationFirebaseDataSourceImpl
       final querySnapshot = await _firestore
           .collection('conversations')
           .where('memberIds', arrayContains: currentUserId)
-          .orderBy('lastMessageAt')
+          .orderBy('lastMessageAt', descending: true)
           .get();
-
-      debugPrint('$querySnapshot');
 
       return querySnapshot.docs.map((doc) {
         final data = {...doc.data(), 'id': doc.id};
         return ConversationModel.fromJson(data);
       }).toList();
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('$st');
+
       throw ConversationExeptions(message: 'Failed to get conversations: $e');
     }
   }
 
   @override
-  Future<ConversationModel> updateConversation() {
-    // TODO: implement updateConversation
-    throw UnimplementedError();
+  Future<ConversationModel> updateConversation(
+    ConversationEntity conversation,
+  ) async {
+    try {
+      final model = ConversationMapper.toModel(conversation);
+
+      final docRef = _firestore.collection('conversations').doc(model.id);
+
+      final data = model.toJson();
+      await docRef.update(data);
+
+      final updatedDoc = await docRef.get();
+      final updatedData = {...?updatedDoc.data(), 'id': updatedDoc.id};
+      return ConversationModel.fromJson(updatedData);
+    } catch (e) {
+      throw ConversationExeptions(message: 'Failed to update conversation: $e');
+    }
   }
 }

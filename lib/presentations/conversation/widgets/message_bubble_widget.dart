@@ -111,23 +111,25 @@ class MessageBubbleWidget extends StatelessWidget {
           LoadingIndicator(size: 10, strokeWidth: 1),
         ],
         const SizedBox(width: AppSize.md),
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSize.md,
-            vertical: AppSize.sm + 2,
-          ),
-          decoration: BoxDecoration(
-            color: isMine
-                ? theme.colorScheme.primary
-                : theme.colorScheme.surfaceContainerHigh,
-            borderRadius: _bubbleRadius(),
-          ),
-          child: Text(
-            message.text ?? '',
-            style: theme.textTheme.bodyMedium?.copyWith(
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSize.md,
+              vertical: AppSize.sm + 2,
+            ),
+            decoration: BoxDecoration(
               color: isMine
-                  ? theme.colorScheme.onPrimary
-                  : theme.colorScheme.onSurface,
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.surfaceContainerHigh,
+              borderRadius: _bubbleRadius(),
+            ),
+            child: Text(
+              message.text ?? '',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: isMine
+                    ? theme.colorScheme.onPrimary
+                    : theme.colorScheme.onSurface,
+              ),
             ),
           ),
         ),
