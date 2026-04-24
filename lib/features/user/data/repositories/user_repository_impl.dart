@@ -16,10 +16,17 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<User?> getUserById(String id) async {
-    final model = await _remoteDataSource.getUserById(id);
-
-    if (model != null) {
-      return UserMapper.toEntity(model);
+    try {
+      final model = await _remoteDataSource.getUserById(id);
+      if (model != null) {
+        await _localDataSource.cacheUser(model);
+        return UserMapper.toEntity(model);
+      }
+    } catch (_) {
+      final cachedUsers = await _localDataSource.getCachedUsersByIds([id]);
+      if (cachedUsers.isNotEmpty) {
+        return UserMapper.toEntity(cachedUsers.first);
+      }
     }
 
     return null;

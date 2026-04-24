@@ -6,7 +6,8 @@ import 'package:social_app/features/user/domain/user_exceptions.dart';
 class UserHiveLocalDataSource implements UserLocalDataSource {
   static const _kUserBox = 'user_box';
 
-  String _kUserKey() => 'user_key';
+  String _currentUserKey() => 'current_user_profile';
+  String _userByIdKey(String userId) => 'user_$userId';
 
   Future<Box<dynamic>> _openBox() async {
     return Hive.isBoxOpen(_kUserBox)
@@ -18,8 +19,33 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
   Future<void> cacheUser(UserModel user) async {
     try {
       final box = await _openBox();
+      final serializedUser = _serializeUser(user);
 
-      await box.put(_kUserKey(), _serializeUser(user));
+      await Future.wait([
+        box.put(_currentUserKey(), serializedUser),
+        box.put(_userByIdKey(user.id), serializedUser),
+      ]);
+    } catch (e) {
+      throw UserException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<UserModel>> getCachedUsersByIds(List<String> ids) async {
+    try {
+      final box = await _openBox();
+      final cachedUsers = <UserModel>[];
+
+      for (final id in ids.toSet()) {
+        final raw = box.get(_userByIdKey(id));
+        if (raw is Map) {
+          cachedUsers.add(
+            UserModel.fromJson(_deserializeUser(Map<String, dynamic>.from(raw))),
+          );
+        }
+      }
+
+      return cachedUsers;
     } catch (e) {
       throw UserException(message: e.toString());
     }
@@ -29,11 +55,11 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
   Future<UserModel?> getCachedUser() async {
     try {
       final box = await _openBox();
-      final raw = box.get(_kUserKey());
+      final raw = box.get(_currentUserKey());
 
       if (raw == null) return null;
 
-      return UserModel.fromJson(Map<String, dynamic>.from(raw));
+      return UserModel.fromJson(_deserializeUser(Map<String, dynamic>.from(raw)));
     } catch (e) {
       throw UserException(message: e.toString());
     }
@@ -43,7 +69,7 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
   Future<void> clearCachedUser() async {
     try {
       final box = await _openBox();
-      await box.delete(_kUserKey());
+      await box.delete(_currentUserKey());
     } catch (e) {
       throw UserException(message: e.toString());
     }
