@@ -337,11 +337,19 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
   ) {
     switch (exception.code) {
       case 'invalid-email':
+        return ValidationException(
+          message: 'Email format is invalid.',
+          errors: {'code': exception.code},
+        );
       case 'invalid-credential':
       case 'wrong-password':
-      case 'weak-password':
       case 'missing-password':
       case 'user-not-found':
+        return ValidationException(
+          message: 'Email or password is incorrect.',
+          errors: {'code': exception.code},
+        );
+      case 'weak-password':
       case 'email-already-in-use':
       case 'requires-recent-login':
       case 'expired-action-code':

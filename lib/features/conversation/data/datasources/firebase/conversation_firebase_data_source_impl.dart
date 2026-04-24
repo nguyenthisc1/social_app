@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:social_app/features/conversation/data/datasources/conversation_remote_data_source.dart';
+import 'package:flutter/foundation.dart';
+import 'package:social_app/features/conversation/data/datasources/remote/conversation_remote_data_source.dart';
 import 'package:social_app/features/conversation/data/mappers/conversation_mapper.dart';
 import 'package:social_app/features/conversation/data/models/conversation_model.dart';
 import 'package:social_app/features/conversation/domain/conversation_exeptions.dart';
@@ -65,14 +66,16 @@ class ConversationFirebaseDataSourceImpl
       final querySnapshot = await _firestore
           .collection('conversations')
           .where('memberIds', arrayContains: currentUserId)
-          .orderBy('lastMessageAt')
+          .orderBy('lastMessageAt', descending: true)
           .get();
 
       return querySnapshot.docs.map((doc) {
         final data = {...doc.data(), 'id': doc.id};
         return ConversationModel.fromJson(data);
       }).toList();
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('$st');
+
       throw ConversationExeptions(message: 'Failed to get conversations: $e');
     }
   }

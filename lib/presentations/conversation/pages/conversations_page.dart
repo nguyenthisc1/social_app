@@ -56,6 +56,8 @@ class _ConversationsPageState extends State<ConversationsPage> {
       listener: (context, state) {
         if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
           context.showSnackBar(state.errorMessage!, isError: true);
+
+          print(state.errorMessage);
         }
 
         _preloadConversationUsers();

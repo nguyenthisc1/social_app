@@ -316,7 +316,6 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
       itemBuilder: (context, index) {
         final message = messages[index];
         final isMine = message.senderId == currentUserId;
-
         final isLastFromSender =
             index == messages.length - 1 ||
             messages[index + 1].senderId != message.senderId;
@@ -341,7 +340,8 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
             MessageBubbleWidget(
               message: message,
               isMine: isMine,
-              showAvatar: !isMine && isLastFromSender,
+              // showAvatar: !isMine && isLastFromSender,
+              showAvatar: !isMine,
               timeLabel: _formatTime(currentMessageDay),
             ),
           ],
