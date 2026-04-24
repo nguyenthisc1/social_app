@@ -60,8 +60,10 @@ import 'package:social_app/features/post/domain/usecases/get_post_usecase.dart';
 import 'package:social_app/features/post/domain/usecases/get_posts_by_user_usecase.dart';
 import 'package:social_app/features/post/domain/usecases/update_post_usecase.dart';
 import 'package:social_app/features/user/application/cubit/user_cubit.dart';
-import 'package:social_app/features/user/data/datasources/user_firebase_data_source.dart';
-import 'package:social_app/features/user/data/datasources/user_remote_data_source.dart';
+import 'package:social_app/features/user/data/datasources/local/hive/user_hive_local_data_source.dart';
+import 'package:social_app/features/user/data/datasources/local/user_local_data_source.dart';
+import 'package:social_app/features/user/data/datasources/remote/firebase/user_firebase_data_source.dart';
+import 'package:social_app/features/user/data/datasources/remote/user_remote_data_source.dart';
 import 'package:social_app/features/user/data/repositories/user_repository_impl.dart';
 import 'package:social_app/features/user/domain/repositories/user_repository.dart';
 import 'package:social_app/features/user/domain/usecases/get_user_by_id_usecase.dart';
@@ -167,6 +169,10 @@ Future<void> initializeDependencies() async {
     ),
   );
 
+  sl.registerLazySingleton<UserLocalDataSource>(
+    () => UserHiveLocalDataSource(),
+  );
+
   // Conversation Data Sources
   sl.registerLazySingleton<ConversationRemoteDataSource>(
     () =>
@@ -214,7 +220,7 @@ Future<void> initializeDependencies() async {
 
   // User Repository
   sl.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(remoteDataSource: sl()),
+    () => UserRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
   );
 
   // Conversation Repository
