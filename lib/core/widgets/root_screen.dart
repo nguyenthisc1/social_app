@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:social_app/core/core.dart';
 import 'package:social_app/core/services/firebase/firebase_seed_service.dart';
 import 'package:social_app/core/utils/extensions.dart';
+import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 
 class RootScreen extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -18,6 +20,16 @@ class RootScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final index = navigationShell.currentIndex;
+    final unreadCount = context.select((ConversationCubit cubit) {
+      final state = cubit.state;
+      if (state.currentUserId.isEmpty) return 0;
+
+      return state.conversations.fold<int>(
+        0,
+        (total, conversation) =>
+            total + (conversation.unreadCountMap[state.currentUserId] ?? 0),
+      );
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -74,47 +86,64 @@ class RootScreen extends StatelessWidget {
         // Remove const, because we use non-const value (theme) in selectedIcon
         destinations: [
           NavigationDestination(
-            icon: Icon(LucideIcons.house, size: AppSize.icon),
-            selectedIcon: Icon(
-              LucideIcons.house,
-              size: AppSize.icon,
-              color: theme.colorScheme.primary,
+            icon: _buildNavIcon(
+              theme: theme,
+              icon: LucideIcons.house,
+            ),
+            selectedIcon: _buildNavIcon(
+              theme: theme,
+              icon: LucideIcons.house,
+              isSelected: true,
             ),
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.store, size: AppSize.icon),
-            selectedIcon: Icon(
-              LucideIcons.store,
-              size: AppSize.icon,
-              color: theme.colorScheme.primary,
+            icon: _buildNavIcon(
+              theme: theme,
+              icon: LucideIcons.store,
+            ),
+            selectedIcon: _buildNavIcon(
+              theme: theme,
+              icon: LucideIcons.store,
+              isSelected: true,
             ),
             label: 'Shop',
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.messageCircle, size: AppSize.icon),
-            selectedIcon: Icon(
-              LucideIcons.messageCircle,
-              size: AppSize.icon,
-              color: theme.colorScheme.primary,
+            icon: _buildNavIcon(
+              theme: theme,
+              icon: LucideIcons.messageCircle,
+              badgeCount: unreadCount,
+            ),
+            selectedIcon: _buildNavIcon(
+              theme: theme,
+              icon: LucideIcons.messageCircle,
+              isSelected: true,
+              badgeCount: unreadCount,
             ),
             label: 'Chat',
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.search, size: AppSize.icon),
-            selectedIcon: Icon(
-              LucideIcons.search,
-              size: AppSize.icon,
-              color: theme.colorScheme.primary,
+            icon: _buildNavIcon(
+              theme: theme,
+              icon: LucideIcons.search,
+            ),
+            selectedIcon: _buildNavIcon(
+              theme: theme,
+              icon: LucideIcons.search,
+              isSelected: true,
             ),
             label: 'Search',
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.user, size: AppSize.icon),
-            selectedIcon: Icon(
-              LucideIcons.user,
-              size: AppSize.icon,
-              color: theme.colorScheme.primary,
+            icon: _buildNavIcon(
+              theme: theme,
+              icon: LucideIcons.user,
+            ),
+            selectedIcon: _buildNavIcon(
+              theme: theme,
+              icon: LucideIcons.user,
+              isSelected: true,
             ),
             label: 'Profile',
           ),
@@ -132,5 +161,53 @@ class RootScreen extends StatelessWidget {
     } catch (error) {
       context.showSnackBar('Seed failed: $error');
     }
+  }
+
+  Widget _buildNavIcon({
+    required ThemeData theme,
+    required IconData icon,
+    bool isSelected = false,
+    int badgeCount = 0,
+  }) {
+    final iconWidget = Icon(
+      icon,
+      size: AppSize.icon,
+      color: isSelected ? theme.colorScheme.primary : null,
+    );
+
+    if (badgeCount <= 0) {
+      return iconWidget;
+    }
+
+    final badgeLabel = badgeCount > 99 ? '99+' : '$badgeCount';
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        iconWidget,
+        Positioned(
+          top: -6,
+          right: -10,
+          child: Container(
+            constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.error,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Center(
+              child: Text(
+                badgeLabel,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onError,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
