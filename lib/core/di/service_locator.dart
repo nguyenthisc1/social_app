@@ -19,6 +19,7 @@ import 'package:social_app/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:social_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
+import 'package:social_app/features/conversation/application/services/bardge-service/badge_service.dart';
 import 'package:social_app/features/conversation/data/datasources/conversation_firebase_data_source_impl.dart';
 import 'package:social_app/features/conversation/data/datasources/conversation_local_data_source.dart';
 import 'package:social_app/features/conversation/data/datasources/conversation_local_data_source_impl.dart';
@@ -126,6 +127,8 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<FirebaseSeedService>(
     () => FirebaseSeedService(firestore: sl<FirebaseFirestore>()),
   );
+
+  sl.registerLazySingleton<BadgeService>(() => AppIconBadgeService());
 
   // ============================================================================
   // Data Sources
@@ -318,7 +321,10 @@ Future<void> initializeDependencies() async {
   );
 
   sl.registerFactory(
-    () => ConversationDetailCubit(getConversationUsecase: sl()),
+    () => ConversationDetailCubit(
+      getConversationUsecase: sl(),
+      updateConversationsUsecase: sl(),
+    ),
   );
 
   // Message Cubit

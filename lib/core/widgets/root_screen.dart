@@ -20,16 +20,9 @@ class RootScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final index = navigationShell.currentIndex;
-    final unreadCount = context.select((ConversationCubit cubit) {
-      final state = cubit.state;
-      if (state.currentUserId.isEmpty) return 0;
-
-      return state.conversations.fold<int>(
-        0,
-        (total, conversation) =>
-            total + (conversation.unreadCountMap[state.currentUserId] ?? 0),
-      );
-    });
+    final unreadCount = context.select(
+      (ConversationCubit cubit) => cubit.getTotalUnreadCount(cubit.state),
+    );
 
     return Scaffold(
       appBar: AppBar(
