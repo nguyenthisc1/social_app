@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:social_app/features/user/data/datasources/user_remote_data_source.dart';
+import 'package:social_app/features/user/data/datasources/remote/user_remote_data_source.dart';
 import 'package:social_app/features/user/data/models/user_model.dart';
 import 'package:social_app/features/user/domain/user_exceptions.dart';
 
