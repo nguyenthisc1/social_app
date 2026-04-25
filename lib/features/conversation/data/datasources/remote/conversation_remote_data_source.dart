@@ -6,4 +6,6 @@ abstract interface class ConversationRemoteDataSource {
   Future<ConversationModel?> getConversation(String id);
   Future<List<ConversationModel>> getConversations(String currentUserId);
   Future<ConversationModel> updateConversation(ConversationEntity conversation);
+
+  Stream<List<ConversationModel>> watchConversations(String currentUserId);
 }

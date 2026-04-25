@@ -10,21 +10,8 @@ import 'package:social_app/features/conversation/domain/entites/conversation_typ
 import 'package:social_app/features/user/application/cubit/user_cubit.dart';
 import 'package:social_app/presentations/conversation/widgets/conversation_list_item.dart';
 
-class ConversationsPage extends StatefulWidget {
+class ConversationsPage extends StatelessWidget {
   const ConversationsPage({super.key});
-
-  @override
-  State<ConversationsPage> createState() => _ConversationsPageState();
-}
-
-class _ConversationsPageState extends State<ConversationsPage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ConversationCubit>().getConversations();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

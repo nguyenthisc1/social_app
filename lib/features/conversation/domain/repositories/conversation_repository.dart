@@ -7,4 +7,6 @@ abstract interface class ConversationRepository {
   Future<ConversationEntity> updateConversation(
     ConversationEntity conversation,
   );
+
+  Stream<List<ConversationEntity>> watchConversations(String currentUserId);
 }

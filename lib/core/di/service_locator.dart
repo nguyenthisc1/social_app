@@ -7,10 +7,10 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
-import 'package:social_app/features/auth/data/datasources/local/shared-preferences/auth_preferences_local_data_source.dart';
-import 'package:social_app/features/auth/data/datasources/remote/firebase/auth_firebase_data_source.dart';
 import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/local/shared-preferences/auth_preferences_local_data_source.dart';
 import 'package:social_app/features/auth/data/datasources/remote/auth_remote_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/remote/firebase/auth_firebase_data_source.dart';
 import 'package:social_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:social_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:social_app/features/auth/domain/usecases/check_auth_status_usecase.dart';
@@ -21,16 +21,17 @@ import 'package:social_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
 import 'package:social_app/features/conversation/application/services/bardge-service/badge_service.dart';
-import 'package:social_app/features/conversation/data/datasources/remote/firebase/conversation_firebase_data_source_impl.dart';
 import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
 import 'package:social_app/features/conversation/data/datasources/local/hive/conversation_hive_local_data_source.dart';
 import 'package:social_app/features/conversation/data/datasources/remote/conversation_remote_data_source.dart';
+import 'package:social_app/features/conversation/data/datasources/remote/firebase/conversation_firebase_data_source_impl.dart';
 import 'package:social_app/features/conversation/data/repositories/conversation_repository_impl.dart';
 import 'package:social_app/features/conversation/domain/repositories/conversation_repository.dart';
 import 'package:social_app/features/conversation/domain/usecases/create_conversation_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversation_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/update_conversation_usecase.dart';
+import 'package:social_app/features/conversation/domain/usecases/watch_conversations_usecase.dart';
 import 'package:social_app/features/message/application/cubit/meesage_cubit.dart';
 import 'package:social_app/features/message/data/datasources/local/hive/message_hive_local_data_source.dart';
 import 'package:social_app/features/message/data/datasources/local/message_local_data_source.dart';
@@ -275,6 +276,7 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => GetConversationsUsecase(sl()));
   sl.registerLazySingleton(() => CreateConversationUsecase(sl()));
   sl.registerLazySingleton(() => UpdateConversationsUsecase(sl()));
+  sl.registerLazySingleton(() => WatchConversationsUsecase(sl()));
 
   // Message Use Cases
   sl.registerLazySingleton(() => GetMessagesByConversationUsecase(sl()));
@@ -327,6 +329,7 @@ Future<void> initializeDependencies() async {
     () => ConversationCubit(
       getConversationsUsecase: sl(),
       conversationLocalDataSource: sl(),
+      watchConversationsUsecase: sl(),
     ),
   );
 

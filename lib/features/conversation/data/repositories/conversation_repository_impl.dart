@@ -61,4 +61,24 @@ class ConversationRepositoryImpl implements ConversationRepository {
 
     return ConversationMapper.toEntity(model);
   }
+
+  @override
+  Stream<List<ConversationEntity>> watchConversations(
+    String currentUserId,
+  ) async* {
+    final cachedConversation = await _localDataSource.getCachedConversations(
+      currentUserId,
+    );
+
+    if (cachedConversation.isNotEmpty) {
+      yield cachedConversation.map(ConversationMapper.toEntity).toList();
+    }
+
+    await for (final models in _remoteDataSource.watchConversations(
+      currentUserId,
+    )) {
+      await _localDataSource.cacheConversations(currentUserId, models);
+      yield models.map(ConversationMapper.toEntity).toList();
+    }
+  }
 }
