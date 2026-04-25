@@ -4,32 +4,24 @@ import 'package:social_app/features/conversation/data/datasources/local/conversa
 import 'package:social_app/features/conversation/data/mappers/conversation_mapper.dart';
 import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart';
 import 'package:social_app/features/conversation/domain/entites/unread_count.dart';
-import 'package:social_app/features/conversation/domain/usecases/create_conversation_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
-import 'package:social_app/features/conversation/domain/usecases/update_conversation_usecase.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
 
 class ConversationCubit extends Cubit<ConversationState> {
   final GetConversationsUsecase _getConversationsUsecase;
-  final CreateConversationUsecase _createConversationUsecase;
-  final UpdateConversationsUsecase _updateConversationsUsecase;
   final ConversationLocalDataSource _conversationLocalDataSource;
 
   ConversationCubit({
     required GetConversationsUsecase getConversationsUsecase,
-    required CreateConversationUsecase createConversationUsecase,
-    required UpdateConversationsUsecase updateConversationsUsecase,
     required ConversationLocalDataSource conversationLocalDataSource,
   }) : _conversationLocalDataSource = conversationLocalDataSource,
        _getConversationsUsecase = getConversationsUsecase,
-       _createConversationUsecase = createConversationUsecase,
-       _updateConversationsUsecase = updateConversationsUsecase,
        super(ConversationState.initial());
 
-  Future<void> loadConversationsForUser(String currentUserId) async {
+  Future<void> initializeSession(String currentUserId) async {
     emit(state.copyWith(currentUserId: currentUserId, clearError: true));
     await _loadCachedConversations(currentUserId);
-    await getConversations();
+    
   }
 
   Future<void> getConversations() async {
@@ -37,6 +29,8 @@ class ConversationCubit extends Cubit<ConversationState> {
       emit(state.copyWith(isLoading: false));
       return;
     }
+
+    emit(state.copyWith(isLoading: true, clearError: true));
 
     try {
       final conversations = await _getConversationsUsecase(state.currentUserId);

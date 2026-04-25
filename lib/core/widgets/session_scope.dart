@@ -51,9 +51,7 @@ class SessionScope extends StatelessWidget {
             listener: (context, state) {
               final userId = state.profile?.id;
               if (userId != null) {
-                context.read<ConversationCubit>().loadConversationsForUser(
-                  userId,
-                );
+                context.read<ConversationCubit>().initializeSession(userId);
                 context.read<NotificationCubit>().initialize(userId);
               }
             },
@@ -65,6 +63,17 @@ class SessionScope extends StatelessWidget {
                   previous.currentUserId != current.currentUserId;
             },
             listener: (context, state) async {
+              // Fetch users participant when init
+              final participantIds = state.conversations
+                  .expand((conversation) => conversation.participantIds)
+                  .where((id) => id != state.currentUserId)
+                  .toSet()
+                  .toList();
+
+              if (participantIds.isNotEmpty) {
+                context.read<UserCubit>().fetchUsersByIds(participantIds);
+              }
+
               final badgeService = sl<BadgeService>();
               final conversationCubit = context.read<ConversationCubit>();
               final totalUnread = conversationCubit.getTotalUnreadCount(state);

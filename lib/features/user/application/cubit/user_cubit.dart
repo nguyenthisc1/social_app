@@ -3,30 +3,22 @@ import 'package:social_app/features/user/application/cubit/user_state.dart';
 import 'package:social_app/features/user/data/datasources/local/user_local_data_source.dart';
 import 'package:social_app/features/user/data/mappers/user_mapper.dart';
 import 'package:social_app/features/user/domain/entites/user_entity.dart';
-import 'package:social_app/features/user/domain/usecases/get_user_by_id_usecase.dart';
 import 'package:social_app/features/user/domain/usecases/get_user_profile_usecase.dart';
-import 'package:social_app/features/user/domain/usecases/search_user_profile_usecase.dart';
-import 'package:social_app/features/user/domain/usecases/update_user_profile_usecase.dart';
+import 'package:social_app/features/user/domain/usecases/get_users_by_ids_usecase.dart';
 
 class UserCubit extends Cubit<UserState> {
-  final GetUserByIdUsecase _getUserByIdUsecase;
   final GetUserProfileUsecase _getUserProfileUsecase;
-  final SearchUserProfileUsecase _searchUserProfileUsecase;
-  final UpdateUserProfileUsecase _updateUserProfileUsecase;
+  final GetUsersByIdsUsecase _getUsersByIdsUsecase;
 
   final UserLocalDataSource _localDataSource;
 
   UserCubit({
-    required GetUserByIdUsecase getUserByIdUsecase,
     required GetUserProfileUsecase getUserProfileUsecase,
-    required SearchUserProfileUsecase searchUserProfileUsecase,
-    required UpdateUserProfileUsecase updateUserProfileUsecase,
+    required GetUsersByIdsUsecase getUsersByIdsUsecase,
     required UserLocalDataSource localDataSource,
   }) : _localDataSource = localDataSource,
-       _getUserByIdUsecase = getUserByIdUsecase,
        _getUserProfileUsecase = getUserProfileUsecase,
-       _searchUserProfileUsecase = searchUserProfileUsecase,
-       _updateUserProfileUsecase = updateUserProfileUsecase,
+       _getUsersByIdsUsecase = getUsersByIdsUsecase,
        super(UserState.initial());
 
   Future<void> initializeSession() async {
@@ -39,9 +31,7 @@ class UserCubit extends Cubit<UserState> {
     try {
       final user = await _getUserProfileUsecase();
       final usersById = Map<String, UserEntity>.from(state.usersById);
-      final preloadedUserIds = Set<String>.from(state.preloadedUserIds);
       usersById[user.id] = user;
-      preloadedUserIds.add(user.id);
 
       emit(
         state.copyWith(
@@ -49,7 +39,6 @@ class UserCubit extends Cubit<UserState> {
           clearError: true,
           profile: user,
           usersById: usersById,
-          preloadedUserIds: preloadedUserIds,
         ),
       );
     } catch (error) {
@@ -63,10 +52,9 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-  Future<void> preloadUsers(List<String> ids) async {
-    final preloadedUserIds = Set<String>.from(state.preloadedUserIds);
+  Future<void> fetchUsersByIds(List<String> ids) async {
     final missingIds = ids
-        .where((id) => id.isNotEmpty && !preloadedUserIds.contains(id))
+        .where((id) => id.isNotEmpty && !state.usersById.containsKey(id))
         .toSet()
         .toList();
 
@@ -74,58 +62,18 @@ class UserCubit extends Cubit<UserState> {
       return;
     }
 
-    final cachedUsersByIdModels = await _localDataSource.getCachedUsersByIds(
-      missingIds,
-    );
+    try {
+      final nextUsersById = Map<String, UserEntity>.from(state.usersById);
+      final users = await _getUsersByIdsUsecase(missingIds);
 
-    final nextUsersById = Map<String, UserEntity>.from(state.usersById);
-
-    for (final cachedUser in cachedUsersByIdModels.values) {
-      final user = UserMapper.toEntity(cachedUser);
-      nextUsersById[user.id] = user;
-      preloadedUserIds.add(user.id);
-    }
-
-    emit(
-      state.copyWith(
-        clearError: true,
-        usersById: nextUsersById,
-        preloadedUserIds: preloadedUserIds,
-      ),
-    );
-
-    final remainingIds = missingIds
-        .where((id) => !nextUsersById.containsKey(id))
-        .toList();
-
-    if (remainingIds.isEmpty) {
-      return;
-    }
-
-    for (final id in remainingIds) {
-      try {
-        final user = await _getUserByIdUsecase(id);
-        if (user != null) {
-          nextUsersById[user.id] = user;
-          preloadedUserIds.add(user.id);
-        }
-      } catch (_) {
-        // Ignore individual preload failures and keep existing cache.
-        preloadedUserIds.add(id);
+      for (final user in users) {
+        nextUsersById[user.id] = user;
       }
+
+      emit(state.copyWith(clearError: true, usersById: nextUsersById));
+    } catch (error) {
+      emit(state.copyWith(errorMessage: error.toString(), clearError: false));
     }
-
-    emit(
-      state.copyWith(
-        clearError: true,
-        usersById: nextUsersById,
-        preloadedUserIds: preloadedUserIds,
-      ),
-    );
-  }
-
-  UserEntity? getCachedUser(String id) {
-    return state.usersById[id];
   }
 
   void clear() {
@@ -141,21 +89,21 @@ class UserCubit extends Cubit<UserState> {
 
       final user = UserMapper.toEntity(cachedUser);
       final usersById = Map<String, UserEntity>.from(state.usersById);
-      final preloadedUserIds = Set<String>.from(state.preloadedUserIds);
       usersById[user.id] = user;
-      preloadedUserIds.add(user.id);
-
       emit(
         state.copyWith(
           isLoading: false,
           clearError: true,
           profile: user,
           usersById: usersById,
-          preloadedUserIds: preloadedUserIds,
         ),
       );
     } catch (_) {
       // Ignore cache bootstrap failures and continue to remote fetch.
     }
+  }
+
+  UserEntity? getCachedUser(String id) {
+    return state.usersById[id];
   }
 }

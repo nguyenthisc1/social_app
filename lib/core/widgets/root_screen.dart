@@ -76,13 +76,9 @@ class RootScreen extends StatelessWidget {
         backgroundColor: theme.colorScheme.surface,
         indicatorColor: Colors.transparent,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        // Remove const, because we use non-const value (theme) in selectedIcon
         destinations: [
           NavigationDestination(
-            icon: _buildNavIcon(
-              theme: theme,
-              icon: LucideIcons.house,
-            ),
+            icon: _buildNavIcon(theme: theme, icon: LucideIcons.house),
             selectedIcon: _buildNavIcon(
               theme: theme,
               icon: LucideIcons.house,
@@ -91,10 +87,7 @@ class RootScreen extends StatelessWidget {
             label: 'Home',
           ),
           NavigationDestination(
-            icon: _buildNavIcon(
-              theme: theme,
-              icon: LucideIcons.store,
-            ),
+            icon: _buildNavIcon(theme: theme, icon: LucideIcons.store),
             selectedIcon: _buildNavIcon(
               theme: theme,
               icon: LucideIcons.store,
@@ -117,10 +110,7 @@ class RootScreen extends StatelessWidget {
             label: 'Chat',
           ),
           NavigationDestination(
-            icon: _buildNavIcon(
-              theme: theme,
-              icon: LucideIcons.search,
-            ),
+            icon: _buildNavIcon(theme: theme, icon: LucideIcons.search),
             selectedIcon: _buildNavIcon(
               theme: theme,
               icon: LucideIcons.search,
@@ -129,10 +119,7 @@ class RootScreen extends StatelessWidget {
             label: 'Search',
           ),
           NavigationDestination(
-            icon: _buildNavIcon(
-              theme: theme,
-              icon: LucideIcons.user,
-            ),
+            icon: _buildNavIcon(theme: theme, icon: LucideIcons.user),
             selectedIcon: _buildNavIcon(
               theme: theme,
               icon: LucideIcons.user,
