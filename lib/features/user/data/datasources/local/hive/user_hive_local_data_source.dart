@@ -31,16 +31,16 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
   }
 
   @override
-  Future<List<UserModel>> getCachedUsersByIds(List<String> ids) async {
+  Future<Map<String, UserModel>> getCachedUsersByIds(List<String> ids) async {
     try {
       final box = await _openBox();
-      final cachedUsers = <UserModel>[];
+      final cachedUsers = <String, UserModel>{};
 
       for (final id in ids.toSet()) {
         final raw = box.get(_userByIdKey(id));
         if (raw is Map) {
-          cachedUsers.add(
-            UserModel.fromJson(_deserializeUser(Map<String, dynamic>.from(raw))),
+          cachedUsers[id] = UserModel.fromJson(
+            _deserializeUser(Map<String, dynamic>.from(raw)),
           );
         }
       }
@@ -59,7 +59,9 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
 
       if (raw == null) return null;
 
-      return UserModel.fromJson(_deserializeUser(Map<String, dynamic>.from(raw)));
+      return UserModel.fromJson(
+        _deserializeUser(Map<String, dynamic>.from(raw)),
+      );
     } catch (e) {
       throw UserException(message: e.toString());
     }
@@ -85,7 +87,7 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
       'friends': model.friends,
       'following': model.following,
       'followers': model.followers,
-      'isActive': model.isActive,
+      'isOnline': model.isOnline,
     };
   }
 
@@ -102,7 +104,7 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
           (json['following'] as List<dynamic>?)?.cast<String>() ?? const [],
       'followers':
           (json['followers'] as List<dynamic>?)?.cast<String>() ?? const [],
-      'isActive': json['isActive'] as bool? ?? false,
+      'isOnline': json['isOnline'] as bool? ?? false,
     };
   }
 }

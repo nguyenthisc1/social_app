@@ -15,7 +15,7 @@ class AuthPreferencesLocalDataSource implements AuthLocalDataSource {
 
   @override
   Future<void> cacheUser(UserModel user) async {
-    final jsonString = jsonEncode(user.toJson());
+    final jsonString = jsonEncode(_serializeUser(user));
     await sharedPreferences.setString(_cachedUserKey, jsonString);
   }
 
@@ -26,7 +26,7 @@ class AuthPreferencesLocalDataSource implements AuthLocalDataSource {
 
     try {
       final json = jsonDecode(jsonString) as Map<String, dynamic>;
-      return UserModel.fromJson(json);
+      return UserModel.fromJson(_deserializeUser(json));
     } catch (_) {
       return null;
     }
@@ -64,5 +64,33 @@ class AuthPreferencesLocalDataSource implements AuthLocalDataSource {
   @override
   Future<void> clearAllData() async {
     await Future.wait([clearCachedUser(), clearCachedTokens()]);
+  }
+
+  Map<String, dynamic> _serializeUser(UserModel user) {
+    return {
+      'id': user.id,
+      'username': user.username,
+      'email': user.email,
+      'avatarUrl': user.avatarUrl,
+      'bio': user.bio,
+      'friends': user.friends,
+      'following': user.following,
+      'followers': user.followers,
+      'lastSeen': user.lastSeen.millisecondsSinceEpoch,
+      'createdAt': user.createdAt.millisecondsSinceEpoch,
+      'isOnline': user.isOnline,
+    };
+  }
+
+  Map<String, dynamic> _deserializeUser(Map<String, dynamic> json) {
+    return {
+      ...json,
+      'lastSeen': {
+        'millisecondsSinceEpoch': json['lastSeen'],
+      },
+      'createdAt': {
+        'millisecondsSinceEpoch': json['createdAt'],
+      },
+    };
   }
 }

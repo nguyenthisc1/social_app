@@ -1,7 +1,7 @@
 import 'package:social_app/features/user/data/datasources/local/user_local_data_source.dart';
 import 'package:social_app/features/user/data/datasources/remote/user_remote_data_source.dart';
 import 'package:social_app/features/user/data/mappers/user_mapper.dart';
-import 'package:social_app/features/user/domain/entites/user.dart';
+import 'package:social_app/features/user/domain/entites/user_entity.dart';
 import 'package:social_app/features/user/domain/repositories/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
@@ -15,7 +15,7 @@ class UserRepositoryImpl implements UserRepository {
        _remoteDataSource = remoteDataSource;
 
   @override
-  Future<User?> getUserById(String id) async {
+  Future<UserEntity?> getUserById(String id) async {
     try {
       final model = await _remoteDataSource.getUserById(id);
       if (model != null) {
@@ -23,9 +23,11 @@ class UserRepositoryImpl implements UserRepository {
         return UserMapper.toEntity(model);
       }
     } catch (_) {
+      // getCachedUsersByIds returns Map<String, UserModel>
       final cachedUsers = await _localDataSource.getCachedUsersByIds([id]);
       if (cachedUsers.isNotEmpty) {
-        return UserMapper.toEntity(cachedUsers.first);
+        final firstModel = cachedUsers.values.first;
+        return UserMapper.toEntity(firstModel);
       }
     }
 
@@ -33,7 +35,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<User> getUserProfile() async {
+  Future<UserEntity> getUserProfile() async {
     try {
       final model = await _remoteDataSource.getUserProfile();
       await _localDataSource.cacheUser(model);
@@ -48,14 +50,14 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<List<User>> searchUser(String search) async {
+  Future<List<UserEntity>> searchUser(String search) async {
     final models = await _remoteDataSource.searchUser(search);
 
     return models.map(UserMapper.toEntity).toList();
   }
 
   @override
-  Future<User> updateUserProfile(User user) {
+  Future<UserEntity> updateUserProfile(UserEntity user) {
     throw UnimplementedError();
   }
 }

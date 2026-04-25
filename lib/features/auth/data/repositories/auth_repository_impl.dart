@@ -3,7 +3,7 @@ import 'package:social_app/features/auth/data/datasources/remote/auth_remote_dat
 
 import '../../../../core/core.dart';
 import '../../../user/data/models/user_model.dart';
-import '../../../user/domain/entites/user.dart';
+import '../../../user/domain/entites/user_entity.dart';
 import '../../domain/entities/auth_tokens.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/local/auth_local_data_source.dart';
@@ -76,7 +76,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> login({
+  Future<Either<Failure, UserEntity>> login({
     required String email,
     required String password,
   }) async {
@@ -123,7 +123,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> register({
+  Future<Either<Failure, UserEntity>> register({
     required String email,
     required String username,
     required String password,
@@ -197,7 +197,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> getCurrentUser() async {
+  Future<Either<Failure, UserEntity>> getCurrentUser() async {
     try {
       final cachedUser = await localDataSource.getCachedUser();
       if (cachedUser != null) {
@@ -312,7 +312,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> updateProfile({
+  Future<Either<Failure, UserEntity>> updateProfile({
     String? displayName,
     String? bio,
     String? avatarUrl,

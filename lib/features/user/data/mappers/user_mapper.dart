@@ -1,11 +1,11 @@
+import '../../domain/entites/user_entity.dart';
 import '../models/user_model.dart';
-import '../../domain/entites/user.dart';
 
 class UserMapper {
   const UserMapper._();
 
-  static User toEntity(UserModel model) {
-    return User(
+  static UserEntity toEntity(UserModel model) {
+    return UserEntity(
       id: model.id,
       username: model.username,
       email: model.email,
@@ -14,11 +14,13 @@ class UserMapper {
       friends: model.friends,
       following: model.following,
       followers: model.followers,
-      isActive: model.isActive,
+      isOnline: model.isOnline,
+      lastSeen: model.lastSeen,
+      createdAt: model.createdAt,
     );
   }
 
-  static UserModel toModel(User entity) {
+  static UserModel toModel(UserEntity entity) {
     return UserModel(
       id: entity.id,
       username: entity.username,
@@ -28,15 +30,9 @@ class UserMapper {
       friends: entity.friends,
       following: entity.following,
       followers: entity.followers,
-      isActive: entity.isActive,
+      isOnline: entity.isOnline,
+      lastSeen: entity.lastSeen,
+      createdAt: entity.createdAt,
     );
-  }
-
-  static List<User> toEntityList(List<UserModel> models) {
-    return models.map((model) => toEntity(model)).toList();
-  }
-
-  static List<UserModel> toModelList(List<User> entities) {
-    return entities.map((entity) => toModel(entity)).toList();
   }
 }

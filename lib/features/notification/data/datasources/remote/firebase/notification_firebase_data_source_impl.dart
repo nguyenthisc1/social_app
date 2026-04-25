@@ -38,10 +38,7 @@ class NotificationFirebaseDataSource implements NotificationRemoteDataSource {
       await Future.delayed(const Duration(seconds: 1));
 
       final apnsToken = await _firebaseMessaging.getAPNSToken();
-      print('APNS token: $apnsToken');
-      print(settings.authorizationStatus);
       final token = await _firebaseMessaging.getToken();
-      print(' token: $token');
       return settings.authorizationStatus == AuthorizationStatus.authorized ||
           settings.authorizationStatus == AuthorizationStatus.provisional;
     } catch (e) {
@@ -56,7 +53,6 @@ class NotificationFirebaseDataSource implements NotificationRemoteDataSource {
     required String token,
   }) async {
     try {
-      print('fcmtoken');
       await _firestore.collection('users').doc(userId).update({
         'fcmToken': token,
         'fcmUpdatedAt': FieldValue.serverTimestamp(),

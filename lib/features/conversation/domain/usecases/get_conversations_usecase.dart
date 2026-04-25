@@ -7,6 +7,10 @@ class GetConversationsUsecase {
   const GetConversationsUsecase(this._conversationRepository);
 
   Future<List<ConversationEntity>> call(String currentUserId) {
-    return _conversationRepository.getConversations(currentUserId);
+    final conversations = _conversationRepository.getConversations(
+      currentUserId,
+    );
+
+    return conversations;
   }
 }

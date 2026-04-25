@@ -1,16 +1,18 @@
-import 'package:social_app/features/user/domain/entites/user.dart';
+import 'package:social_app/features/user/domain/entites/user_entity.dart';
 
 class UserState {
   final bool isLoading;
   final String? errorMessage;
-  final User? profile;
-  final Map<String, User> usersById;
+  final UserEntity? profile;
+  final Map<String, UserEntity> usersById;
+  final Set<String> preloadedUserIds;
 
   const UserState({
     required this.isLoading,
     this.errorMessage,
     required this.profile,
     required this.usersById,
+    required this.preloadedUserIds,
   });
 
   factory UserState.initial() {
@@ -19,6 +21,7 @@ class UserState {
       errorMessage: null,
       profile: null,
       usersById: {},
+      preloadedUserIds: {},
     );
   }
 
@@ -26,14 +29,16 @@ class UserState {
     bool? isLoading,
     String? errorMessage,
     bool clearError = false,
-    User? profile,
-    Map<String, User>? usersById,
+    UserEntity? profile,
+    Map<String, UserEntity>? usersById,
+    Set<String>? preloadedUserIds,
   }) {
     return UserState(
       isLoading: isLoading ?? this.isLoading,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       profile: profile ?? this.profile,
       usersById: usersById ?? this.usersById,
+      preloadedUserIds: preloadedUserIds ?? this.preloadedUserIds,
     );
   }
 }

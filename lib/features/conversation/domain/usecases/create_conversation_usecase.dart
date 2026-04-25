@@ -7,13 +7,13 @@ class CreateConversationUsecase {
 
   const CreateConversationUsecase(this._conversationRepository);
 
-  Future<ConversationEntity> call(List<String> memberIds) {
-    if (memberIds.isEmpty) {
+  Future<ConversationEntity> call(List<String> participantIds) {
+    if (participantIds.isEmpty) {
       throw ConversationExeptions(
         message: 'Conversation must have at least one member.',
       );
     }
 
-    return _conversationRepository.createConversation(memberIds);
+    return _conversationRepository.createConversation(participantIds);
   }
 }

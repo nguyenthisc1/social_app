@@ -7,6 +7,7 @@ import 'package:social_app/core/widgets/error_view.dart';
 import 'package:social_app/core/widgets/loading_indicator.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
+import 'package:social_app/features/message/domain/entites/message_type.dart';
 import 'package:social_app/features/user/application/cubit/user_cubit.dart';
 
 class ConversationsPage extends StatefulWidget {
@@ -28,16 +29,18 @@ class _ConversationsPageState extends State<ConversationsPage> {
 
   void _preloadConversationUsers() {
     final userCubit = context.read<UserCubit>();
+    final userState = userCubit.state;
     final conversationState = context.read<ConversationCubit>().state;
-    final currentUserId = userCubit.state.profile?.id;
+    final currentUserId = userState.profile?.id;
 
     if (currentUserId == null || conversationState.conversations.isEmpty) {
       return;
     }
 
     final otherUserIds = conversationState.conversations
-        .expand((conversation) => conversation.memberIds)
+        .expand((conversation) => conversation.participantIds)
         .where((memberId) => memberId != currentUserId)
+        .where((memberId) => !userState.preloadedUserIds.contains(memberId))
         .toSet()
         .toList();
 
@@ -56,8 +59,6 @@ class _ConversationsPageState extends State<ConversationsPage> {
       listener: (context, state) {
         if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
           context.showSnackBar(state.errorMessage!, isError: true);
-
-          print(state.errorMessage);
         }
 
         _preloadConversationUsers();
@@ -84,20 +85,24 @@ class _ConversationsPageState extends State<ConversationsPage> {
           ),
           itemBuilder: (context, index) {
             final conversation = state.conversations[index];
-
             // Other User conversation
-            final otherUserId = conversation.memberIds
+            final otherUserId = conversation.participantIds
                 .where((id) => id != state.currentUserId)
                 .firstOrNull;
             final otherUser = otherUserId == null
                 ? null
                 : userState.usersById[otherUserId];
-            final title = otherUser?.username ?? otherUserId ?? 'Unknown user';
+            final isUserPreloaded =
+                otherUserId != null &&
+                userState.preloadedUserIds.contains(otherUserId);
+            final title =
+                otherUser?.username ??
+                (isUserPreloaded ? 'Unknown user' : 'Loading...');
             final avatarLabel = title.isNotEmpty
                 ? title.characters.first.toUpperCase()
                 : '?';
             final unreadCount =
-                conversation.unreadCountMap[state.currentUserId] ?? 0;
+                conversation.unreadCountMap[state.currentUserId]?.count ?? 0;
             final isUnread = unreadCount > 0;
 
             return ListTile(
@@ -120,7 +125,11 @@ class _ConversationsPageState extends State<ConversationsPage> {
               subtitle: Text(
                 unreadCount > 1
                     ? '$unreadCount new messages'
-                    : conversation.lastMessage ?? '',
+                    : conversation.lastMessage?.type == MessageType.text
+                    ? conversation.lastMessage?.text ?? ""
+                    : conversation.lastMessage?.type == MessageType.image
+                    ? 'Send a image'
+                    : '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.textTheme.bodySmall?.copyWith(
@@ -136,10 +145,10 @@ class _ConversationsPageState extends State<ConversationsPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    conversation.lastMessageAt == null
+                    conversation.lastMessage?.createdAt == null
                         ? ''
                         : _formatMessageTime(
-                            conversation.lastMessageAt!.toDate(),
+                            conversation.lastMessage!.createdAt.toDate(),
                           ),
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colorScheme.outline,

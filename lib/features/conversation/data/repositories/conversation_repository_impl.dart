@@ -15,8 +15,10 @@ class ConversationRepositoryImpl implements ConversationRepository {
        _localDataSource = localDataSource;
 
   @override
-  Future<ConversationEntity> createConversation(List<String> memberIds) async {
-    final model = await _remoteDataSource.createConversation(memberIds);
+  Future<ConversationEntity> createConversation(
+    List<String> participantIds,
+  ) async {
+    final model = await _remoteDataSource.createConversation(participantIds);
 
     return ConversationMapper.toEntity(model);
   }
@@ -28,7 +30,10 @@ class ConversationRepositoryImpl implements ConversationRepository {
     try {
       final models = await _remoteDataSource.getConversations(currentUserId);
       await _localDataSource.cacheConversations(currentUserId, models);
-      return models.map(ConversationMapper.toEntity).toList();
+
+      final conversations = models.map(ConversationMapper.toEntity).toList();
+
+      return conversations;
     } catch (_) {
       final cachedModels = await _localDataSource.getCachedConversations(
         currentUserId,

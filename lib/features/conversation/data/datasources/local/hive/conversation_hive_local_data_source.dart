@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
+import 'package:social_app/features/conversation/data/models/conversation_last_message_model.dart';
 import 'package:social_app/features/conversation/data/models/conversation_model.dart';
 import 'package:social_app/features/conversation/domain/conversation_exeptions.dart';
+import 'package:social_app/features/conversation/domain/entites/unread_count.dart';
 
 class ConversationHiveLocalDataSource implements ConversationLocalDataSource {
   static const _kConversationsBox = 'conversations_box';
@@ -47,51 +50,106 @@ class ConversationHiveLocalDataSource implements ConversationLocalDataSource {
       final box = await _openBox();
       final raw = box.get(_userConversationsKey(userId));
 
-      if (raw is! List) {
+      if (raw == null || raw is! List) {
         return const [];
       }
 
-      return raw
-          .whereType<Map>()
-          .map(
-            (item) => ConversationModel.fromJson(
+      final conversations = <ConversationModel>[];
+
+      for (final item in raw) {
+        try {
+          if (item is! Map) {
+            continue;
+          }
+
+          conversations.add(
+            ConversationModel.fromJson(
               _deserializeConversation(Map<String, dynamic>.from(item)),
             ),
-          )
-          .toList();
+          );
+        } catch (e, st) {
+          debugPrint('Skip invalid cached conversation item: $e');
+          debugPrintStack(stackTrace: st);
+        }
+      }
+
+      return conversations;
     } catch (e) {
       throw ConversationExeptions(message: e.toString());
     }
   }
 
+  // Serializes ConversationModel to Map<String, dynamic> for Hive caching.
   Map<String, dynamic> _serializeConversation(ConversationModel model) {
     return {
       'id': model.id,
-      'lastMessage': model.lastMessage,
-      'lastMessageAt': model.lastMessageAt?.millisecondsSinceEpoch,
-      'lastMessageType': model.lastMessageType,
-      'lastSenderId': model.lastSenderId,
-      'memberIds': model.memberIds,
-      'unreadCountMap': model.unreadCountMap,
+      'type': model.type,
+      'participantIds': model.participantIds,
+      'lastMessage': model.lastMessage == null
+          ? null
+          : {
+              'id': model.lastMessage!.id,
+              'senderId': model.lastMessage!.senderId,
+              'type': model.lastMessage!.type,
+              'text': model.lastMessage!.text,
+              'mediaUrl': model.lastMessage!.mediaUrl,
+              'mediaType': model.lastMessage!.mediaType,
+              'isDeleted': model.lastMessage!.isDeleted,
+              'createdAt':
+                  model.lastMessage!.createdAt.millisecondsSinceEpoch,
+            },
       'createdAt': model.createdAt.millisecondsSinceEpoch,
+      'name': model.name,
+      'avatarUrl': model.avatarUrl,
+      'unreadCountMap': model.unreadCountMap.map(
+        (key, value) => MapEntry(key, {
+          'count': value.count,
+          'lastReadAt': value.lastReadAt?.millisecondsSinceEpoch,
+          'lastReadMessageId': value.lastReadMessageId,
+        }),
+      ),
     };
   }
 
+  // Deserializes cached Map<String, dynamic> to a format accepted by ConversationModel.fromJson
   Map<String, dynamic> _deserializeConversation(Map<String, dynamic> json) {
+    final unreadCountMapRaw = json['unreadCountMap'];
+
     return {
       ...json,
-      'lastMessageAt': json['lastMessageAt'] == null
-          ? null
-          : Timestamp.fromMillisecondsSinceEpoch(json['lastMessageAt'] as int),
-      'createdAt': Timestamp.fromMillisecondsSinceEpoch(
-        json['createdAt'] as int,
+      // lastMessage: attempt deserialization only if present, using fromJson if Map
+      'lastMessage': (json['lastMessage'] is Map)
+          ? ConversationLastMessageModel.fromJson(
+              Map<String, dynamic>.from(json['lastMessage'] as Map),
+            )
+          : (json['lastMessage'] is ConversationLastMessageModel)
+          ? json['lastMessage']
+          : null,
+      // Only handle 'createdAt' (no lastMessageAt/lastSenderId/lastMessageType)
+      'createdAt': json['createdAt'] is Timestamp
+          ? json['createdAt']
+          : Timestamp.fromMillisecondsSinceEpoch(
+              (json['createdAt'] as int?) ??
+                  DateTime.now().millisecondsSinceEpoch,
+            ),
+      'participantIds': List<String>.from(
+        (json['participantIds'] as List?) ?? const <String>[],
       ),
-      'memberIds': List<String>.from(json['memberIds'] as List),
-      'unreadCountMap': Map<String, int>.from(
-        (json['unreadCountMap'] as Map).map(
-          (key, value) => MapEntry(key.toString(), value as int),
-        ),
-      ),
+      'unreadCountMap': unreadCountMapRaw is Map
+          ? unreadCountMapRaw.map(
+              (key, value) =>
+                  MapEntry(key.toString(), _deserializeUnreadCount(value)),
+            )
+          : <String, UnreadCount>{},
     };
+  }
+
+  UnreadCount _deserializeUnreadCount(dynamic value) {
+    if (value is UnreadCount) return value;
+    if (value is Map<String, dynamic>) return UnreadCount.fromJson(value);
+    if (value is Map) {
+      return UnreadCount.fromJson(Map<String, dynamic>.from(value));
+    }
+    return const UnreadCount(count: 0);
   }
 }

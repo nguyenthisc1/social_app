@@ -26,7 +26,6 @@ class _CreatePostStoryWidgetState extends State<CreatePostStoryWidget>
   void initState() {
     super.initState();
     context.read<StoryBloc>().add(OpenCamera());
-    print(123);
   }
 
   Future<void> _initializeCamera(StoryCameraDirection direction) async {

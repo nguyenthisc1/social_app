@@ -233,10 +233,7 @@ Future<void> initializeDependencies() async {
 
   // Message Repository
   sl.registerLazySingleton<MessageRepository>(
-    () => MessageRepositoryImpl(
-      localDataSource: sl(),
-      remoteDataSource: sl(),
-    ),
+    () => MessageRepositoryImpl(localDataSource: sl(), remoteDataSource: sl()),
   );
 
   // Notification
@@ -311,6 +308,7 @@ Future<void> initializeDependencies() async {
       getUserProfileUsecase: sl(),
       searchUserProfileUsecase: sl(),
       updateUserProfileUsecase: sl(),
+      localDataSource: sl(),
     ),
   );
 
@@ -329,10 +327,10 @@ Future<void> initializeDependencies() async {
   // Conversations Cubit
   sl.registerFactory(
     () => ConversationCubit(
-      getConversationUsecase: sl(),
       getConversationsUsecase: sl(),
       createConversationUsecase: sl(),
       updateConversationsUsecase: sl(),
+      conversationLocalDataSource: sl(),
     ),
   );
 

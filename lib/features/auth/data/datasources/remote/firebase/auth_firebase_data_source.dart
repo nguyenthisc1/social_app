@@ -71,10 +71,15 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
         id: user.uid,
         username: username,
         email: email,
-        isActive: true,
+        isOnline: true,
+        lastSeen: Timestamp.now(),
+        createdAt: Timestamp.now(),
       );
 
-      await _firestore.collection('users').doc(user.uid).set(userModel.toJson());
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .set(userModel.toJson());
 
       final token = await user.getIdToken();
 
@@ -109,7 +114,9 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
       throw _mapFirebaseAuthException(e);
     } catch (e) {
       if (e is AppException) rethrow;
-      throw ServerException(message: 'Unknown error occurred during logout: $e');
+      throw ServerException(
+        message: 'Unknown error occurred during logout: $e',
+      );
     }
   }
 
@@ -162,10 +169,10 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
       if (bio != null) updateData['bio'] = bio;
       if (avatarUrl != null) updateData['avatarUrl'] = avatarUrl;
       if (updateData.isNotEmpty) {
-        await _firestore.collection('users').doc(user.uid).set(
-          updateData,
-          SetOptions(merge: true),
-        );
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(updateData, SetOptions(merge: true));
       }
 
       final userModel = await _loadUserModel(user);
@@ -291,9 +298,7 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
       return BaseResponse(
         success: true,
         message: 'Token refreshed successfully.',
-        data: {
-          'tokens': _buildTokens(newAccessToken, user.refreshToken),
-        },
+        data: {'tokens': _buildTokens(newAccessToken, user.refreshToken)},
       );
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw _mapFirebaseAuthException(e);
@@ -318,10 +323,7 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
     });
   }
 
-  Map<String, dynamic> _buildTokens(
-    String? accessToken,
-    String? refreshToken,
-  ) {
+  Map<String, dynamic> _buildTokens(String? accessToken, String? refreshToken) {
     return {
       'access_token': accessToken ?? '',
       'refresh_token': refreshToken ?? '',

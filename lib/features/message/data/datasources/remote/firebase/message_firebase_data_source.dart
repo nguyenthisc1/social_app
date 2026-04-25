@@ -44,10 +44,14 @@ class MessageFirebaseDataSource implements MessageRemoteDataSource {
         'clientMessageId': messageModel.clientMessageId,
         'conversationId': conversationId,
         'text': messageModel.text,
-        'fileName': messageModel.fileName,
-        'fileUrl': messageModel.fileUrl,
         'senderId': currentUserId,
         'type': messageModel.type,
+        'status': 'sent',
+        'isDeleted': messageModel.isDeleted,
+        'replyTo': messageModel.replyTo,
+        'reactions': messageModel.reactions,
+        'mediaUrl': messageModel.mediaUrl,
+        'mediaType': messageModel.mediaType,
         'clientCreatedAt': messageModel.createdAt,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -58,16 +62,31 @@ class MessageFirebaseDataSource implements MessageRemoteDataSource {
           .collection('conversations')
           .doc(conversationId)
           .get();
-      final memberIds = List<String>.from(conversationDoc['memberIds']);
-      final otherUserId = memberIds.firstWhere((id) => id != currentUserId);
+      final participantIds = List<String>.from(
+        conversationDoc['participantIds'],
+      );
+      final otherUserId = participantIds.firstWhere(
+        (id) => id != currentUserId,
+        orElse: () => currentUserId,
+      );
 
       await _firestore.collection('conversations').doc(conversationId).update({
-        'lastMessage': messageModel.text,
-        'lastMessageAt': FieldValue.serverTimestamp(),
-        'lastMessageType': 'text',
-        'lastSenderId': currentUserId,
-        'unreadCountMap.$otherUserId': FieldValue.increment(1),
-        'unreadCountMap.$currentUserId': 0,
+        'lastMessage.id': docRef.id,
+        'lastMessage.senderId': currentUserId,
+        'lastMessage.type': messageModel.type,
+        'lastMessage.text': messageModel.text,
+        'lastMessage.mediaUrl': messageModel.mediaUrl,
+        'lastMessage.mediaType': messageModel.mediaType,
+        'lastMessage.isDeleted': messageModel.isDeleted,
+        'lastMessage.createdAt': FieldValue.serverTimestamp(),
+
+        'unreadCountMap.$otherUserId.count': FieldValue.increment(1),
+        // 'unreadCountMap.$otherUserId.lastReadAt': FieldValue.serverTimestamp(),
+        // 'unreadCountMap.$otherUserId.lastReadMessageId': FieldValue,
+        'unreadCountMap.$currentUserId.count': 0,
+        // 'unreadCountMap.$currentUserId.lastReadAt':
+        //     FieldValue.serverTimestamp(),
+        // 'unreadCountMap.$currentUserId.lastReadMessageId': FieldValue,
       });
 
       final docSnapshot = await docRef.get();

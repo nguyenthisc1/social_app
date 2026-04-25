@@ -20,7 +20,6 @@ class AppIconBadgeService implements BadgeService {
   Future<void> updateCount(int count) async {
     final check = await FlutterAppBadger.isAppBadgeSupported();
 
-    print(check);
     try {
       if (count <= 0) {
         await clear();

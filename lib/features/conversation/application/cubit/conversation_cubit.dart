@@ -1,31 +1,34 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
+import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
+import 'package:social_app/features/conversation/data/mappers/conversation_mapper.dart';
 import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart';
+import 'package:social_app/features/conversation/domain/entites/unread_count.dart';
 import 'package:social_app/features/conversation/domain/usecases/create_conversation_usecase.dart';
-import 'package:social_app/features/conversation/domain/usecases/get_conversation_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/update_conversation_usecase.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
 
 class ConversationCubit extends Cubit<ConversationState> {
-  final GetConversationUsecase _getConversationUsecase;
   final GetConversationsUsecase _getConversationsUsecase;
   final CreateConversationUsecase _createConversationUsecase;
   final UpdateConversationsUsecase _updateConversationsUsecase;
+  final ConversationLocalDataSource _conversationLocalDataSource;
 
   ConversationCubit({
-    required GetConversationUsecase getConversationUsecase,
     required GetConversationsUsecase getConversationsUsecase,
     required CreateConversationUsecase createConversationUsecase,
     required UpdateConversationsUsecase updateConversationsUsecase,
-  }) : _getConversationUsecase = getConversationUsecase,
+    required ConversationLocalDataSource conversationLocalDataSource,
+  }) : _conversationLocalDataSource = conversationLocalDataSource,
        _getConversationsUsecase = getConversationsUsecase,
        _createConversationUsecase = createConversationUsecase,
        _updateConversationsUsecase = updateConversationsUsecase,
        super(ConversationState.initial());
 
   Future<void> loadConversationsForUser(String currentUserId) async {
-    emit(state.copyWith(currentUserId: currentUserId));
+    emit(state.copyWith(currentUserId: currentUserId, clearError: true));
+    await _loadCachedConversations(currentUserId);
     await getConversations();
   }
 
@@ -35,7 +38,6 @@ class ConversationCubit extends Cubit<ConversationState> {
       return;
     }
 
-    emit(state.copyWith(isLoading: true));
     try {
       final conversations = await _getConversationsUsecase(state.currentUserId);
 
@@ -47,7 +49,13 @@ class ConversationCubit extends Cubit<ConversationState> {
         ),
       );
     } catch (error) {
-      emit(state.copyWith(errorMessage: error.toString(), clearError: false));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: error.toString(),
+          clearError: false,
+        ),
+      );
     }
   }
 
@@ -57,19 +65,31 @@ class ConversationCubit extends Cubit<ConversationState> {
     try {
       final updatedConversations = state.conversations.map((c) {
         if (c.id == newMessage.conversationId) {
-          final otherUserId = c.memberIds.firstWhere(
+          final otherUserId = c.participantIds.firstWhere(
             (id) => id != newMessage.senderId,
           );
-          final newUnreadCountMap = Map<String, int>.from(c.unreadCountMap);
-          newUnreadCountMap[otherUserId] =
-              (newUnreadCountMap[otherUserId] ?? 0) + 1;
-          newUnreadCountMap[newMessage.senderId] = 0;
+          final newUnreadCountMap = Map<String, UnreadCount>.from(
+            c.unreadCountMap,
+          );
+          // Increment the other user's unread count
+          final currentUnread = newUnreadCountMap[otherUserId]?.count ?? 0;
+          newUnreadCountMap[otherUserId] = UnreadCount(
+            count: currentUnread + 1,
+          );
+          // Reset sender's unread count to 0
+          newUnreadCountMap[newMessage.senderId] = const UnreadCount(count: 0);
 
           return c.copyWith(
-            lastMessage: newMessage.text,
-            lastMessageAt: newMessage.createdAt,
-            lastMessageType: newMessage.type,
-            lastSenderId: newMessage.senderId,
+            lastMessage: c.lastMessage?.copyWith(
+              id: newMessage.id,
+              senderId: newMessage.senderId,
+              type: newMessage.type,
+              text: newMessage.text,
+              mediaUrl: newMessage.mediaUrl,
+              mediaType: newMessage.mediaType,
+              isDeleted: newMessage.isDeleted,
+              createdAt: newMessage.createdAt,
+            ),
             unreadCountMap: newUnreadCountMap,
           );
         }
@@ -78,8 +98,8 @@ class ConversationCubit extends Cubit<ConversationState> {
       }).toList();
 
       updatedConversations.sort((a, b) {
-        final aTime = a.lastMessageAt ?? a.createdAt;
-        final bTime = b.lastMessageAt ?? b.createdAt;
+        final aTime = a.lastMessage?.createdAt ?? a.createdAt;
+        final bTime = b.lastMessage?.createdAt ?? b.createdAt;
         return bTime.compareTo(aTime);
       });
 
@@ -104,8 +124,8 @@ class ConversationCubit extends Cubit<ConversationState> {
         state.copyWith(
           conversations: state.conversations.map((c) {
             if (c.id == conversation.id) {
-              final updatedMap = Map<String, int>.from(c.unreadCountMap)
-                ..[currentUserId] = 0;
+              final updatedMap = Map<String, UnreadCount>.from(c.unreadCountMap)
+                ..[currentUserId] = const UnreadCount(count: 0);
               return c.copyWith(unreadCountMap: updatedMap);
             }
             return c;
@@ -120,14 +140,34 @@ class ConversationCubit extends Cubit<ConversationState> {
   int getTotalUnreadCount(ConversationState state) {
     if (state.currentUserId.isEmpty) return 0;
 
-    return state.conversations.fold<int>(
-      0,
-      (total, conversation) =>
-          total + (conversation.unreadCountMap[state.currentUserId] ?? 0),
+    // If any conversation has unread, return 1, else 0
+    final hasUnread = state.conversations.any(
+      (conversation) =>
+          (conversation.unreadCountMap[state.currentUserId]?.count ?? 0) > 0,
     );
+    return hasUnread ? 1 : 0;
   }
 
   void clear() {
     emit(ConversationState.initial());
+  }
+
+  Future<void> _loadCachedConversations(String currentUserId) async {
+    try {
+      final cachedConversationsModels = await _conversationLocalDataSource
+          .getCachedConversations(currentUserId);
+
+      if (cachedConversationsModels.isEmpty) {
+        return;
+      }
+
+      final cachedConversations = cachedConversationsModels
+          .map(ConversationMapper.toEntity)
+          .toList();
+
+      emit(state.copyWith(conversations: cachedConversations));
+    } catch (_) {
+      // Ignore cache bootstrap failures and continue to remote fetch.
+    }
   }
 }

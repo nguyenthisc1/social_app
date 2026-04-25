@@ -1,4 +1,4 @@
-import 'package:social_app/features/user/domain/entites/user.dart';
+import 'package:social_app/features/user/domain/entites/user_entity.dart';
 import 'package:social_app/features/user/domain/repositories/user_repository.dart';
 
 class GetUserProfileUsecase {
@@ -6,7 +6,7 @@ class GetUserProfileUsecase {
 
   const GetUserProfileUsecase(this._userRepository);
 
-  Future<User> call() async {
+  Future<UserEntity> call() async {
     return await _userRepository.getUserProfile();
   }
 }

@@ -3,6 +3,7 @@ import 'package:social_app/core/theme/app_size.dart';
 import 'package:social_app/core/widgets/loading_indicator.dart';
 import 'package:social_app/features/message/domain/entites/message_delivery_status.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
+import 'package:social_app/features/message/domain/entites/message_type.dart';
 
 class MessageBubbleWidget extends StatelessWidget {
   const MessageBubbleWidget({
@@ -77,13 +78,13 @@ class MessageBubbleWidget extends StatelessWidget {
   }
 
   Widget _buildBubble(BuildContext context, ThemeData theme) {
-    final isImage = message.type == 'image';
+    final isImage = message.type == MessageType.image;
 
-    if (isImage && message.fileUrl != null) {
+    if (isImage && message.mediaUrl != null) {
       return ClipRRect(
         borderRadius: _bubbleRadius(),
         child: Image.network(
-          message.fileUrl!,
+          message.mediaUrl!,
           width: 200,
           height: 200,
           fit: BoxFit.cover,
