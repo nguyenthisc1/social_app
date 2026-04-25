@@ -23,29 +23,27 @@ class _ConversationsPageState extends State<ConversationsPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _preloadConversationUsers();
+      _fetchConversationUsers();
     });
   }
 
-  void _preloadConversationUsers() {
+  void _fetchConversationUsers() {
     final userCubit = context.read<UserCubit>();
-    final userState = userCubit.state;
     final conversationState = context.read<ConversationCubit>().state;
-    final currentUserId = userState.profile?.id;
+    final currentUserId = userCubit.state.profile?.id;
 
     if (currentUserId == null || conversationState.conversations.isEmpty) {
       return;
     }
 
-    final otherUserIds = conversationState.conversations
+    final participantIds = conversationState.conversations
         .expand((conversation) => conversation.participantIds)
         .where((memberId) => memberId != currentUserId)
-        .where((memberId) => !userState.preloadedUserIds.contains(memberId))
         .toSet()
         .toList();
 
-    if (otherUserIds.isNotEmpty) {
-      userCubit.preloadUsers(otherUserIds);
+    if (participantIds.isNotEmpty) {
+      userCubit.fetchUsersByIds(participantIds);
     }
   }
 
@@ -61,7 +59,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
           context.showSnackBar(state.errorMessage!, isError: true);
         }
 
-        _preloadConversationUsers();
+        _fetchConversationUsers();
       },
 
       builder: (context, state) {
@@ -92,12 +90,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
             final otherUser = otherUserId == null
                 ? null
                 : userState.usersById[otherUserId];
-            final isUserPreloaded =
-                otherUserId != null &&
-                userState.preloadedUserIds.contains(otherUserId);
-            final title =
-                otherUser?.username ??
-                (isUserPreloaded ? 'Unknown user' : 'Loading...');
+            final title = otherUser?.username ?? 'Unknown user';
             final avatarLabel = title.isNotEmpty
                 ? title.characters.first.toUpperCase()
                 : '?';

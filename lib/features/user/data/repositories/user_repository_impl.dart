@@ -35,6 +35,41 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future<List<UserEntity>> getUsersByIds(List<String> ids) async {
+    final uniqueIds = ids.where((id) => id.isNotEmpty).toSet().toList();
+    if (uniqueIds.isEmpty) {
+      return const [];
+    }
+
+    final cachedUsers = await _localDataSource.getCachedUsersByIds(uniqueIds);
+    final usersById = <String, UserEntity>{};
+
+    for (final cachedUser in cachedUsers.values) {
+      final user = UserMapper.toEntity(cachedUser);
+      usersById[user.id] = user;
+    }
+
+    final missingIds = uniqueIds
+        .where((id) => !usersById.containsKey(id))
+        .toList();
+
+    if (missingIds.isNotEmpty) {
+      final remoteUsers = await _remoteDataSource.getUsersByIds(missingIds);
+
+      for (final remoteUser in remoteUsers) {
+        await _localDataSource.cacheUser(remoteUser);
+        final user = UserMapper.toEntity(remoteUser);
+        usersById[user.id] = user;
+      }
+    }
+
+    return uniqueIds
+        .map((id) => usersById[id])
+        .whereType<UserEntity>()
+        .toList();
+  }
+
+  @override
   Future<UserEntity> getUserProfile() async {
     try {
       final model = await _remoteDataSource.getUserProfile();

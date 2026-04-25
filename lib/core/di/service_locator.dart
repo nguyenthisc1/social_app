@@ -66,8 +66,8 @@ import 'package:social_app/features/user/data/datasources/remote/firebase/user_f
 import 'package:social_app/features/user/data/datasources/remote/user_remote_data_source.dart';
 import 'package:social_app/features/user/data/repositories/user_repository_impl.dart';
 import 'package:social_app/features/user/domain/repositories/user_repository.dart';
-import 'package:social_app/features/user/domain/usecases/get_user_by_id_usecase.dart';
 import 'package:social_app/features/user/domain/usecases/get_user_profile_usecase.dart';
+import 'package:social_app/features/user/domain/usecases/get_users_by_ids_usecase.dart';
 import 'package:social_app/features/user/domain/usecases/search_user_profile_usecase.dart';
 import 'package:social_app/features/user/domain/usecases/update_user_profile_usecase.dart';
 import 'package:social_app/presentations/post/bloc/post_bloc.dart';
@@ -262,7 +262,7 @@ Future<void> initializeDependencies() async {
 
   // User Use Cases
   sl.registerLazySingleton(() => GetUserProfileUsecase(sl<UserRepository>()));
-  sl.registerLazySingleton(() => GetUserByIdUsecase(sl<UserRepository>()));
+  sl.registerLazySingleton(() => GetUsersByIdsUsecase(sl<UserRepository>()));
   sl.registerLazySingleton(
     () => SearchUserProfileUsecase(sl<UserRepository>()),
   );
@@ -304,10 +304,8 @@ Future<void> initializeDependencies() async {
   // User Cubit
   sl.registerFactory(
     () => UserCubit(
-      getUserByIdUsecase: sl(),
       getUserProfileUsecase: sl(),
-      searchUserProfileUsecase: sl(),
-      updateUserProfileUsecase: sl(),
+      getUsersByIdsUsecase: sl(),
       localDataSource: sl(),
     ),
   );

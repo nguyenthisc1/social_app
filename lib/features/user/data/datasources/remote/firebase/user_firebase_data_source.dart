@@ -25,6 +25,23 @@ class UserFirebaseDataSource implements UserRemoteDataSource {
   }
 
   @override
+  Future<List<UserModel>> getUsersByIds(List<String> ids) async {
+    final uniqueIds = ids.where((id) => id.isNotEmpty).toSet().toList();
+    if (uniqueIds.isEmpty) {
+      return const [];
+    }
+
+    final users = await Future.wait(
+      uniqueIds.map((id) => _firestore.collection('users').doc(id).get()),
+    );
+
+    return users
+        .where((doc) => doc.exists && doc.data() != null)
+        .map((doc) => UserModel.fromJson({...doc.data()!, 'id': doc.id}))
+        .toList();
+  }
+
+  @override
   Future<UserModel> getUserProfile() async {
     final user = _firebaseAuth.currentUser;
     if (user == null) {
@@ -45,7 +62,7 @@ class UserFirebaseDataSource implements UserRemoteDataSource {
     final querySnapshot = await _firestore
         .collection('users')
         .where('username', isGreaterThanOrEqualTo: search)
-        .where('username', isLessThanOrEqualTo: search + '\uf8ff')
+        .where('username', isLessThanOrEqualTo: '$search\uf8ff')
         .get();
 
     return querySnapshot.docs

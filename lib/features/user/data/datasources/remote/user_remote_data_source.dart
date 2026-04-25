@@ -5,4 +5,5 @@ abstract interface class UserRemoteDataSource {
   Future<UserModel> updateUserProfile(UserModel user);
   Future<List<UserModel>> searchUser(String search);
   Future<UserModel?> getUserById(String id);
+  Future<List<UserModel>> getUsersByIds(List<String> ids);
 }
