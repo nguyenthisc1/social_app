@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/core.dart';
-import '../../../user/domain/entites/user.dart';
+import '../../../user/domain/entites/user_entity.dart';
 import '../repositories/auth_repository.dart';
 
 /// Use case for user registration
@@ -9,7 +9,7 @@ class RegisterUseCase {
 
   RegisterUseCase(this.repository);
 
-  Future<Either<Failure, User>> call({
+  Future<Either<Failure, UserEntity>> call({
     required String email,
     required String username,
     required String password,

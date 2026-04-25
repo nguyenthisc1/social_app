@@ -1,15 +1,15 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/core.dart';
-import '../../../user/domain/entites/user.dart';
+import '../../../user/domain/entites/user_entity.dart';
 import '../entities/auth_tokens.dart';
 
 abstract interface class AuthRepository {
-  Future<Either<Failure, User>> login({
+  Future<Either<Failure, UserEntity>> login({
     required String email,
     required String password,
   });
 
-  Future<Either<Failure, User>> register({
+  Future<Either<Failure, UserEntity>> register({
     required String email,
     required String username,
     required String password,
@@ -17,7 +17,7 @@ abstract interface class AuthRepository {
 
   Future<Either<Failure, void>> logout();
 
-  Future<Either<Failure, User>> getCurrentUser();
+  Future<Either<Failure, UserEntity>> getCurrentUser();
 
   Future<bool> isAuthenticated();
 
@@ -25,7 +25,7 @@ abstract interface class AuthRepository {
 
   Future<Either<Failure, AuthTokens>> refreshToken();
 
-  Future<Either<Failure, User>> updateProfile({
+  Future<Either<Failure, UserEntity>> updateProfile({
     String? displayName,
     String? bio,
     String? avatarUrl,

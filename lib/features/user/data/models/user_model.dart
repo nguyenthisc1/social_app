@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 /// User model with JSON serialization
@@ -10,7 +11,9 @@ class UserModel extends Equatable {
   final List<String> friends;
   final List<String> following;
   final List<String> followers;
-  final bool isActive;
+  final Timestamp lastSeen;
+  final Timestamp createdAt;
+  final bool isOnline;
 
   const UserModel({
     required this.id,
@@ -21,7 +24,9 @@ class UserModel extends Equatable {
     this.friends = const [],
     this.following = const [],
     this.followers = const [],
-    this.isActive = false,
+    required this.lastSeen,
+    required this.createdAt,
+    this.isOnline = false,
   });
 
   @override
@@ -34,40 +39,14 @@ class UserModel extends Equatable {
     friends,
     following,
     followers,
-    isActive,
+    lastSeen,
+    createdAt,
+    isOnline,
   ];
 
-  /// Create UserModel from JSON
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['_id'] ?? json['id'] as String,
-      username: json['username'] as String,
-      email: json['email'] as String,
-      avatarUrl: json['avatarUrl'] as String?,
-      bio: json['bio'] as String?,
-      friends:
-          (json['friends'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
-      following:
-          (json['following'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
-      followers:
-          (json['followers'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
-      isActive: json['isActive'] as bool? ?? false,
-    );
-  }
-
-  /// Convert UserModel to JSON
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
+      'id': id,
       'username': username,
       'email': email,
       'avatarUrl': avatarUrl,
@@ -75,34 +54,35 @@ class UserModel extends Equatable {
       'friends': friends,
       'following': following,
       'followers': followers,
-      'isActive': isActive,
+      'lastSeen': lastSeen,
+      'createdAt': createdAt,
+      'isOnline': isOnline,
     };
   }
 
-  /// Create a copy with updated fields
-  UserModel copyWith({
-    String? id,
-    String? username,
-    String? email,
-    String? avatarUrl,
-    String? bio,
-    List<String>? friends,
-    List<String>? following,
-    List<String>? followers,
-    bool? isActive,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) {
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: id ?? this.id,
-      username: username ?? this.username,
-      email: email ?? this.email,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      bio: bio ?? this.bio,
-      friends: friends ?? this.friends,
-      following: following ?? this.following,
-      followers: followers ?? this.followers,
-      isActive: isActive ?? this.isActive,
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
+      avatarUrl: json['avatarUrl'],
+      bio: json['bio'],
+      friends: List<String>.from(json['friends'] ?? []),
+      following: List<String>.from(json['following'] ?? []),
+      followers: List<String>.from(json['followers'] ?? []),
+      lastSeen: json['lastSeen'] is Timestamp
+          ? json['lastSeen']
+          : Timestamp.fromMillisecondsSinceEpoch(
+              (json['lastSeen']?['millisecondsSinceEpoch']) ??
+                  DateTime.now().millisecondsSinceEpoch,
+            ),
+      createdAt: json['createdAt'] is Timestamp
+          ? json['createdAt']
+          : Timestamp.fromMillisecondsSinceEpoch(
+              (json['createdAt']?['millisecondsSinceEpoch']) ??
+                  DateTime.now().millisecondsSinceEpoch,
+            ),
+      isOnline: json['isOnline'] ?? false,
     );
   }
 }

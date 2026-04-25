@@ -15,7 +15,7 @@ class ConversationState {
 
   factory ConversationState.initial() {
     return ConversationState(
-      isLoading: true,
+      isLoading: false,
       errorMessage: null,
       conversations: [],
       currentUserId: '',

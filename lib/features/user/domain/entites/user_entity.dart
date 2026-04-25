@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-class User extends Equatable {
+class UserEntity extends Equatable {
   final String id;
   final String username;
   final String email;
@@ -9,10 +10,12 @@ class User extends Equatable {
   final List<String> friends;
   final List<String> following;
   final List<String> followers;
-  final bool isActive;
+  final Timestamp lastSeen;
+  final Timestamp createdAt;
+  final bool isOnline;
 
-  const User({
-    required this.id,
+  const UserEntity({
+  required this.id,
     required this.username,
     required this.email,
     this.avatarUrl,
@@ -20,8 +23,38 @@ class User extends Equatable {
     this.friends = const [],
     this.following = const [],
     this.followers = const [],
-    this.isActive = false,
+    this.isOnline = false,
+    required this.lastSeen,
+    required this.createdAt,
   });
+
+  UserEntity copyWith({
+    String? id,
+    String? username,
+    String? email,
+    String? avatarUrl,
+    String? bio,
+    List<String>? friends,
+    List<String>? following,
+    List<String>? followers,
+    Timestamp? lastSeen,
+    Timestamp? createdAt,
+    bool? isOnline,
+  }) {
+    return UserEntity(
+      id: id ?? this.id,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      bio: bio ?? this.bio,
+      friends: friends ?? this.friends,
+      following: following ?? this.following,
+      followers: followers ?? this.followers,
+      lastSeen: lastSeen ?? this.lastSeen,
+      createdAt: createdAt ?? this.createdAt,
+      isOnline: isOnline ?? this.isOnline,
+    );
+  }
 
   @override
   List<Object?> get props => [
@@ -33,31 +66,8 @@ class User extends Equatable {
     friends,
     following,
     followers,
-    isActive,
+    lastSeen,
+    createdAt,
+    isOnline,
   ];
-
-  /// Create a copy with updated fields
-  User copyWith({
-    String? id,
-    String? username,
-    String? email,
-    String? avatarUrl,
-    String? bio,
-    List<String>? friends,
-    List<String>? following,
-    List<String>? followers,
-    bool? isActive,
-  }) {
-    return User(
-      id: id ?? this.id,
-      username: username ?? this.username,
-      email: email ?? this.email,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      bio: bio ?? this.bio,
-      friends: friends ?? this.friends,
-      following: following ?? this.following,
-      followers: followers ?? this.followers,
-      isActive: isActive ?? this.isActive,
-    );
-  }
 }
