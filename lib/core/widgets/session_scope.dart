@@ -28,7 +28,7 @@ class SessionScope extends StatelessWidget {
           create: (_) {
             final cubit = sl<UserCubit>();
             if (isAuthenticated) {
-              cubit.getProfile();
+              cubit.initializeSession();
             }
             return cubit;
           },
