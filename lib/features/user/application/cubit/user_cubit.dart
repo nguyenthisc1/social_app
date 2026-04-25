@@ -70,24 +70,10 @@ class UserCubit extends Cubit<UserState> {
         nextUsersById[user.id] = user;
       }
 
-      emit(
-        state.copyWith(
-          clearError: true,
-          usersById: nextUsersById,
-        ),
-      );
+      emit(state.copyWith(clearError: true, usersById: nextUsersById));
     } catch (error) {
-      emit(
-        state.copyWith(
-          errorMessage: error.toString(),
-          clearError: false,
-        ),
-      );
+      emit(state.copyWith(errorMessage: error.toString(), clearError: false));
     }
-  }
-
-  UserEntity? getCachedUser(String id) {
-    return state.usersById[id];
   }
 
   void clear() {
@@ -104,7 +90,6 @@ class UserCubit extends Cubit<UserState> {
       final user = UserMapper.toEntity(cachedUser);
       final usersById = Map<String, UserEntity>.from(state.usersById);
       usersById[user.id] = user;
-
       emit(
         state.copyWith(
           isLoading: false,
@@ -116,5 +101,9 @@ class UserCubit extends Cubit<UserState> {
     } catch (_) {
       // Ignore cache bootstrap failures and continue to remote fetch.
     }
+  }
+
+  UserEntity? getCachedUser(String id) {
+    return state.usersById[id];
   }
 }

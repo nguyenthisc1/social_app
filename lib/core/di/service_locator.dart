@@ -326,8 +326,6 @@ Future<void> initializeDependencies() async {
   sl.registerFactory(
     () => ConversationCubit(
       getConversationsUsecase: sl(),
-      createConversationUsecase: sl(),
-      updateConversationsUsecase: sl(),
       conversationLocalDataSource: sl(),
     ),
   );

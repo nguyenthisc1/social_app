@@ -7,6 +7,7 @@ import 'package:social_app/core/widgets/error_view.dart';
 import 'package:social_app/core/widgets/loading_indicator.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
+import 'package:social_app/features/conversation/domain/entites/conversation_type.dart';
 import 'package:social_app/features/message/domain/entites/message_type.dart';
 import 'package:social_app/features/user/application/cubit/user_cubit.dart';
 
@@ -23,45 +24,20 @@ class _ConversationsPageState extends State<ConversationsPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchConversationUsers();
+      context.read<ConversationCubit>().getConversations();
     });
-  }
-
-  void _fetchConversationUsers() {
-    final userCubit = context.read<UserCubit>();
-    final conversationState = context.read<ConversationCubit>().state;
-    final currentUserId = userCubit.state.profile?.id;
-
-    if (currentUserId == null || conversationState.conversations.isEmpty) {
-      return;
-    }
-
-    final participantIds = conversationState.conversations
-        .expand((conversation) => conversation.participantIds)
-        .where((memberId) => memberId != currentUserId)
-        .toSet()
-        .toList();
-
-    if (participantIds.isNotEmpty) {
-      userCubit.fetchUsersByIds(participantIds);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ConversationCubit, ConversationState>(
       listenWhen: (previous, current) =>
-          previous.conversations != current.conversations ||
           previous.errorMessage != current.errorMessage,
-
       listener: (context, state) {
         if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
           context.showSnackBar(state.errorMessage!, isError: true);
         }
-
-        _fetchConversationUsers();
       },
-
       builder: (context, state) {
         final userState = context.watch<UserCubit>().state;
 
@@ -83,17 +59,22 @@ class _ConversationsPageState extends State<ConversationsPage> {
           ),
           itemBuilder: (context, index) {
             final conversation = state.conversations[index];
-            // Other User conversation
             final otherUserId = conversation.participantIds
                 .where((id) => id != state.currentUserId)
                 .firstOrNull;
             final otherUser = otherUserId == null
                 ? null
                 : userState.usersById[otherUserId];
-            final title = otherUser?.username ?? 'Unknown user';
-            final avatarLabel = title.isNotEmpty
-                ? title.characters.first.toUpperCase()
-                : '?';
+            final isGroup = conversation.type == ConversationType.group;
+            final title = isGroup
+                ? (conversation.name.trim().isEmpty
+                      ? 'Unnamed group'
+                      : conversation.name)
+                : (otherUser?.username ?? 'Unknown user');
+            final avatarLabel = title.characters.first.toUpperCase();
+            final avatarUrl = isGroup
+                ? conversation.avatarUrl
+                : otherUser?.avatarUrl;
             final unreadCount =
                 conversation.unreadCountMap[state.currentUserId]?.count ?? 0;
             final isUnread = unreadCount > 0;
@@ -106,7 +87,15 @@ class _ConversationsPageState extends State<ConversationsPage> {
               leading: CircleAvatar(
                 radius: 26,
                 backgroundColor: context.colorScheme.surfaceContainerHighest,
-                child: Text(avatarLabel, style: context.textTheme.titleMedium),
+                backgroundImage: avatarUrl?.isNotEmpty == true
+                    ? NetworkImage(avatarUrl!)
+                    : null,
+                child: avatarUrl?.isNotEmpty == true
+                    ? null
+                    : Text(
+                        avatarLabel,
+                        style: context.textTheme.titleMedium,
+                      ),
               ),
               title: Text(
                 title,
@@ -119,7 +108,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                 unreadCount > 1
                     ? '$unreadCount new messages'
                     : conversation.lastMessage?.type == MessageType.text
-                    ? conversation.lastMessage?.text ?? ""
+                    ? conversation.lastMessage?.text ?? ''
                     : conversation.lastMessage?.type == MessageType.image
                     ? 'Send a image'
                     : '',

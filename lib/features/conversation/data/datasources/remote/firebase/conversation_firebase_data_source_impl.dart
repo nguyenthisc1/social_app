@@ -75,7 +75,6 @@ class ConversationFirebaseDataSourceImpl
           .orderBy('lastMessage.createdAt', descending: true)
           .get();
 
-
       return querySnapshot.docs.map((doc) {
         final data = {...doc.data(), 'id': doc.id};
         return ConversationModel.fromJson(data);
