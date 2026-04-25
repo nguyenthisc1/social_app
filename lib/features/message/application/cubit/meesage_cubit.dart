@@ -99,7 +99,6 @@ class MessageCubit extends Cubit<MessageState> {
               m.clientMessageId != null &&
               !messages.any((msg) => msg.clientMessageId == m.clientMessageId),
         );
-
         emit(
           state.copyWith(
             isLoading: false,

@@ -6,11 +6,14 @@ class MessageModel extends Equatable {
   final String id;
   final String conversationId;
   final String? text;
-  final String? fileName;
-  final String? fileUrl;
   final String senderId;
   final String type;
   final String status;
+  final bool isDeleted;
+  final String? replyTo;
+  final Map<String, dynamic> reactions;
+  final String? mediaUrl;
+  final String? mediaType;
   final Timestamp createdAt;
 
   const MessageModel({
@@ -18,12 +21,15 @@ class MessageModel extends Equatable {
     required this.id,
     required this.conversationId,
     this.text,
-    this.fileName,
-    this.fileUrl,
     required this.senderId,
     required this.type,
-    required this.createdAt,
     required this.status,
+    this.isDeleted = false,
+    this.replyTo,
+    required this.reactions,
+    this.mediaUrl,
+    this.mediaType,
+    required this.createdAt,
   });
 
   @override
@@ -32,11 +38,14 @@ class MessageModel extends Equatable {
     id,
     conversationId,
     text,
-    fileName,
-    fileUrl,
     senderId,
     type,
     status,
+    isDeleted,
+    replyTo,
+    reactions,
+    mediaUrl,
+    mediaType,
     createdAt,
   ];
 
@@ -46,30 +55,41 @@ class MessageModel extends Equatable {
       'id': id,
       'conversationId': conversationId,
       'text': text,
-      'fileName': fileName,
-      'fileUrl': fileUrl,
       'senderId': senderId,
       'type': type,
       'status': status,
+      'isDeleted': isDeleted,
+      'replyTo': replyTo,
+      'reactions': reactions,
+      'mediaUrl': mediaUrl,
+      'mediaType': mediaType,
       'createdAt': createdAt,
     };
   }
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
-    final createdAt =
-        json['createdAt'] ?? json['clientCreatedAt'] ?? Timestamp.now();
-
     return MessageModel(
-      clientMessageId: json['clientMessageId'] ?? json['id'],
-      id: json['id'],
-      conversationId: json['conversationId'],
+      clientMessageId:
+          json['clientMessageId']?.toString() ?? json['id']?.toString() ?? '',
+      id: json['id']?.toString() ?? '',
+      conversationId: json['conversationId']?.toString() ?? '',
       text: json['text'],
-      fileName: json['fileName'],
-      fileUrl: json['fileUrl'],
-      senderId: json['senderId'],
-      type: json['type'],
-      createdAt: createdAt,
-      status: json['status'] ?? 'sent',
+      senderId: json['senderId']?.toString() ?? '',
+      type: json['type']?.toString() ?? 'text',
+      status: json['status']?.toString() ?? 'sent',
+      isDeleted: json['isDeleted'] ?? false,
+      replyTo: json['replyTo'],
+      reactions: json['reactions'] is Map
+          ? Map<String, dynamic>.from(json['reactions'] as Map)
+          : <String, dynamic>{},
+      mediaUrl: json['mediaUrl'],
+      mediaType: json['mediaType'],
+      createdAt: json['createdAt'] is Timestamp
+          ? json['createdAt']
+          : Timestamp.fromMillisecondsSinceEpoch(
+              (json['createdAt'] as int?) ??
+                  DateTime.now().millisecondsSinceEpoch,
+            ),
     );
   }
 }

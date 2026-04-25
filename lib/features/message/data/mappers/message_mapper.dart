@@ -1,6 +1,7 @@
 import 'package:social_app/features/message/data/models/message_model.dart';
 import 'package:social_app/features/message/domain/entites/message_delivery_status.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
+import 'package:social_app/features/message/domain/entites/message_type.dart';
 
 class MessageMapper {
   const MessageMapper._();
@@ -11,15 +12,21 @@ class MessageMapper {
       id: model.id,
       conversationId: model.conversationId,
       createdAt: model.createdAt,
-      fileName: model.fileName,
-      fileUrl: model.fileUrl,
       senderId: model.senderId,
-      type: model.type,
+      type: MessageType.values.firstWhere(
+        (e) => e.name == model.type,
+        orElse: () => MessageType.text,
+      ),
       text: model.text,
       status: MessageDeliveryStatus.values.firstWhere(
         (e) => e.name == model.status,
         orElse: () => MessageDeliveryStatus.sent,
       ),
+      isDeleted: model.isDeleted,
+      reactions: model.reactions,
+      replyTo: model.replyTo,
+      mediaType: model.mediaType,
+      mediaUrl: model.mediaUrl,
     );
   }
 
@@ -29,12 +36,15 @@ class MessageMapper {
       id: entity.id,
       conversationId: entity.conversationId,
       text: entity.text,
-      fileName: entity.fileName,
-      fileUrl: entity.fileUrl,
+      mediaUrl: entity.mediaUrl,
+      mediaType: entity.mediaType,
       senderId: entity.senderId,
-      type: entity.type,
+      type: entity.type.name,
       createdAt: entity.createdAt,
       status: entity.status.name,
+      replyTo: entity.replyTo,
+      isDeleted: entity.isDeleted,
+      reactions: entity.reactions,
     );
   }
 }

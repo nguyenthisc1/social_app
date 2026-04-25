@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:social_app/features/message/data/datasources/local/message_local_data_source.dart';
 import 'package:social_app/features/message/data/models/message_model.dart';
@@ -48,18 +49,30 @@ class MessageHiveLocalDataSource implements MessageLocalDataSource {
       final box = await _openBox();
       final raw = box.get(_conversationMessagesKey(conversationId));
 
-      if (raw is! List) {
+      if (raw == null || raw is! List) {
         return const [];
       }
 
-      return raw
-          .whereType<Map>()
-          .map(
-            (item) => MessageModel.fromJson(
+      final messages = <MessageModel>[];
+
+      for (final item in raw) {
+        try {
+          if (item is! Map) {
+            continue;
+          }
+
+          messages.add(
+            MessageModel.fromJson(
               _deserializeMessage(Map<String, dynamic>.from(item)),
             ),
-          )
-          .toList();
+          );
+        } catch (e, st) {
+          debugPrint('Skip invalid cached message item: $e');
+          debugPrintStack(stackTrace: st);
+        }
+      }
+
+      return messages;
     } catch (e) {
       throw MessageExeptions(message: e.toString());
     }
@@ -100,11 +113,14 @@ class MessageHiveLocalDataSource implements MessageLocalDataSource {
       'id': model.id,
       'conversationId': model.conversationId,
       'text': model.text,
-      'fileName': model.fileName,
-      'fileUrl': model.fileUrl,
       'senderId': model.senderId,
       'type': model.type,
       'status': model.status,
+      'isDeleted': model.isDeleted,
+      'replyTo': model.replyTo,
+      'reactions': model.reactions,
+      'mediaUrl': model.mediaUrl,
+      'mediaType': model.mediaType,
       'createdAt': model.createdAt.millisecondsSinceEpoch,
     };
   }
@@ -112,9 +128,16 @@ class MessageHiveLocalDataSource implements MessageLocalDataSource {
   Map<String, dynamic> _deserializeMessage(Map<String, dynamic> json) {
     return {
       ...json,
-      'createdAt': Timestamp.fromMillisecondsSinceEpoch(
-        json['createdAt'] as int,
-      ),
+      'text': json['text'],
+      'reactions': json['reactions'] is Map
+          ? Map<String, dynamic>.from(json['reactions'] as Map)
+          : <String, dynamic>{},
+      'isDeleted': json['isDeleted'] ?? false,
+      'createdAt': json['createdAt'] is Timestamp
+          ? json['createdAt']
+          : Timestamp.fromMillisecondsSinceEpoch(
+              (json['createdAt'] as int?) ?? DateTime.now().millisecondsSinceEpoch,
+            ),
     };
   }
 }

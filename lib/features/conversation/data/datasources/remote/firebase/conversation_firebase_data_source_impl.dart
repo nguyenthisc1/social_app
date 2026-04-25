@@ -5,6 +5,7 @@ import 'package:social_app/features/conversation/data/mappers/conversation_mappe
 import 'package:social_app/features/conversation/data/models/conversation_model.dart';
 import 'package:social_app/features/conversation/domain/conversation_exeptions.dart';
 import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart';
+import 'package:social_app/features/conversation/domain/entites/conversation_type.dart';
 
 class ConversationFirebaseDataSourceImpl
     implements ConversationRemoteDataSource {
@@ -15,17 +16,22 @@ class ConversationFirebaseDataSourceImpl
   final FirebaseFirestore _firestore;
 
   @override
-  Future<ConversationModel> createConversation(List<String> memberIds) async {
+  Future<ConversationModel> createConversation(
+    List<String> participantIds,
+  ) async {
     try {
       final docRef = await _firestore.collection('conversations').add({
-        'memberIds': memberIds,
+        'participantIds': participantIds,
+        'type': participantIds.length == 2
+            ? ConversationType.direct.name
+            : ConversationType.group.name,
         'createdAt': FieldValue.serverTimestamp(),
-        'lastMessage': null,
-        'lastMessageAt': null,
-        'lastMessageType': null,
-        'lastSenderId': null,
+        'lastMessage.createdAt': FieldValue.serverTimestamp(),
         'unreadCountMap': {},
+        'name': '',
+        'avatarUrl': null,
       });
+
       final docSnapshot = await docRef.get();
 
       final data = {
@@ -65,16 +71,41 @@ class ConversationFirebaseDataSourceImpl
     try {
       final querySnapshot = await _firestore
           .collection('conversations')
-          .where('memberIds', arrayContains: currentUserId)
-          .orderBy('lastMessageAt', descending: true)
+          .where('participantIds', arrayContains: currentUserId)
+          .orderBy('lastMessage.createdAt', descending: true)
           .get();
+
 
       return querySnapshot.docs.map((doc) {
         final data = {...doc.data(), 'id': doc.id};
         return ConversationModel.fromJson(data);
       }).toList();
+    } on FirebaseException catch (e, st) {
+      debugPrint(
+        'getConversations FirebaseException code=${e.code} message=${e.message}',
+      );
+      debugPrintStack(stackTrace: st);
+
+      final fallbackSnapshot = await _firestore
+          .collection('conversations')
+          .where('participantIds', arrayContains: currentUserId)
+          .get();
+
+      final conversations = fallbackSnapshot.docs.map((doc) {
+        final data = {...doc.data(), 'id': doc.id};
+        return ConversationModel.fromJson(data);
+      }).toList();
+
+      conversations.sort((a, b) {
+        final aTime = a.lastMessage?.createdAt ?? a.createdAt;
+        final bTime = b.lastMessage?.createdAt ?? b.createdAt;
+        return bTime.compareTo(aTime);
+      });
+
+      return conversations;
     } catch (e, st) {
-      debugPrint('$st');
+      debugPrint('getConversations error: $e');
+      debugPrintStack(stackTrace: st);
 
       throw ConversationExeptions(message: 'Failed to get conversations: $e');
     }

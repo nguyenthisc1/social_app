@@ -30,9 +30,7 @@ class NotificationCubit extends Cubit<NotificationState> {
       }
 
       final token = await _getFcmTokenUsecase();
-      print(token);
       if (token != null) {
-        print('sycfcm token cubit');
         await _syncFcmTokenUsecase(userId: userId, token: token);
       }
 

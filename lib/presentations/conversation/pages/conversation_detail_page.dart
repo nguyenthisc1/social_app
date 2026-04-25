@@ -4,15 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:social_app/core/theme/app_size.dart';
 import 'package:social_app/core/utils/extensions.dart';
+import 'package:social_app/core/utils/time_formatter.dart';
 import 'package:social_app/core/widgets/error_view.dart';
 import 'package:social_app/core/widgets/loading_indicator.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_state.dart';
+import 'package:social_app/features/conversation/domain/entites/unread_count.dart';
 import 'package:social_app/features/message/application/cubit/meesage_cubit.dart';
 import 'package:social_app/features/message/application/cubit/message_state.dart';
 import 'package:social_app/features/message/domain/entites/message_delivery_status.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
+import 'package:social_app/features/message/domain/entites/message_type.dart';
 import 'package:social_app/features/user/application/cubit/user_cubit.dart';
 import 'package:social_app/presentations/conversation/widgets/message_bubble_widget.dart';
 
@@ -83,9 +86,10 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
       conversationId: widget.conversationId,
       text: text,
       senderId: currentUserId!,
-      type: 'text',
+      type: MessageType.text,
       status: MessageDeliveryStatus.sending,
       createdAt: Timestamp.now(),
+      reactions: {},
     );
 
     context.read<MessageCubit>().sendMessage(
@@ -113,13 +117,23 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
     if (currentUserId == null || conversationState.conversation == null) {
       return;
     }
-    print('state ${conversationState.currentUserId}');
 
-    final newUnreadCount = Map<String, int>.from(
+    final newUnreadCount = Map<String, UnreadCount>.from(
       conversationState.conversation!.unreadCountMap,
     );
 
-    newUnreadCount[currentUserId!] = 0;
+    if (newUnreadCount[currentUserId!] != null) {
+      newUnreadCount[currentUserId!] = newUnreadCount[currentUserId!]!.copyWith(
+        count: 0,
+        lastReadAt: Timestamp.now(),
+        lastReadMessageId: context
+            .read<ConversationDetailCubit>()
+            .state
+            .conversation
+            ?.lastMessage
+            ?.id,
+      );
+    }
 
     final updatedConversation = conversationState.conversation!.copyWith(
       unreadCountMap: newUnreadCount,
@@ -194,7 +208,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
         .read<ConversationDetailCubit>()
         .state
         .conversation
-        ?.memberIds
+        ?.participantIds
         .firstWhere((id) => id != currentUserId);
     final otherUser = context.watch<UserCubit>().state.usersById[otherUserId];
 
