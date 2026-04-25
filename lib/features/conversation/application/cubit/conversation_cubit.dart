@@ -21,6 +21,7 @@ class ConversationCubit extends Cubit<ConversationState> {
   Future<void> initializeSession(String currentUserId) async {
     emit(state.copyWith(currentUserId: currentUserId, clearError: true));
     await _loadCachedConversations(currentUserId);
+    
   }
 
   Future<void> getConversations() async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:social_app/core/theme/app_size.dart';
+import 'package:social_app/core/utils/date_formatter.dart';
 import 'package:social_app/core/utils/text_helpers.dart';
 import 'package:social_app/features/post/domain/entities/post_entity.dart';
 
@@ -131,8 +132,7 @@ class PostWidget extends StatelessWidget {
                 ),
               const SizedBox(height: AppSize.xs),
               Text(
-                // Use TextHelpers.timeAgo for displaying "Just now" or relative time
-                TextHelpers.timeAgo(post.createdAt),
+                DateFormatter.timeAgo(post.createdAt),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.outline,
                 ),
