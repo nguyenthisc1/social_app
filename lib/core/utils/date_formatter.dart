@@ -60,6 +60,41 @@ class DateFormatter {
     }
   }
 
+  /// Formats a timestamp for chat time dividers, e.g. "Today 14:30", "Yesterday 09:00", "Jan 15 08:30"
+  static String formatDividerTime(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    final time = DateFormat('HH:mm').format(date);
+
+    if (dateOnly == today) return 'Today $time';
+    if (dateOnly == yesterday) return 'Yesterday $time';
+    if (now.year == date.year) return '${DateFormat('MMM d').format(date)} $time';
+    return '${DateFormat('MMM d, yyyy').format(date)} $time';
+  }
+
+  /// Formats a chat bubble timestamp (e.g., "Just now", "5m ago", "14:30")
+  static String formatChatMessageTime(DateTime dt) {
+    final diff = DateTime.now().difference(dt);
+
+    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    final h = dt.hour.toString().padLeft(2, '0');
+    final m = dt.minute.toString().padLeft(2, '0');
+    return '$h:$m';
+  }
+
+  /// Formats a message timestamp to a compact relative label (e.g., "Just now", "5m", "2h", "3d")
+  static String formatMessageTime(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+
+    if (difference.inMinutes < 1) return 'Just now';
+    if (difference.inHours < 1) return '${difference.inMinutes}m';
+    if (difference.inDays < 1) return '${difference.inHours}h';
+    return '${difference.inDays}d';
+  }
+
   /// Formats date to short relative time (e.g., "2h", "3d")
   static String shortTimeAgo(DateTime date) {
     final now = DateTime.now();
