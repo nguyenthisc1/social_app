@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:social_app/core/domain-base/exceptions/generic_exception.dart';
 import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
+import 'package:social_app/features/auth/domain/auth_exceptions.dart';
 
-import '../errors/exceptions.dart';
 import '../utils/device_service.dart';
 import 'network_info.dart';
 
@@ -54,7 +55,7 @@ class ApiClient {
     Map<String, String>? headers,
   }) async {
     if (!await networkInfo.isConnected) {
-      throw NetworkException(message: 'No internet connection');
+      throw NetworkException(userMessage: 'No internet connection');
     }
 
     final uri = Uri.parse('$baseUrl$endpoint').replace(queryParameters: query);
@@ -91,7 +92,7 @@ class ApiClient {
       }
       return _handleResponse(response);
     } on SocketException {
-      throw NetworkException(message: 'No internet connection');
+      throw NetworkException(userMessage: 'No internet connection');
     } on http.ClientException {
       throw http.ClientException('Failed to connect to server');
     }
@@ -105,7 +106,7 @@ class ApiClient {
     Map<String, String>? headers,
   }) async {
     if (!await networkInfo.isConnected) {
-      throw NetworkException(message: 'No internet connection');
+      throw NetworkException(userMessage: 'No internet connection');
     }
 
     // Add headers, including device-id
@@ -127,9 +128,9 @@ class ApiClient {
     try {
       return _handleResponse(response);
     } on SocketException {
-      throw NetworkException(message: 'No internet connection');
+      throw NetworkException(userMessage: 'No internet connection');
     } on http.ClientException {
-      throw NetworkException(message: 'Failed to connect to server');
+      throw NetworkException(userMessage: 'Failed to connect to server');
     }
   }
 
@@ -153,16 +154,16 @@ class ApiClient {
 
     switch (statusCode) {
       case 401:
-        throw UnauthorizedException(message: message);
+        throw AuthUnauthorizedException(userMessage: message);
       case 404:
-        throw NotFoundException(message: message);
-      case 422:
-        throw ValidationException(
-          message: message,
-          errors: _extractValidationErrors(response),
-        );
+        throw NotFoundException(userMessage: message);
+      // case 422:
+      //   throw ValidationException(
+      //     message: message,
+      //     errors: _extractValidationErrors(response),
+      //   );
       default:
-        throw ServerException(message: message, statusCode: statusCode);
+        throw NetworkException(userMessage: message, cause: statusCode);
     }
   }
 
