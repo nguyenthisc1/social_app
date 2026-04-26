@@ -1,5 +1,3 @@
-import 'package:dartz/dartz.dart';
-import 'package:social_app/core/core.dart';
 import 'package:social_app/features/reaction/domain/entities/reaction_entity.dart';
 import 'package:social_app/features/reaction/domain/entities/reaction_enums.dart';
 import 'package:social_app/features/reaction/domain/repositories/reaction_repository.dart';
@@ -11,7 +9,7 @@ class GetReactionSummaryUsecase {
   GetReactionSummaryUsecase({required this.repository});
 
   /// Get aggregated reaction counts for a target
-  Future<Either<Failure, List<ReactionSummaryEntity>>> call({
+  Future<List<ReactionSummaryEntity>> call({
     required ReactionTargetType targetType,
     required String targetId,
   }) async {
