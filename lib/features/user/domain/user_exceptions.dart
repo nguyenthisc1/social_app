@@ -1,45 +1,72 @@
-import 'package:social_app/core/domain-base/exceptions/exception-base.dart';
+import 'package:social_app/core/domain-base/exceptions/exception_base.dart';
+import 'package:social_app/core/domain-base/exceptions/exception_factory.dart';
 
-/// Thrown when user-related errors occur.
-class UserException extends ExceptionBase {
+abstract class UserException extends ExceptionBase {
   const UserException({
-    required super.message,
-    super.code,
-    super.correlationId,
+    required super.userMessage,
+    required super.debugMessage,
+    required super.correlationId,
     super.cause,
     super.metadata,
   });
 }
 
-/// Specific exception indicating the user was not found.
 class UserNotFoundException extends UserException {
-  const UserNotFoundException({
-    super.message = 'User not found.',
-    super.code = 'user_not_found',
-    super.correlationId,
+  @override
+  final String code = 'USER.NOT_FOUND';
+
+  UserNotFoundException({
+    super.userMessage = 'User not found.',
+    super.debugMessage = 'User document does not exist.',
     super.cause,
     super.metadata,
-  });
+  }) : super(correlationId: newCorrelationId());
 }
 
-/// Specific exception indicating duplicate user (e.g., duplicate email/username).
-class DuplicateUserException extends UserException {
-  const DuplicateUserException({
-    super.message = 'Duplicate user.',
-    super.code = 'duplicate_user',
-    super.correlationId,
+class UserLoadException extends UserException {
+  @override
+  final String code = 'USER.LOAD_FAILED';
+
+  UserLoadException({
+    super.userMessage = 'Unable to load user profile.',
+    super.debugMessage = 'Failed to load user data.',
     super.cause,
     super.metadata,
-  });
+  }) : super(correlationId: newCorrelationId());
 }
 
-/// Specific exception for failed user validation or malformed data.
-class UserValidationException extends UserException {
-  const UserValidationException({
-    super.message = 'User validation failed.',
-    super.code = 'user_validation_failed',
-    super.correlationId,
+class UserUpdateException extends UserException {
+  @override
+  final String code = 'USER.UPDATE_FAILED';
+
+  UserUpdateException({
+    super.userMessage = 'Unable to update user profile.',
+    super.debugMessage = 'Failed to update user data.',
     super.cause,
     super.metadata,
-  });
+  }) : super(correlationId: newCorrelationId());
+}
+
+class UserCacheException extends UserException {
+  @override
+  final String code = 'USER.CACHE_FAILED';
+
+  UserCacheException({
+    super.userMessage = 'Unable to load local user data.',
+    super.debugMessage = 'User cache operation failed.',
+    super.cause,
+    super.metadata,
+  }) : super(correlationId: newCorrelationId());
+}
+
+class UserSearchException extends UserException {
+  @override
+  final String code = 'USER.SEARCH_FAILED';
+
+  UserSearchException({
+    super.userMessage = 'Unable to search users.',
+    super.debugMessage = 'User search operation failed.',
+    super.cause,
+    super.metadata,
+  }) : super(correlationId: newCorrelationId());
 }

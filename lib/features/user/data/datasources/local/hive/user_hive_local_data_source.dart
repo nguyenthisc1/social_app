@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:social_app/features/user/data/datasources/local/user_local_data_source.dart';
 import 'package:social_app/features/user/data/models/user_model.dart';
-import 'package:social_app/features/user/domain/user_exceptions.dart';
+import 'package:social_app/features/user/domain/user_exceptions.dart' show UserCacheException;
 
 class UserHiveLocalDataSource implements UserLocalDataSource {
   static const _kUserBox = 'user_box';
@@ -26,7 +26,10 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
         box.put(_userByIdKey(user.id), serializedUser),
       ]);
     } catch (e) {
-      throw UserException(message: e.toString());
+      throw UserCacheException(
+        debugMessage: 'Failed to cache user: $e',
+        cause: e,
+      );
     }
   }
 
@@ -47,7 +50,10 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
 
       return cachedUsers;
     } catch (e) {
-      throw UserException(message: e.toString());
+      throw UserCacheException(
+        debugMessage: 'Failed to get cached users by ids: $e',
+        cause: e,
+      );
     }
   }
 
@@ -63,7 +69,10 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
         _deserializeUser(Map<String, dynamic>.from(raw)),
       );
     } catch (e) {
-      throw UserException(message: e.toString());
+      throw UserCacheException(
+        debugMessage: 'Failed to get cached user: $e',
+        cause: e,
+      );
     }
   }
 
@@ -73,7 +82,10 @@ class UserHiveLocalDataSource implements UserLocalDataSource {
       final box = await _openBox();
       await box.delete(_currentUserKey());
     } catch (e) {
-      throw UserException(message: e.toString());
+      throw UserCacheException(
+        debugMessage: 'Failed to clear cached user: $e',
+        cause: e,
+      );
     }
   }
 
