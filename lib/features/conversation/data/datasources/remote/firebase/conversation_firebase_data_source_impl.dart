@@ -174,7 +174,11 @@ class ConversationFirebaseDataSourceImpl
       debugPrint('getConversations error: $e');
       debugPrintStack(stackTrace: st);
 
-      throw ConversationExeptions(message: 'Failed to get conversations: $e');
+      throw ConversationWatchException(
+        userMessage: 'Failed to get conversations: $e',
+        debugMessage: 'Failed to get conversations: $e',
+        cause: e,
+      );
     }
   }
 }
