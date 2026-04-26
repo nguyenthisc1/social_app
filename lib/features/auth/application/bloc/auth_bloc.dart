@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/core/domain-base/exceptions/exception_base.dart';
 
 import '../../domain/usecases/check_auth_status_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
@@ -131,11 +132,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final isAuthenticated = await checkAuthStatusUseCase();
 
     if (isAuthenticated) {
-      final result = await getCurrentUserUseCase();
-      result.fold(
-        (failure) => emit(AuthUnauthenticated()),
-        (user) => emit(AuthAuthenticated(user)),
-      );
+      try {
+        final user = await getCurrentUserUseCase();
+        emit(AuthAuthenticated(user));
+      } catch (_) {
+        emit(AuthUnauthenticated());
+      }
     } else {
       emit(AuthUnauthenticated());
     }
@@ -148,15 +150,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthEventState(event));
     emit(AuthLoading());
 
-    final result = await loginUseCase(
-      email: event.email,
-      password: event.password,
-    );
-
-    result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (user) => emit(AuthAuthenticated(user)),
-    );
+    try {
+      final user = await loginUseCase(
+        email: event.email,
+        password: event.password,
+      );
+      emit(AuthAuthenticated(user));
+    } catch (error) {
+      emit(AuthError(_mapErrorMessage(error)));
+    }
   }
 
   Future<void> _onAuthRegisterRequested(
@@ -166,16 +168,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthEventState(event));
     emit(AuthLoading());
 
-    final result = await registerUseCase(
-      email: event.email,
-      username: event.username,
-      password: event.password,
-    );
-
-    result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (user) => emit(AuthAuthenticated(user)),
-    );
+    try {
+      final user = await registerUseCase(
+        email: event.email,
+        username: event.username,
+        password: event.password,
+      );
+      emit(AuthAuthenticated(user));
+    } catch (error) {
+      emit(AuthError(_mapErrorMessage(error)));
+    }
   }
 
   Future<void> _onAuthLogoutRequested(
@@ -185,12 +187,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthEventState(event));
     emit(AuthLoading());
 
-    final result = await logoutUseCase();
-
-    result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (_) => emit(AuthUnauthenticated()),
-    );
+    try {
+      await logoutUseCase();
+      emit(AuthUnauthenticated());
+    } catch (error) {
+      emit(AuthError(_mapErrorMessage(error)));
+    }
   }
 
   Future<void> _onAuthGetCurrentUserRequested(
@@ -200,11 +202,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthEventState(event));
     emit(AuthLoading());
 
-    final result = await getCurrentUserUseCase();
+    try {
+      final user = await getCurrentUserUseCase();
+      emit(AuthAuthenticated(user));
+    } catch (error) {
+      emit(AuthError(_mapErrorMessage(error)));
+    }
+  }
 
-    result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (user) => emit(AuthAuthenticated(user)),
-    );
+  String _mapErrorMessage(Object error) {
+    if (error is ExceptionBase) {
+      return error.userMessage;
+    }
+
+    return 'Something went wrong.';
   }
 }

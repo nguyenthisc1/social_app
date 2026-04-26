@@ -1,19 +1,21 @@
-import 'package:dartz/dartz.dart';
-import 'package:social_app/features/auth/data/datasources/remote/auth_remote_data_source.dart';
+import 'package:social_app/core/domain-base/exceptions/exception_base.dart';
+import 'package:social_app/core/domain-base/exceptions/generic_exception.dart';
+import 'package:social_app/core/network/network.dart';
+import 'package:social_app/features/auth/data/datasources/remote/auth_firebase_remote_data_souce.dart';
+import 'package:social_app/features/auth/domain/auth_exceptions.dart';
+import 'package:social_app/features/user/data/models/user_model.dart';
 
-import '../../../../core/core.dart';
-import '../../../user/data/models/user_model.dart';
+import '../../../user/data/mappers/user_mapper.dart';
 import '../../../user/domain/entites/user_entity.dart';
 import '../../domain/entities/auth_tokens.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/local/auth_local_data_source.dart';
 import '../mappers/auth_tokens_mapper.dart';
-import '../../../user/data/mappers/user_mapper.dart';
 import '../models/auth_tokens_model.dart';
 
 /// Implementation of AuthRepository
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDataSource remoteDataSource;
+  final AuthFirebaseRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
@@ -29,7 +31,10 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<String> _getValidAccessToken() async {
     final tokens = await localDataSource.getCachedTokens();
     if (tokens == null) {
-      throw const UnauthorizedException(message: 'No authentication tokens');
+      throw AuthUnauthorizedException(
+        userMessage: 'Your session has expired. Please sign in again.',
+        debugMessage: 'No cached authentication tokens found.',
+      );
     }
 
     if (!tokens.isExpired && !tokens.willExpireSoon) {
@@ -52,200 +57,146 @@ class AuthRepositoryImpl implements AuthRepository {
   /// Executes the actual refresh request and caches the new tokens.
   Future<String> _performTokenRefresh(String refreshToken) async {
     try {
-      final response = await remoteDataSource.refreshToken(
+      final data = await remoteDataSource.refreshToken(
         refreshToken: refreshToken,
       );
-      final data = response.data;
-      if (data == null) {
-        await localDataSource.clearAllData();
-        throw const UnauthorizedException(message: 'Token refresh failed');
-      }
 
       final newTokens = AuthTokensModel.fromJson(
         data['tokens'] as Map<String, dynamic>,
       );
       await localDataSource.cacheTokens(newTokens);
       return newTokens.accessToken;
-    } on UnauthorizedException {
+    } on AuthException {
       await localDataSource.clearAllData();
       rethrow;
     } catch (e) {
       await localDataSource.clearAllData();
-      throw const UnauthorizedException(message: 'Token refresh failed');
+      throw AuthTokenException(
+        cause: e,
+        userMessage: 'Your session has expired. Please sign in again.',
+        debugMessage: 'Token refresh failed in auth repository.',
+      );
     }
   }
 
   @override
-  Future<Either<Failure, UserEntity>> login({
+  Future<UserEntity> login({
     required String email,
     required String password,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw NetworkException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network unavailable during login.',
+      );
     }
 
-    try {
-      final response = await remoteDataSource.login(
-        email: email,
-        password: password,
-      );
-      final data = response.data;
-      if (data == null) {
-        return const Left(
-          ServerFailure(message: 'Login failed: no data returned'),
-        );
-      }
+    final data = await remoteDataSource.login(email: email, password: password);
+    final userModel = UserModel.fromJson(data['user'] as Map<String, dynamic>);
+    final tokensModel = AuthTokensModel.fromJson(
+      data['tokens'] as Map<String, dynamic>,
+    );
 
-      // Extract user and tokens from response
-      final userModel = UserModel.fromJson(
-        data['user'] as Map<String, dynamic>,
-      );
-      final tokensModel = AuthTokensModel.fromJson(
-        data['tokens'] as Map<String, dynamic>,
-      );
+    await localDataSource.cacheUser(userModel);
+    await localDataSource.cacheTokens(tokensModel);
 
-      // Cache user and tokens
-      await localDataSource.cacheUser(userModel);
-      await localDataSource.cacheTokens(tokensModel);
-
-      return Right(UserMapper.toEntity(userModel));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on UnauthorizedException catch (e) {
-      return Left(UnauthorizedFailure(message: e.message));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(message: e.message, errors: e.errors));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Unexpected error: $e'));
-    }
+    return UserMapper.toEntity(userModel);
   }
 
   @override
-  Future<Either<Failure, UserEntity>> register({
+  Future<UserEntity> register({
     required String email,
     required String username,
     required String password,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw NetworkException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network unavailable during registration.',
+      );
     }
 
-    try {
-      final response = await remoteDataSource.register(
-        email: email,
-        username: username,
-        password: password,
-      );
+    final data = await remoteDataSource.register(
+      email: email,
+      username: username,
+      password: password,
+    );
 
-      final data = response.data;
-      if (data == null) {
-        return const Left(
-          ServerFailure(message: 'Registration failed: no data returned'),
-        );
-      }
+    final userModel = UserModel.fromJson(data['user'] as Map<String, dynamic>);
+    final tokensModel = AuthTokensModel.fromJson(
+      data['tokens'] as Map<String, dynamic>,
+    );
 
-      // Extract user and tokens from response
-      final userModel = UserModel.fromJson(
-        data['user'] as Map<String, dynamic>,
-      );
-      final tokensModel = AuthTokensModel.fromJson(
-        data['tokens'] as Map<String, dynamic>,
-      );
+    await localDataSource.cacheUser(userModel);
+    await localDataSource.cacheTokens(tokensModel);
 
-      // Cache user and tokens
-      await localDataSource.cacheUser(userModel);
-      await localDataSource.cacheTokens(tokensModel);
-
-      return Right(UserMapper.toEntity(userModel));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on UnauthorizedException catch (e) {
-      return Left(UnauthorizedFailure(message: e.message));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(message: e.message, errors: e.errors));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Unexpected error: $e'));
-    }
+    return UserMapper.toEntity(userModel);
   }
 
   @override
-  Future<Either<Failure, void>> logout() async {
+  Future<void> logout() async {
     try {
       final tokens = await localDataSource.getCachedTokens();
       final user = await localDataSource.getCachedUser();
 
       if (tokens != null && user != null && await networkInfo.isConnected) {
-        final response = await remoteDataSource.logout(user.id);
-        if (response.success == true) {
-          await localDataSource.clearAllData();
-
-          // ignore: void_checks
-          return const Right({'success': true});
-        }
+        await remoteDataSource.logout(user.id);
       }
 
-      // In all cases (no tokens/user/network, or remote logout not successful), always clear local data
       await localDataSource.clearAllData();
-      return const Right(null);
+    } on ExceptionBase {
+      rethrow;
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to logout: $e'));
+      throw CacheException(
+        cause: e,
+        userMessage: 'Unable to clear your session.',
+        debugMessage: 'Failed to logout and clear auth cache.',
+      );
     }
   }
 
   @override
-  Future<Either<Failure, UserEntity>> getCurrentUser() async {
+  Future<UserEntity> getCurrentUser() async {
     try {
       final cachedUser = await localDataSource.getCachedUser();
       if (cachedUser != null) {
         if (await networkInfo.isConnected) {
           try {
             final accessToken = await _getValidAccessToken();
-            final response = await remoteDataSource.getCurrentUser(
+            final userModel = await remoteDataSource.getCurrentUser(
               accessToken: accessToken,
             );
-
-            final userModel = response.data;
-            if (userModel != null) {
-              await localDataSource.cacheUser(userModel);
-              return Right(UserMapper.toEntity(userModel));
-            }
+            await localDataSource.cacheUser(userModel);
+            return UserMapper.toEntity(userModel);
           } catch (_) {
-            return Right(UserMapper.toEntity(cachedUser));
+            return UserMapper.toEntity(cachedUser);
           }
         }
-        return Right(UserMapper.toEntity(cachedUser));
+        return UserMapper.toEntity(cachedUser);
       }
 
       if (!await networkInfo.isConnected) {
-        return const Left(NetworkFailure());
-      }
-
-      final accessToken = await _getValidAccessToken();
-      final response = await remoteDataSource.getCurrentUser(
-        accessToken: accessToken,
-      );
-
-      final userModel = response.data;
-      if (userModel == null) {
-        return const Left(
-          ServerFailure(message: 'Failed to load user: no data returned'),
+        throw NetworkException(
+          userMessage: 'No internet connection.',
+          debugMessage: 'Network unavailable while loading current user.',
         );
       }
 
+      final accessToken = await _getValidAccessToken();
+      final userModel = await remoteDataSource.getCurrentUser(
+        accessToken: accessToken,
+      );
+
       await localDataSource.cacheUser(userModel);
-      return Right(UserMapper.toEntity(userModel));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on UnauthorizedException catch (e) {
-      return Left(UnauthorizedFailure(message: e.message));
+      return UserMapper.toEntity(userModel);
+    } on ExceptionBase {
+      rethrow;
     } catch (e) {
-      return Left(CacheFailure(message: 'Failed to get user: $e'));
+      throw CacheException(
+        cause: e,
+        userMessage: 'Unable to load your profile.',
+        debugMessage: 'Failed to get current user in auth repository.',
+      );
     }
   }
 
@@ -270,184 +221,119 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthTokens>> refreshToken() async {
+  Future<AuthTokens> refreshToken() async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw NetworkException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network unavailable during token refresh.',
+      );
     }
 
-    try {
-      final currentTokens = await localDataSource.getCachedTokens();
-      if (currentTokens == null) {
-        return const Left(UnauthorizedFailure(message: 'No refresh token'));
-      }
-
-      final response = await remoteDataSource.refreshToken(
-        refreshToken: currentTokens.refreshToken,
+    final currentTokens = await localDataSource.getCachedTokens();
+    if (currentTokens == null) {
+      throw AuthTokenException(
+        userMessage: 'Your session has expired. Please sign in again.',
+        debugMessage: 'No refresh token available in local cache.',
       );
-
-      final data = response.data;
-
-      if (data == null) {
-        return const Left(
-          ServerFailure(message: 'RefreshToken failed: no data returned'),
-        );
-      }
-
-      final tokensModel = AuthTokensModel.fromJson(
-        data['tokens'] as Map<String, dynamic>,
-      );
-
-      await localDataSource.cacheTokens(tokensModel);
-
-      return Right(AuthTokensMapper.fromModel(tokensModel));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on UnauthorizedException catch (e) {
-      return Left(UnauthorizedFailure(message: e.message));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to refresh token: $e'));
     }
+
+    final data = await remoteDataSource.refreshToken(
+      refreshToken: currentTokens.refreshToken,
+    );
+
+    final tokensModel = AuthTokensModel.fromJson(
+      data['tokens'] as Map<String, dynamic>,
+    );
+
+    await localDataSource.cacheTokens(tokensModel);
+
+    return AuthTokensMapper.fromModel(tokensModel);
   }
 
   @override
-  Future<Either<Failure, UserEntity>> updateProfile({
+  Future<UserEntity> updateProfile({
     String? displayName,
     String? bio,
     String? avatarUrl,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
-    }
-
-    try {
-      final accessToken = await _getValidAccessToken();
-
-      final response = await remoteDataSource.updateProfile(
-        accessToken: accessToken,
-        displayName: displayName,
-        bio: bio,
-        avatarUrl: avatarUrl,
+      throw NetworkException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network unavailable during profile update.',
       );
-
-      final userModel = response.data;
-      if (userModel == null) {
-        return const Left(
-          ServerFailure(message: 'Profile update failed: no data returned'),
-        );
-      }
-
-      await localDataSource.cacheUser(userModel);
-      return Right(UserMapper.toEntity(userModel));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on UnauthorizedException catch (e) {
-      return Left(UnauthorizedFailure(message: e.message));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(message: e.message, errors: e.errors));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to update profile: $e'));
     }
+
+    final accessToken = await _getValidAccessToken();
+    final userModel = await remoteDataSource.updateProfile(
+      accessToken: accessToken,
+      displayName: displayName,
+      bio: bio,
+      avatarUrl: avatarUrl,
+    );
+
+    await localDataSource.cacheUser(userModel);
+    return UserMapper.toEntity(userModel);
   }
 
   @override
-  Future<Either<Failure, void>> changePassword({
+  Future<void> changePassword({
     required String currentPassword,
     required String newPassword,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
-    }
-
-    try {
-      final accessToken = await _getValidAccessToken();
-
-      await remoteDataSource.changePassword(
-        accessToken: accessToken,
-        currentPassword: currentPassword,
-        newPassword: newPassword,
+      throw NetworkException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network unavailable during password change.',
       );
-
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on UnauthorizedException catch (e) {
-      return Left(UnauthorizedFailure(message: e.message));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(message: e.message, errors: e.errors));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to change password: $e'));
     }
+
+    final accessToken = await _getValidAccessToken();
+    await remoteDataSource.changePassword(
+      accessToken: accessToken,
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
   }
 
   @override
-  Future<Either<Failure, void>> requestPasswordReset({
-    required String email,
-  }) async {
+  Future<void> requestPasswordReset({required String email}) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
-    }
-
-    try {
-      await remoteDataSource.requestPasswordReset(email: email);
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } catch (e) {
-      return Left(
-        ServerFailure(message: 'Failed to request password reset: $e'),
+      throw NetworkException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network unavailable during password reset request.',
       );
     }
+
+    await remoteDataSource.requestPasswordReset(email: email);
   }
 
   @override
-  Future<Either<Failure, void>> resetPassword({
+  Future<void> resetPassword({
     required String token,
     required String newPassword,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw NetworkException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network unavailable during password reset.',
+      );
     }
 
-    try {
-      await remoteDataSource.resetPassword(
-        token: token,
-        newPassword: newPassword,
-      );
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(message: e.message, errors: e.errors));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to reset password: $e'));
-    }
+    await remoteDataSource.resetPassword(
+      token: token,
+      newPassword: newPassword,
+    );
   }
 
   @override
-  Future<Either<Failure, void>> verifyEmail({required String token}) async {
+  Future<void> verifyEmail({required String token}) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw NetworkException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network unavailable during email verification.',
+      );
     }
 
-    try {
-      await remoteDataSource.verifyEmail(token: token);
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } catch (e) {
-      return Left(ServerFailure(message: 'Failed to verify email: $e'));
-    }
+    await remoteDataSource.verifyEmail(token: token);
   }
 }
