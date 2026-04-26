@@ -1,8 +1,8 @@
-import 'package:dartz/dartz.dart';
 import 'package:social_app/core/core.dart';
 import 'package:social_app/core/network/base_response.dart';
 import 'package:social_app/features/comment/data/datasources/comment_remote_data_source.dart';
 import 'package:social_app/features/comment/data/models/comment_model.dart';
+import 'package:social_app/features/comment/domain/comment_exceptions.dart';
 import 'package:social_app/features/comment/domain/entities/comment_entity.dart';
 import 'package:social_app/features/comment/domain/mappers/comment_mapper.dart';
 import 'package:social_app/features/comment/domain/repositories/comment_repository.dart';
@@ -15,53 +15,53 @@ class CommentRepositoryImpl extends CommentRepository {
   CommentRepositoryImpl({required this.remote, required this.networkInfo});
 
   @override
-  Future<Either<Failure, CommentEntity>> createComment({
+  Future<CommentEntity> createComment({
     required String postId,
     required String content,
     String? parentCommentId,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw CommentCreateException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network is offline at comment creation.',
+      );
     }
-
     try {
       final BaseResponse<CommentModel> response = await remote.createComment(
         postId: postId,
         content: content,
         parentCommentId: parentCommentId,
       );
-
       final commentModel = response.data;
 
       if (commentModel == null) {
-        return Left(
-          ServerFailure(message: 'Comment creation failed: no data returned'),
+        throw CommentCreateException(
+          userMessage: 'Unable to post comment.',
+          debugMessage: 'Failed to create comment: No data returned.',
         );
       }
 
-      return Right(CommentMapper.fromModel(commentModel));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on UnauthorizedException catch (e) {
-      return Left(UnauthorizedFailure(message: e.message));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(message: e.message, errors: e.errors));
+      return CommentMapper.fromModel(commentModel);
     } catch (e) {
-      return Left(ServerFailure(message: 'Unexpected error: $e'));
+      throw CommentCreateException(
+        userMessage: 'Unable to post comment.',
+        debugMessage: 'Failed to create comment: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, CommentEntity>> updateComment({
+  Future<CommentEntity> updateComment({
     required String commentId,
     required String content,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw CommentUpdateException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network is offline at comment update.',
+      );
     }
-
     try {
       final BaseResponse<CommentModel> response = await remote.updateComment(
         commentId: commentId,
@@ -70,83 +70,85 @@ class CommentRepositoryImpl extends CommentRepository {
       final commentModel = response.data;
 
       if (commentModel == null) {
-        return Left(
-          ServerFailure(message: 'Comment update failed: no data returned'),
+        throw CommentUpdateException(
+          userMessage: 'Unable to update comment.',
+          debugMessage: 'Failed to update comment: No data returned.',
         );
       }
 
-      return Right(CommentMapper.fromModel(commentModel));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on UnauthorizedException catch (e) {
-      return Left(UnauthorizedFailure(message: e.message));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(message: e.message, errors: e.errors));
+      return CommentMapper.fromModel(commentModel);
     } catch (e) {
-      return Left(ServerFailure(message: 'Unexpected error: $e'));
+      throw CommentUpdateException(
+        userMessage: 'Unable to update comment.',
+        debugMessage: 'Failed to update comment: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, void>> deleteComment(String commentId) async {
+  Future<void> deleteComment(String commentId) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw CommentDeleteException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network is offline at comment delete.',
+      );
     }
-
     try {
       await remote.deleteComment(commentId);
-      // ignore: void_checks
-      return const Right(true);
-    } on Exception catch (e) {
-      throw mapExceptionToFailure(e);
+      return;
+    } catch (e) {
+      throw CommentDeleteException(
+        userMessage: 'Unable to delete comment.',
+        debugMessage: 'Failed to delete comment: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, List<CommentEntity>>> getCommentsByPost({
+  Future<List<CommentEntity>> getCommentsByPost({
     required String postId,
     required PaginationParams? query,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw CommentLoadException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network is offline at comments fetch (by post).',
+      );
     }
-
     try {
       final BaseResponse<List<CommentModel>> response = await remote
           .getCommentByPost(postId: postId, pagination: query);
       final comments = response.data;
 
       if (comments == null) {
-        return Left(
-          ServerFailure(message: 'Failed to fetch comments: no data returned'),
+        throw CommentLoadException(
+          userMessage: 'Unable to load comments.',
+          debugMessage: 'Failed to load comments: No data returned.',
         );
       }
-
-      return Right(comments.map(CommentMapper.fromModel).toList());
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on UnauthorizedException catch (e) {
-      return Left(UnauthorizedFailure(message: e.message));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(message: e.message, errors: e.errors));
+      return comments.map(CommentMapper.fromModel).toList();
     } catch (e) {
-      return Left(ServerFailure(message: 'Unexpected error: $e'));
+      throw CommentLoadException(
+        userMessage: 'Unable to load comments.',
+        debugMessage: 'Failed to load comment data: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, List<CommentEntity>>> getReplies({
+  Future<List<CommentEntity>> getReplies({
     required String commentId,
     required PaginationParams? query,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw CommentLoadException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network is offline at replies fetch.',
+      );
     }
-
     try {
       final BaseResponse<List<CommentModel>> response = await remote.getReplies(
         commentId: commentId,
@@ -155,22 +157,18 @@ class CommentRepositoryImpl extends CommentRepository {
       final comments = response.data;
 
       if (comments == null) {
-        return Left(
-          ServerFailure(message: 'Failed to fetch comments: no data returned'),
+        throw CommentLoadException(
+          userMessage: 'Unable to load comments.',
+          debugMessage: 'Failed to load replies: No data returned.',
         );
       }
-
-      return Right(comments.map(CommentMapper.fromModel).toList());
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on UnauthorizedException catch (e) {
-      return Left(UnauthorizedFailure(message: e.message));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(message: e.message, errors: e.errors));
+      return comments.map(CommentMapper.fromModel).toList();
     } catch (e) {
-      return Left(ServerFailure(message: 'Unexpected error: $e'));
+      throw CommentLoadException(
+        userMessage: 'Unable to load comments.',
+        debugMessage: 'Failed to load comment replies: $e',
+        cause: e,
+      );
     }
   }
 }
