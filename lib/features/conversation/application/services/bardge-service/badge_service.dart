@@ -1,5 +1,5 @@
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:social_app/features/conversation/domain/conversation_exeptions.dart';
+import 'package:social_app/features/conversation/domain/conversation_exceptions.dart';
 
 abstract interface class BadgeService {
   Future<void> updateCount(int count);
@@ -12,7 +12,10 @@ class AppIconBadgeService implements BadgeService {
     try {
       await FlutterAppBadger.removeBadge();
     } catch (e) {
-      throw ConversationExeptions(message: e.toString());
+      throw ConversationLoadException(
+        userMessage: 'Failed to clear app icon badge',
+        debugMessage: e.toString(),
+      );
     }
   }
 
@@ -28,7 +31,10 @@ class AppIconBadgeService implements BadgeService {
 
       await FlutterAppBadger.updateBadgeCount(count);
     } catch (e) {
-      throw ConversationExeptions(message: e.toString());
+      throw ConversationLoadException(
+        userMessage: 'Failed to update app icon badge count',
+        debugMessage: e.toString(),
+      );
     }
   }
 }
