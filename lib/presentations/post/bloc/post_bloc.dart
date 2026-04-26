@@ -148,74 +148,74 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   ) async {
     emit(state.copyWith(isLoading: true, error: null));
 
-    final result = await getHomePostUsecase();
+    // final result = await getHomePostUsecase();
 
-    result.fold(
-      (failure) =>
-          emit(state.copyWith(isLoading: false, error: failure.message)),
-      (posts) => emit(
-        state.copyWith(
-          isLoading: false,
-          posts: posts,
-          error: null,
-          hasReachedMax: false,
-        ),
-      ),
-    );
+    // result.fold(
+    //   (failure) =>
+    //       emit(state.copyWith(isLoading: false, error: failure.message)),
+    //   (posts) => emit(
+    //     state.copyWith(
+    //       isLoading: false,
+    //       posts: posts,
+    //       error: null,
+    //       hasReachedMax: false,
+    //     ),
+    //   ),
+    // );
   }
 
   Future<void> _onPostCreated(
     PostCreated event,
     Emitter<PostState> emit,
   ) async {
-    final result = await createPostUsecase(
-      content: event.content,
-      visibility: event.visibility,
-      type: event.type,
-    );
+    // final result = await createPostUsecase(
+    //   content: event.content,
+    //   visibility: event.visibility,
+    //   type: event.type,
+    // );
 
-    result.fold(
-      (failure) => emit(state.copyWith(error: failure.message)),
-      (post) => emit(state.copyWith(posts: [post, ...state.posts])),
-    );
+    // result.fold(
+    //   (failure) => emit(state.copyWith(error: failure.message)),
+    //   (post) => emit(state.copyWith(posts: [post, ...state.posts])),
+    // );
   }
 
   Future<void> _onPostDeleted(
     PostDeleted event,
     Emitter<PostState> emit,
   ) async {
-    final result = await deletePostUsecase(event.postId);
+    // final result = await deletePostUsecase(event.postId);
 
-    result.fold(
-      (failure) => emit(state.copyWith(error: failure.message)),
-      (_) => emit(
-        state.copyWith(
-          posts: state.posts.where((post) => post.id != event.postId).toList(),
-        ),
-      ),
-    );
+    // result.fold(
+    //   (failure) => emit(state.copyWith(error: failure.message)),
+    //   (_) => emit(
+    //     state.copyWith(
+    //       posts: state.posts.where((post) => post.id != event.postId).toList(),
+    //     ),
+    //   ),
+    // );
   }
 
   Future<void> _onPostUpdated(
     PostUpdated event,
     Emitter<PostState> emit,
   ) async {
-    final result = await updatePostUsecase(
-      postId: event.postId,
-      content: event.content,
-      visibility: event.visibility,
-      type: event.type,
-    );
+    // final result = await updatePostUsecase(
+    //   postId: event.postId,
+    //   content: event.content,
+    //   visibility: event.visibility,
+    //   type: event.type,
+    // );
 
-    result.fold(
-      (failure) => emit(state.copyWith(error: failure.message)),
-      (newPost) => emit(
-        state.copyWith(
-          posts: state.posts
-              .map((post) => post.id == newPost.id ? newPost : post)
-              .toList(),
-        ),
-      ),
-    );
+    // result.fold(
+    //   (failure) => emit(state.copyWith(error: failure.message)),
+    //   (newPost) => emit(
+    //     state.copyWith(
+    //       posts: state.posts
+    //           .map((post) => post.id == newPost.id ? newPost : post)
+    //           .toList(),
+    //     ),
+    //   ),
+    // );
   }
 }
