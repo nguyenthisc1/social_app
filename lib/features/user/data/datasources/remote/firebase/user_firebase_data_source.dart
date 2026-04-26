@@ -45,14 +45,19 @@ class UserFirebaseDataSource implements UserRemoteDataSource {
   Future<UserModel> getUserProfile() async {
     final user = _firebaseAuth.currentUser;
     if (user == null) {
-      throw UserException(message: 'No current user');
+      throw UserLoadException(
+        userMessage: 'Unable to load user profile.',
+        debugMessage: 'No authenticated user found.',
+      );
     }
     final doc = await _firestore.collection('users').doc(user.uid).get();
     if (doc.exists && doc.data() != null) {
       final data = {...doc.data()!, 'id': doc.id};
       return UserModel.fromJson(data);
     }
-    throw UserNotFoundException(message: 'User profile not found');
+    throw UserNotFoundException(
+      debugMessage: 'User profile document not found for uid=${user.uid}.',
+    );
   }
 
   @override
@@ -74,7 +79,10 @@ class UserFirebaseDataSource implements UserRemoteDataSource {
   Future<UserModel> updateUserProfile(UserModel user) async {
     final userId = user.id;
     if (userId.isEmpty) {
-      throw UserException(message: 'User ID is required for updating profile');
+      throw UserUpdateException(
+        userMessage: 'Unable to update user profile.',
+        debugMessage: 'User ID is required for updating profile.',
+      );
     }
     final data = user.toJson();
     await _firestore.collection('users').doc(userId).update(data);
@@ -84,6 +92,8 @@ class UserFirebaseDataSource implements UserRemoteDataSource {
         updatedDoc.data()!..addAll({'id': updatedDoc.id}),
       );
     }
-    throw UserException(message: 'Failed to update user profile');
+    throw UserUpdateException(
+      debugMessage: 'Updated user document not found for userId=$userId.',
+    );
   }
 }

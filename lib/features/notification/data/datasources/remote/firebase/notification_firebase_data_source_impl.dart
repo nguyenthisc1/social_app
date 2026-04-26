@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:social_app/features/notification/data/datasources/remote/notification_remote_data_source.dart';
-import 'package:social_app/features/notification/domain/notification_exeptions.dart';
+import 'package:social_app/features/notification/domain/notification_exceptions.dart'
+    show NotificationPermissionException, NotificationSyncException, NotificationTokenException;
 
 class NotificationFirebaseDataSource implements NotificationRemoteDataSource {
   final FirebaseFirestore _firestore;
@@ -18,8 +19,10 @@ class NotificationFirebaseDataSource implements NotificationRemoteDataSource {
     try {
       return await _firebaseMessaging.getToken();
     } catch (e) {
-      NotificationExeptions(message: e.toString());
-      return null;
+      throw NotificationTokenException(
+        debugMessage: 'Failed to retrieve FCM device token: $e',
+        cause: e,
+      );
     }
   }
 
@@ -37,13 +40,16 @@ class NotificationFirebaseDataSource implements NotificationRemoteDataSource {
       );
       await Future.delayed(const Duration(seconds: 1));
 
-      final apnsToken = await _firebaseMessaging.getAPNSToken();
-      final token = await _firebaseMessaging.getToken();
+      await _firebaseMessaging.getAPNSToken();
+      await _firebaseMessaging.getToken();
+
       return settings.authorizationStatus == AuthorizationStatus.authorized ||
           settings.authorizationStatus == AuthorizationStatus.provisional;
     } catch (e) {
-      NotificationExeptions(message: e.toString());
-      return false;
+      throw NotificationPermissionException(
+        debugMessage: 'Failed to request notification permission: $e',
+        cause: e,
+      );
     }
   }
 
@@ -58,8 +64,10 @@ class NotificationFirebaseDataSource implements NotificationRemoteDataSource {
         'fcmUpdatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      NotificationExeptions(message: e.toString());
-      return;
+      throw NotificationSyncException(
+        debugMessage: 'Failed to sync FCM token for userId=$userId: $e',
+        cause: e,
+      );
     }
   }
 }

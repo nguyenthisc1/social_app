@@ -1,7 +1,7 @@
-import 'package:dartz/dartz.dart';
 import 'package:social_app/core/core.dart';
 import 'package:social_app/features/friendship/data/datasources/friendship_remote_data_source.dart';
 import 'package:social_app/features/friendship/domain/entities/friendship_entity.dart';
+import 'package:social_app/features/friendship/domain/friendship_exceptions.dart';
 import 'package:social_app/features/friendship/domain/mappers/friendship_mapper.dart';
 import 'package:social_app/features/friendship/domain/repositories/friendship_repository.dart';
 
@@ -15,223 +15,189 @@ class FriendshipRepositoryImpl implements FriendshipRepository {
   });
 
   @override
-  Future<Either<Failure, FriendshipResponseEntity>> sendRequest({
+  Future<FriendshipResponseEntity> sendRequest({
     required String toUserId,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw FriendshipRequestException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network offline at sendRequest.',
+      );
     }
-
     try {
       final result = await remoteDataSource.sendRequest(toUserId: toUserId);
-      return Right(FriendshipMapper.toResponseEntity(result));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-      ));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
+      return FriendshipMapper.toResponseEntity(result);
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Failed to send friend request: ${e.toString()}',
-      ));
+      throw FriendshipRequestException(
+        debugMessage: 'Failed to send friend request: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, FriendshipResponseEntity>> acceptRequest({
+  Future<FriendshipResponseEntity> acceptRequest({
     required String requestId,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw FriendshipAcceptException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network offline at acceptRequest.',
+      );
     }
-
     try {
       final result = await remoteDataSource.acceptRequest(requestId: requestId);
-      return Right(FriendshipMapper.toResponseEntity(result));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-      ));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
+      return FriendshipMapper.toResponseEntity(result);
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Failed to accept friend request: ${e.toString()}',
-      ));
+      throw FriendshipAcceptException(
+        debugMessage: 'Failed to accept friend request: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, FriendshipResponseEntity>> rejectRequest({
+  Future<FriendshipResponseEntity> rejectRequest({
     required String requestId,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw FriendshipRejectException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network offline at rejectRequest.',
+      );
     }
-
     try {
       final result = await remoteDataSource.rejectRequest(requestId: requestId);
-      return Right(FriendshipMapper.toResponseEntity(result));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-      ));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
+      return FriendshipMapper.toResponseEntity(result);
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Failed to reject friend request: ${e.toString()}',
-      ));
+      throw FriendshipRejectException(
+        debugMessage: 'Failed to reject friend request: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, List<FriendRequestEntity>>> getPendingRequests() async {
+  Future<List<FriendRequestEntity>> getPendingRequests() async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw FriendshipLoadException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network offline at getPendingRequests.',
+      );
     }
-
     try {
       final result = await remoteDataSource.getPendingRequests();
-      return Right(FriendshipMapper.toRequestEntityList(result));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-      ));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
+      return FriendshipMapper.toRequestEntityList(result);
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Failed to get pending requests: ${e.toString()}',
-      ));
+      throw FriendshipLoadException(
+        userMessage: 'Unable to load pending requests.',
+        debugMessage: 'Failed to get pending requests: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, List<FriendRequestEntity>>> getSentRequests() async {
+  Future<List<FriendRequestEntity>> getSentRequests() async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw FriendshipLoadException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network offline at getSentRequests.',
+      );
     }
-
     try {
       final result = await remoteDataSource.getSentRequests();
-      return Right(FriendshipMapper.toRequestEntityList(result));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-      ));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
+      return FriendshipMapper.toRequestEntityList(result);
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Failed to get sent requests: ${e.toString()}',
-      ));
+      throw FriendshipLoadException(
+        userMessage: 'Unable to load sent requests.',
+        debugMessage: 'Failed to get sent requests: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, List<FriendEntity>>> getFriends() async {
+  Future<List<FriendEntity>> getFriends() async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw FriendshipLoadException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network offline at getFriends.',
+      );
     }
-
     try {
       final result = await remoteDataSource.getFriends();
-      return Right(FriendshipMapper.toFriendEntityList(result));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-      ));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
+      return FriendshipMapper.toFriendEntityList(result);
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Failed to get friends: ${e.toString()}',
-      ));
+      throw FriendshipLoadException(
+        userMessage: 'Unable to load friends.',
+        debugMessage: 'Failed to get friends: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, List<FriendEntity>>> getUserFriends({
-    required String userId,
-  }) async {
+  Future<List<FriendEntity>> getUserFriends({required String userId}) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw FriendshipLoadException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network offline at getUserFriends.',
+      );
     }
-
     try {
       final result = await remoteDataSource.getUserFriends(userId: userId);
-      return Right(FriendshipMapper.toFriendEntityList(result));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-      ));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
+      return FriendshipMapper.toFriendEntityList(result);
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Failed to get user friends: ${e.toString()}',
-      ));
+      throw FriendshipLoadException(
+        userMessage: 'Unable to load user friends.',
+        debugMessage: 'Failed to get user friends for userId=$userId: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, FriendshipStatusEntity>> isFriend({
+  Future<FriendshipStatusEntity> isFriend({
     required String userAId,
     required String userBId,
   }) async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw FriendshipStatusException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network offline at isFriend.',
+      );
     }
-
     try {
       final result = await remoteDataSource.isFriend(
         userAId: userAId,
         userBId: userBId,
       );
-      return Right(FriendshipMapper.toStatusEntity(result));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-      ));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
+      return FriendshipMapper.toStatusEntity(result);
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Failed to check friendship status: ${e.toString()}',
-      ));
+      throw FriendshipStatusException(
+        debugMessage: 'Failed to check friendship status: $e',
+        cause: e,
+      );
     }
   }
 
   @override
-  Future<Either<Failure, List<String>>> getFriendIds() async {
+  Future<List<String>> getFriendIds() async {
     if (!await networkInfo.isConnected) {
-      return const Left(NetworkFailure());
+      throw FriendshipLoadException(
+        userMessage: 'No internet connection.',
+        debugMessage: 'Network offline at getFriendIds.',
+      );
     }
-
     try {
-      final result = await remoteDataSource.getFriendIds();
-      return Right(result);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(
-        message: e.message,
-        statusCode: e.statusCode,
-      ));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
+      return await remoteDataSource.getFriendIds();
     } catch (e) {
-      return Left(ServerFailure(
-        message: 'Failed to get friend IDs: ${e.toString()}',
-      ));
+      throw FriendshipLoadException(
+        userMessage: 'Unable to load friend IDs.',
+        debugMessage: 'Failed to get friend IDs: $e',
+        cause: e,
+      );
     }
   }
 }

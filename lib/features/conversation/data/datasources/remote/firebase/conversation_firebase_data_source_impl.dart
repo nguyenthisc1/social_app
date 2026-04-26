@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:social_app/features/conversation/data/datasources/remote/conversation_remote_data_source.dart';
 import 'package:social_app/features/conversation/data/mappers/conversation_mapper.dart';
 import 'package:social_app/features/conversation/data/models/conversation_model.dart';
-import 'package:social_app/features/conversation/domain/conversation_exeptions.dart';
+import 'package:social_app/features/conversation/domain/conversation_exceptions.dart';
 import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart';
 import 'package:social_app/features/conversation/domain/entites/conversation_type.dart';
 
@@ -40,8 +40,18 @@ class ConversationFirebaseDataSourceImpl
         'createdAt': (docSnapshot.data()?['createdAt'] ?? Timestamp.now()),
       };
       return ConversationModel.fromJson(data);
+    } on FirebaseException catch (e) {
+      throw ConversationCreateException(
+        userMessage: 'Unable to create conversation.',
+        debugMessage: 'Firestore create conversation failed.',
+        cause: e,
+        metadata: {'firebaseCode': e.code},
+      );
     } catch (e) {
-      throw ConversationExeptions(message: 'Failed to create conversation: $e');
+      throw ConversationCreateException(
+        cause: e,
+        debugMessage: 'Unexpected error while creating conversation.',
+      );
     }
   }
 
@@ -51,7 +61,10 @@ class ConversationFirebaseDataSourceImpl
       final doc = await _firestore.collection('conversations').doc(id).get();
 
       if (doc.data() == null) {
-        throw ConversationExeptions(message: 'Conversation not fould.');
+        throw ConversationLoadException(
+          userMessage: 'Conversation not found.',
+          debugMessage: 'Conversation document is null.',
+        );
       }
 
       if (doc.exists && doc.data() != null) {
@@ -62,7 +75,11 @@ class ConversationFirebaseDataSourceImpl
 
       return null;
     } catch (e) {
-      throw ConversationExeptions(message: 'Failed to get conversation: $e');
+      throw ConversationLoadException(
+        userMessage: 'Failed to get conversation.',
+        debugMessage: 'Failed to get conversation: $e',
+        cause: e,
+      );
     }
   }
 
@@ -106,7 +123,11 @@ class ConversationFirebaseDataSourceImpl
       debugPrint('getConversations error: $e');
       debugPrintStack(stackTrace: st);
 
-      throw ConversationExeptions(message: 'Failed to get conversations: $e');
+      throw ConversationLoadException(
+        userMessage: 'Failed to get conversations.',
+        debugMessage: 'Failed to get conversations: $e',
+        cause: e,
+      );
     }
   }
 
@@ -126,7 +147,11 @@ class ConversationFirebaseDataSourceImpl
       final updatedData = {...?updatedDoc.data(), 'id': updatedDoc.id};
       return ConversationModel.fromJson(updatedData);
     } catch (e) {
-      throw ConversationExeptions(message: 'Failed to update conversation: $e');
+      throw ConversationWatchException(
+        userMessage: 'Failed to update conversation.',
+        debugMessage: 'Failed to update conversation: $e',
+        cause: e,
+      );
     }
   }
 

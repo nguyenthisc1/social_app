@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
 import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:social_app/features/auth/data/datasources/local/shared-preferences/auth_preferences_local_data_source.dart';
-import 'package:social_app/features/auth/data/datasources/remote/auth_remote_data_source.dart';
-import 'package:social_app/features/auth/data/datasources/remote/firebase/auth_firebase_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/remote/auth_firebase_remote_data_souce.dart';
+import 'package:social_app/features/auth/data/datasources/remote/firebase/auth_firebase_data_source_impl.dart';
 import 'package:social_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:social_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:social_app/features/auth/domain/usecases/check_auth_status_usecase.dart';
@@ -142,8 +142,8 @@ Future<void> initializeDependencies() async {
   // ============================================================================
 
   // Auth Data Sources
-  sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthFirebaseDataSource(
+  sl.registerLazySingleton<AuthFirebaseRemoteDataSource>(
+    () => AuthFirebaseDataSourceImpl(
       firebaseAuth: sl<FirebaseAuth>(),
       firestore: sl<FirebaseFirestore>(),
     ),

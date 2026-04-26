@@ -1,28 +1,26 @@
-import 'package:dartz/dartz.dart';
-import 'package:social_app/core/core.dart';
 import 'package:social_app/features/comment/domain/entities/comment_entity.dart';
 import 'package:social_app/features/comment/domain/value_objects/pagination_params.dart';
 
 abstract class CommentRepository {
-  Future<Either<Failure, CommentEntity>> createComment({
+  Future<CommentEntity> createComment({
     required String postId,
     required String content,
     String? parentCommentId,
   });
 
-  Future<Either<Failure, CommentEntity>> updateComment({
+  Future<CommentEntity> updateComment({
     required String commentId,
     required String content,
   });
 
-  Future<Either<Failure, void>> deleteComment(String commentId);
+  Future<void> deleteComment(String commentId);
 
-  Future<Either<Failure, List<CommentEntity>>> getCommentsByPost({
+  Future<List<CommentEntity>> getCommentsByPost({
     required String postId,
     required PaginationParams? query,
   });
 
-  Future<Either<Failure, List<CommentEntity>>> getReplies({
+  Future<List<CommentEntity>> getReplies({
     required String commentId,
     required PaginationParams? query,
   });

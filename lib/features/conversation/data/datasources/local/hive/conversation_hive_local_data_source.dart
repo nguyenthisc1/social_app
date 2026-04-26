@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:social_app/core/domain-base/exceptions/generic_exception.dart';
 import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
 import 'package:social_app/features/conversation/data/models/conversation_last_message_model.dart';
 import 'package:social_app/features/conversation/data/models/conversation_model.dart';
-import 'package:social_app/features/conversation/domain/conversation_exeptions.dart';
 import 'package:social_app/features/conversation/domain/entites/unread_count.dart';
 
 class ConversationHiveLocalDataSource implements ConversationLocalDataSource {
@@ -30,7 +30,11 @@ class ConversationHiveLocalDataSource implements ConversationLocalDataSource {
         conversations.map(_serializeConversation).toList(),
       );
     } catch (e) {
-      throw ConversationExeptions(message: e.toString());
+      throw CacheException(
+        userMessage: 'Failed to cache conversations',
+        debugMessage: 'Failed to cache conversations: $e',
+        cause: e,
+      );
     }
   }
 
@@ -40,7 +44,11 @@ class ConversationHiveLocalDataSource implements ConversationLocalDataSource {
       final box = await _openBox();
       await box.delete(_userConversationsKey(userId));
     } catch (e) {
-      throw ConversationExeptions(message: e.toString());
+      throw CacheException(
+        userMessage: 'Failed to clear cached conversations',
+        debugMessage: 'Error clearing conversations for user $userId: $e',
+        cause: e,
+      );
     }
   }
 
@@ -75,7 +83,11 @@ class ConversationHiveLocalDataSource implements ConversationLocalDataSource {
 
       return conversations;
     } catch (e) {
-      throw ConversationExeptions(message: e.toString());
+      throw CacheException(
+        userMessage: 'Failed to load cached conversations',
+        debugMessage: 'Error loading conversations for user $userId: $e',
+        cause: e,
+      );
     }
   }
 
@@ -95,8 +107,7 @@ class ConversationHiveLocalDataSource implements ConversationLocalDataSource {
               'mediaUrl': model.lastMessage!.mediaUrl,
               'mediaType': model.lastMessage!.mediaType,
               'isDeleted': model.lastMessage!.isDeleted,
-              'createdAt':
-                  model.lastMessage!.createdAt.millisecondsSinceEpoch,
+              'createdAt': model.lastMessage!.createdAt.millisecondsSinceEpoch,
             },
       'createdAt': model.createdAt.millisecondsSinceEpoch,
       'name': model.name,

@@ -1,5 +1,3 @@
-import 'package:dartz/dartz.dart';
-import 'package:social_app/core/core.dart';
 import 'package:social_app/features/friendship/domain/entities/friendship_entity.dart';
 import 'package:social_app/features/friendship/domain/repositories/friendship_repository.dart';
 
@@ -10,9 +8,7 @@ class SendFriendRequestUsecase {
   SendFriendRequestUsecase(this.repository);
 
   /// Send friend request to another user
-  Future<Either<Failure, FriendshipResponseEntity>> call({
-    required String toUserId,
-  }) async {
+  Future<FriendshipResponseEntity> call({required String toUserId}) async {
     return await repository.sendRequest(toUserId: toUserId);
   }
 }
