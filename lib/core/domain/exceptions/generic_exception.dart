@@ -2,6 +2,30 @@ import 'exception_base.dart';
 import 'exception_codes.dart';
 import 'exception_factory.dart';
 
+class ArgumentNotProvidedException extends ExceptionBase {
+  @override
+  final String code = ExceptionCodes.argumentNotProvided;
+
+  ArgumentNotProvidedException({
+    required super.userMessage,
+    required super.debugMessage,
+    super.cause,
+    super.metadata,
+  }) : super(correlationId: newCorrelationId());
+}
+
+class ArgumentInvalidException extends ExceptionBase {
+  @override
+  final String code = ExceptionCodes.invalidArgument;
+
+  ArgumentInvalidException({
+    required super.userMessage,
+    required super.debugMessage,
+    super.cause,
+    super.metadata,
+  }) : super(correlationId: newCorrelationId());
+}
+
 class NetworkException extends ExceptionBase {
   @override
   final String code = ExceptionCodes.network;

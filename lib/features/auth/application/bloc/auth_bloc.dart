@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/core/domain/exceptions/exception_base.dart';
+import 'package:social_app/features/user/domain/entites/user_entity.dart';
 
 import '../../domain/usecases/check_auth_status_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
@@ -81,7 +82,7 @@ class AuthLoading extends AuthState {}
 
 /// Authenticated state
 class AuthAuthenticated extends AuthState {
-  final dynamic user; // Changed to dynamic as User may be undefined
+  final UserEntity user;
   const AuthAuthenticated(this.user);
 
   @override
