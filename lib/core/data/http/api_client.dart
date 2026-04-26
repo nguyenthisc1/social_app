@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:social_app/core/domain-base/exceptions/generic_exception.dart';
+import 'package:social_app/core/domain/exceptions/generic_exception.dart';
 import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:social_app/features/auth/domain/auth_exceptions.dart';
 
-import '../utils/device_service.dart';
+import '../../utils/device_service.dart';
 import 'network_info.dart';
 
 class ApiClient {

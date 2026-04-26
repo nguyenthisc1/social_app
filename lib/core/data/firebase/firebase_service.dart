@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:social_app/core/services/firebase/firebase_option.dart';
+import 'package:social_app/core/data/firebase/firebase_option.dart';
 
 class FirebaseService {
   FirebaseService._();

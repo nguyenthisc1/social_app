@@ -1,6 +1,6 @@
 import 'package:mockito/annotations.dart';
-import 'package:social_app/core/network/api_client.dart';
-import 'package:social_app/core/network/network_info.dart';
+import 'package:social_app/core/data/http/api_client.dart';
+import 'package:social_app/core/data/http/network_info.dart';
 import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:social_app/features/auth/data/datasources/remote/auth_remote_data_source.dart';
 import 'package:social_app/features/auth/domain/repositories/auth_repository.dart';

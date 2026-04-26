@@ -6,6 +6,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_app/core/data/http/api_client.dart';
+import 'package:social_app/core/data/http/network_info.dart';
+import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
 import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:social_app/features/auth/data/datasources/local/shared-preferences/auth_preferences_local_data_source.dart';
@@ -72,11 +75,9 @@ import 'package:social_app/features/user/domain/usecases/search_user_profile_use
 import 'package:social_app/features/user/domain/usecases/update_user_profile_usecase.dart';
 import 'package:social_app/presentations/post/bloc/post_bloc.dart';
 
-import '../locale/locale_manager.dart';
-import '../network/network.dart';
-import '../services/firebase/firebase_seed_service.dart';
-import '../theme/theme.dart';
-import '../utils/constants.dart';
+import '../../core/data/firebase/firebase_seed_service.dart';
+import '../../core/locale/locale_manager.dart';
+import '../../core/theme/theme.dart';
 
 /// Service locator instance
 final sl = GetIt.instance;

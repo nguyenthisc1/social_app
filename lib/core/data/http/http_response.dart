@@ -1,21 +1,21 @@
-class BaseResponse<T> {
+class HttpResponse<T> {
   final bool success;
   final String message;
   final T? data;
   final Map<String, dynamic>? errors;
 
-  BaseResponse({
+  HttpResponse({
     required this.success,
     required this.message,
     this.data,
     this.errors,
   });
 
-  factory BaseResponse.fromJson(
+  factory HttpResponse.fromJson(
     Map<String, dynamic> json,
     T Function(dynamic json)? fromJsonT,
   ) {
-    return BaseResponse<T>(
+    return HttpResponse<T>(
       success: json['success'] as bool,
       message: json['message'] as String,
       data: json['data'] != null && fromJsonT != null

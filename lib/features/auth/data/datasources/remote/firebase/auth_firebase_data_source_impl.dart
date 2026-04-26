@@ -122,7 +122,7 @@ class AuthFirebaseDataSourceImpl implements AuthFirebaseRemoteDataSource {
   Future<void> logout(String userId) async {
     try {
       await _firebaseAuth.signOut();
-      // No BaseResponse; just return.
+      // No HttpResponse; just return.
       return;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthSignOutException(
@@ -251,7 +251,7 @@ class AuthFirebaseDataSourceImpl implements AuthFirebaseRemoteDataSource {
       await user.reauthenticateWithCredential(credential);
       await user.updatePassword(newPassword);
 
-      // No BaseResponse; just return.
+      // No HttpResponse; just return.
       return;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthUnauthorizedException(
@@ -275,7 +275,7 @@ class AuthFirebaseDataSourceImpl implements AuthFirebaseRemoteDataSource {
   Future<void> requestPasswordReset({required String email}) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
-      // No BaseResponse; just return.
+      // No HttpResponse; just return.
       return;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthPasswordResetException(
@@ -305,7 +305,7 @@ class AuthFirebaseDataSourceImpl implements AuthFirebaseRemoteDataSource {
         newPassword: newPassword,
       );
 
-      // No BaseResponse; just return.
+      // No HttpResponse; just return.
       return;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthPasswordResetException(
@@ -329,7 +329,7 @@ class AuthFirebaseDataSourceImpl implements AuthFirebaseRemoteDataSource {
   Future<void> verifyEmail({required String token}) async {
     try {
       await _firebaseAuth.applyActionCode(token);
-      // No BaseResponse; just return.
+      // No HttpResponse; just return.
       return;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthUnauthorizedException(

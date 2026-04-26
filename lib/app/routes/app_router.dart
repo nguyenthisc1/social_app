@@ -16,7 +16,7 @@ import '../../presentations/profile/pages/profile_page.dart';
 import '../../presentations/search/pages/search_page.dart';
 import '../../presentations/shop/pages/shop_page.dart';
 import '../di/injection_container.dart';
-import '../widgets/root_screen.dart';
+import '../../core/widgets/root_screen.dart';
 import 'app_routes.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();

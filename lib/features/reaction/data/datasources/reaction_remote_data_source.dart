@@ -1,5 +1,6 @@
 import 'package:social_app/core/core.dart';
-import 'package:social_app/core/network/api_client.dart';
+import 'package:social_app/core/data/http/api_client.dart';
+import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/features/reaction/data/models/reaction_model.dart';
 import 'package:social_app/features/reaction/domain/entities/reaction_enums.dart';
 

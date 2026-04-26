@@ -1,28 +1,29 @@
 import 'package:social_app/core/core.dart';
-import 'package:social_app/core/network/base_response.dart';
+import 'package:social_app/core/data/http/http_response.dart';
+import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/features/post/data/models/post_model.dart';
 
 abstract class PostRemoteDataSource {
-  Future<BaseResponse<PostModel>> createPost({
+  Future<HttpResponse<PostModel>> createPost({
     required String content,
     required String visibility,
     required String type,
   });
 
-  Future<BaseResponse<PostModel>> updatePost({
+  Future<HttpResponse<PostModel>> updatePost({
     required String postId,
     required String content,
     required String visibility,
     required String type,
   });
 
-  Future<BaseResponse<void>> deletePost(String postId);
+  Future<HttpResponse<void>> deletePost(String postId);
 
-  Future<BaseResponse<PostModel>> getPost(String postId);
+  Future<HttpResponse<PostModel>> getPost(String postId);
 
-  Future<BaseResponse<List<PostModel>>> getHomePost();
+  Future<HttpResponse<List<PostModel>>> getHomePost();
 
-  Future<BaseResponse<List<PostModel>>> getPostsByUser(String viewerId);
+  Future<HttpResponse<List<PostModel>>> getPostsByUser(String viewerId);
 }
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
@@ -31,13 +32,13 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   PostRemoteDataSourceImpl({required this.apiClient});
 
   @override
-  Future<BaseResponse<List<PostModel>>> getHomePost() async {
+  Future<HttpResponse<List<PostModel>>> getHomePost() async {
     final response = await apiClient.request(
       method: 'GET',
       endpoint: ApiEndpoints.feedHome,
     );
 
-    return BaseResponse.fromJson(
+    return HttpResponse.fromJson(
       response,
       (data) => (data as List<dynamic>)
           .map((item) => PostModel.fromJson(item))
@@ -46,20 +47,20 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   }
 
   @override
-  Future<BaseResponse<PostModel>> getPost(String postId) async {
+  Future<HttpResponse<PostModel>> getPost(String postId) async {
     final response = await apiClient.request(
       method: 'GET',
       endpoint: '${ApiEndpoints.getPost}/$postId',
     );
 
-    return BaseResponse.fromJson(
+    return HttpResponse.fromJson(
       response,
       (data) => PostModel.fromJson(data['post']),
     );
   }
 
   @override
-  Future<BaseResponse<PostModel>> createPost({
+  Future<HttpResponse<PostModel>> createPost({
     required String content,
     required String visibility,
     required String type,
@@ -70,14 +71,14 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       body: {'content': content, 'visibility': visibility, 'type': type},
     );
 
-    return BaseResponse.fromJson(
+    return HttpResponse.fromJson(
       response,
       (data) => PostModel.fromJson(data['post']),
     );
   }
 
   @override
-  Future<BaseResponse<PostModel>> updatePost({
+  Future<HttpResponse<PostModel>> updatePost({
     required String postId,
     required String content,
     required String visibility,
@@ -89,30 +90,30 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       body: {'content': content, 'visibility': visibility, 'type': type},
     );
 
-    return BaseResponse.fromJson(
+    return HttpResponse.fromJson(
       response,
       (data) => PostModel.fromJson(data['post']),
     );
   }
 
   @override
-  Future<BaseResponse<bool>> deletePost(String postId) async {
+  Future<HttpResponse<bool>> deletePost(String postId) async {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: '${ApiEndpoints.softdeletePost}/$postId',
     );
 
-    return BaseResponse.fromJson(response, (data) => data['success'] == true);
+    return HttpResponse.fromJson(response, (data) => data['success'] == true);
   }
 
   @override
-  Future<BaseResponse<List<PostModel>>> getPostsByUser(String viewerId) async {
+  Future<HttpResponse<List<PostModel>>> getPostsByUser(String viewerId) async {
     final response = await apiClient.request(
       method: 'GET',
       endpoint: '${ApiEndpoints.postsByUser}/$viewerId',
     );
 
-    return BaseResponse.fromJson(
+    return HttpResponse.fromJson(
       response,
       (data) => (data['posts'] as List<dynamic>)
           .map((item) => PostModel.fromJson(item))

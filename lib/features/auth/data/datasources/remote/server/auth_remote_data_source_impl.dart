@@ -1,5 +1,6 @@
 import 'package:social_app/core/core.dart';
-import 'package:social_app/core/network/base_response.dart';
+import 'package:social_app/core/data/http/http_response.dart';
+import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/features/auth/data/datasources/remote/auth_remote_data_source.dart';
 
 import '../../../../../user/data/models/user_model.dart';
@@ -10,7 +11,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.apiClient});
 
   @override
-  Future<BaseResponse<Map<String, dynamic>>> login({
+  Future<HttpResponse<Map<String, dynamic>>> login({
     required String email,
     required String password,
   }) async {
@@ -20,14 +21,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       body: {'email': email, 'password': password},
     );
 
-    return BaseResponse.fromJson(
+    return HttpResponse.fromJson(
       response,
       (data) => data as Map<String, dynamic>,
     );
   }
 
   @override
-  Future<BaseResponse<Map<String, dynamic>>> register({
+  Future<HttpResponse<Map<String, dynamic>>> register({
     required String email,
     required String username,
     required String password,
@@ -38,25 +39,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       body: {'email': email, 'username': username, 'password': password},
     );
 
-    return BaseResponse.fromJson(
+    return HttpResponse.fromJson(
       response,
       (data) => data as Map<String, dynamic>,
     );
   }
 
   @override
-  Future<BaseResponse<void>> logout(userId) async {
+  Future<HttpResponse<void>> logout(userId) async {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: ApiEndpoints.logout,
       body: {'userId': userId},
     );
 
-    return BaseResponse.fromJson(response, (_) {});
+    return HttpResponse.fromJson(response, (_) {});
   }
 
   @override
-  Future<BaseResponse<UserModel>> getCurrentUser({
+  Future<HttpResponse<UserModel>> getCurrentUser({
     required String accessToken,
   }) async {
     final response = await apiClient.request(
@@ -65,14 +66,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       token: accessToken,
     );
 
-    return BaseResponse.fromJson(
+    return HttpResponse.fromJson(
       response,
       (data) => UserModel.fromJson(data['user'] as Map<String, dynamic>),
     );
   }
 
   @override
-  Future<BaseResponse<UserModel>> updateProfile({
+  Future<HttpResponse<UserModel>> updateProfile({
     required String accessToken,
     String? displayName,
     String? bio,
@@ -90,14 +91,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       body: body,
     );
 
-    return BaseResponse.fromJson(
+    return HttpResponse.fromJson(
       response,
       (data) => UserModel.fromJson(data['user'] as Map<String, dynamic>),
     );
   }
 
   @override
-  Future<BaseResponse<void>> changePassword({
+  Future<HttpResponse<void>> changePassword({
     required String accessToken,
     required String currentPassword,
     required String newPassword,
@@ -109,11 +110,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       body: {'current_password': currentPassword, 'new_password': newPassword},
     );
 
-    return BaseResponse.fromJson(response, (data) {});
+    return HttpResponse.fromJson(response, (data) {});
   }
 
   @override
-  Future<BaseResponse<void>> requestPasswordReset({
+  Future<HttpResponse<void>> requestPasswordReset({
     required String email,
   }) async {
     final response = await apiClient.request(
@@ -122,11 +123,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       body: {'email': email},
     );
 
-    return BaseResponse.fromJson(response, (data) {});
+    return HttpResponse.fromJson(response, (data) {});
   }
 
   @override
-  Future<BaseResponse<void>> resetPassword({
+  Future<HttpResponse<void>> resetPassword({
     required String token,
     required String newPassword,
   }) async {
@@ -136,22 +137,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       body: {'token': token, 'new_password': newPassword},
     );
 
-    return BaseResponse.fromJson(response, (data) {});
+    return HttpResponse.fromJson(response, (data) {});
   }
 
   @override
-  Future<BaseResponse<void>> verifyEmail({required String token}) async {
+  Future<HttpResponse<void>> verifyEmail({required String token}) async {
     final response = await apiClient.request(
       method: 'POST',
       endpoint: '${ApiEndpoints.profile}/verify-email',
       body: {'token': token},
     );
 
-    return BaseResponse.fromJson(response, (data) {});
+    return HttpResponse.fromJson(response, (data) {});
   }
 
   @override
-  Future<BaseResponse<Map<String, dynamic>>> refreshToken({
+  Future<HttpResponse<Map<String, dynamic>>> refreshToken({
     required String refreshToken,
   }) async {
     final response = await apiClient.request(
@@ -160,7 +161,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       body: {'refreshToken': refreshToken},
     );
 
-    return BaseResponse.fromJson(
+    return HttpResponse.fromJson(
       response,
       (data) => data as Map<String, dynamic>,
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:social_app/core/routes/app_routes.dart';
+import 'package:social_app/app/routes/app_routes.dart';
 import 'package:social_app/core/utils/extensions.dart';
 import 'package:social_app/core/widgets/in_app_status_wrapper.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';

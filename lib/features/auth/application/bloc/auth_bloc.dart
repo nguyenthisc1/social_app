@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/core/domain-base/exceptions/exception_base.dart';
+import 'package:social_app/core/domain/exceptions/exception_base.dart';
 
 import '../../domain/usecases/check_auth_status_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';

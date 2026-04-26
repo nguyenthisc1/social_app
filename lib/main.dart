@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:social_app/core/services/firebase/firebase_service.dart';
+import 'package:social_app/core/data/firebase/firebase_service.dart';
 
 import 'core/core.dart';
 import 'core/l10n/app_localizations.dart';

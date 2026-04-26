@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/core/di/injection_container.dart';
+import 'package:social_app/app/di/injection_container.dart';
 import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
