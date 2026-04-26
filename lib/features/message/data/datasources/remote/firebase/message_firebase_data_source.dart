@@ -3,7 +3,8 @@ import 'package:social_app/features/message/data/datasources/remote/message_remo
 import 'package:social_app/features/message/data/mappers/message_mapper.dart';
 import 'package:social_app/features/message/data/models/message_model.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
-import 'package:social_app/features/message/domain/message_exeptions.dart';
+import 'package:social_app/features/message/domain/message_exceptions.dart'
+    show MessageLoadException, MessageSendException, MessageWatchException;
 
 class MessageFirebaseDataSource implements MessageRemoteDataSource {
   const MessageFirebaseDataSource({required FirebaseFirestore firestore})
@@ -27,7 +28,10 @@ class MessageFirebaseDataSource implements MessageRemoteDataSource {
         return MessageModel.fromJson(data);
       }).toList();
     } catch (e) {
-      throw MessageExeptions(message: e.toString());
+      throw MessageLoadException(
+        debugMessage: 'Failed to load messages for conversationId=$conversationId: $e',
+        cause: e,
+      );
     }
   }
 
@@ -100,7 +104,10 @@ class MessageFirebaseDataSource implements MessageRemoteDataSource {
 
       return MessageModel.fromJson(data);
     } catch (e) {
-      throw MessageExeptions(message: e.toString());
+      throw MessageSendException(
+        debugMessage: 'Failed to send message to conversationId=$conversationId: $e',
+        cause: e,
+      );
     }
   }
 
@@ -129,8 +136,12 @@ class MessageFirebaseDataSource implements MessageRemoteDataSource {
             }).toList(),
           );
     } catch (e) {
-      // Streams can't throw in this outerway, so we return a stream with the error.
-      return Stream.error(e);
+      return Stream.error(
+        MessageWatchException(
+          debugMessage: 'Failed to watch messages for conversationId=$conversationId: $e',
+          cause: e,
+        ),
+      );
     }
   }
 }

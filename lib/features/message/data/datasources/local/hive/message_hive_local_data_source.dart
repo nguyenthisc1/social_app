@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:social_app/features/message/data/datasources/local/message_local_data_source.dart';
 import 'package:social_app/features/message/data/models/message_model.dart';
-import 'package:social_app/features/message/domain/message_exeptions.dart';
+import 'package:social_app/features/message/domain/message_exceptions.dart'
+    show MessageCacheException;
 
 class MessageHiveLocalDataSource implements MessageLocalDataSource {
   static const _kMessagesBox = 'messages_box';
@@ -29,7 +30,10 @@ class MessageHiveLocalDataSource implements MessageLocalDataSource {
         messages.map(_serializeMessage).toList(),
       );
     } catch (e) {
-      throw MessageExeptions(message: e.toString());
+      throw MessageCacheException(
+        debugMessage: 'Failed to cache messages for conversationId=$conversationId: $e',
+        cause: e,
+      );
     }
   }
 
@@ -39,7 +43,10 @@ class MessageHiveLocalDataSource implements MessageLocalDataSource {
       final box = await _openBox();
       await box.delete(_conversationMessagesKey(conversationId));
     } catch (e) {
-      throw MessageExeptions(message: e.toString());
+      throw MessageCacheException(
+        debugMessage: 'Failed to clear cached messages for conversationId=$conversationId: $e',
+        cause: e,
+      );
     }
   }
 
@@ -74,7 +81,10 @@ class MessageHiveLocalDataSource implements MessageLocalDataSource {
 
       return messages;
     } catch (e) {
-      throw MessageExeptions(message: e.toString());
+      throw MessageCacheException(
+        debugMessage: 'Failed to get cached messages for conversationId=$conversationId: $e',
+        cause: e,
+      );
     }
   }
 
@@ -103,7 +113,10 @@ class MessageHiveLocalDataSource implements MessageLocalDataSource {
         nextMessages.map(_serializeMessage).toList(),
       );
     } catch (e) {
-      throw MessageExeptions(message: e.toString());
+      throw MessageCacheException(
+        debugMessage: 'Failed to upsert cached message for conversationId=$conversationId: $e',
+        cause: e,
+      );
     }
   }
 
