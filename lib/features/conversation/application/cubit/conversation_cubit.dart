@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
 import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
@@ -5,23 +7,29 @@ import 'package:social_app/features/conversation/data/mappers/conversation_mappe
 import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart';
 import 'package:social_app/features/conversation/domain/entites/unread_count.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
+import 'package:social_app/features/conversation/domain/usecases/watch_conversations_usecase.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
 
 class ConversationCubit extends Cubit<ConversationState> {
   final GetConversationsUsecase _getConversationsUsecase;
   final ConversationLocalDataSource _conversationLocalDataSource;
+  final WatchConversationsUsecase _watchConversationsUsecase;
+
+  StreamSubscription<List<ConversationEntity>>? _conversationSubscription;
 
   ConversationCubit({
     required GetConversationsUsecase getConversationsUsecase,
     required ConversationLocalDataSource conversationLocalDataSource,
-  }) : _conversationLocalDataSource = conversationLocalDataSource,
+    required WatchConversationsUsecase watchConversationsUsecase,
+  }) : _watchConversationsUsecase = watchConversationsUsecase,
+       _conversationLocalDataSource = conversationLocalDataSource,
        _getConversationsUsecase = getConversationsUsecase,
        super(ConversationState.initial());
 
   Future<void> initializeSession(String currentUserId) async {
     emit(state.copyWith(currentUserId: currentUserId, clearError: true));
     await _loadCachedConversations(currentUserId);
-    
+    await watchConversation(currentUserId);
   }
 
   Future<void> getConversations() async {
@@ -131,21 +139,6 @@ class ConversationCubit extends Cubit<ConversationState> {
     }
   }
 
-  int getTotalUnreadCount(ConversationState state) {
-    if (state.currentUserId.isEmpty) return 0;
-
-    // If any conversation has unread, return 1, else 0
-    final hasUnread = state.conversations.any(
-      (conversation) =>
-          (conversation.unreadCountMap[state.currentUserId]?.count ?? 0) > 0,
-    );
-    return hasUnread ? 1 : 0;
-  }
-
-  void clear() {
-    emit(ConversationState.initial());
-  }
-
   Future<void> _loadCachedConversations(String currentUserId) async {
     try {
       final cachedConversationsModels = await _conversationLocalDataSource
@@ -163,5 +156,39 @@ class ConversationCubit extends Cubit<ConversationState> {
     } catch (_) {
       // Ignore cache bootstrap failures and continue to remote fetch.
     }
+  }
+
+  int getTotalUnreadCount(ConversationState state) {
+    if (state.currentUserId.isEmpty) return 0;
+
+    return state.conversations.fold<int>(
+      0,
+      (total, conversation) {
+        final unreadCount =
+            conversation.unreadCountMap[state.currentUserId]?.count ?? 0;
+        return total + (unreadCount > 0 ? 1 : 0);
+      },
+    );
+  }
+
+  Future<void> watchConversation(String currentUserId) async {
+    await _conversationSubscription?.cancel();
+
+    emit(state.copyWith());
+
+    _conversationSubscription = _watchConversationsUsecase(currentUserId)
+        .listen((conversations) {
+          emit(state.copyWith(clearError: true, conversations: conversations));
+        });
+  }
+
+  @override
+  Future<void> close() async {
+    await _conversationSubscription?.cancel();
+    return super.close();
+  }
+
+  void clear() {
+    emit(ConversationState.initial());
   }
 }

@@ -154,4 +154,31 @@ class ConversationFirebaseDataSourceImpl
       );
     }
   }
+
+  @override
+  Stream<List<ConversationModel>> watchConversations(String currentUserId) {
+    try {
+      return _firestore
+          .collection('conversations')
+          .where('participantIds', arrayContains: currentUserId)
+          .orderBy('lastMessage.createdAt', descending: true)
+          .snapshots()
+          .map(
+            (querySnapshot) => querySnapshot.docs.map((doc) {
+              final rawData = doc.data();
+              final data = {...rawData, 'id': doc.id};
+              return ConversationModel.fromJson(data);
+            }).toList(),
+          );
+    } catch (e, st) {
+      debugPrint('getConversations error: $e');
+      debugPrintStack(stackTrace: st);
+
+      throw ConversationWatchException(
+        userMessage: 'Failed to get conversations: $e',
+        debugMessage: 'Failed to get conversations: $e',
+        cause: e,
+      );
+    }
+  }
 }

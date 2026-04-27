@@ -34,6 +34,7 @@ import 'package:social_app/features/conversation/domain/usecases/create_conversa
 import 'package:social_app/features/conversation/domain/usecases/get_conversation_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
 import 'package:social_app/features/conversation/domain/usecases/update_conversation_usecase.dart';
+import 'package:social_app/features/conversation/domain/usecases/watch_conversations_usecase.dart';
 import 'package:social_app/features/message/application/cubit/meesage_cubit.dart';
 import 'package:social_app/features/message/data/datasources/local/hive/message_hive_local_data_source.dart';
 import 'package:social_app/features/message/data/datasources/local/message_local_data_source.dart';
@@ -276,6 +277,7 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => GetConversationsUsecase(sl()));
   sl.registerLazySingleton(() => CreateConversationUsecase(sl()));
   sl.registerLazySingleton(() => UpdateConversationsUsecase(sl()));
+  sl.registerLazySingleton(() => WatchConversationsUsecase(sl()));
 
   // Message Use Cases
   sl.registerLazySingleton(() => GetMessagesByConversationUsecase(sl()));
@@ -328,6 +330,7 @@ Future<void> initializeDependencies() async {
     () => ConversationCubit(
       getConversationsUsecase: sl(),
       conversationLocalDataSource: sl(),
+      watchConversationsUsecase: sl(),
     ),
   );
 
