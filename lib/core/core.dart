@@ -1,4 +1,5 @@
 export 'data/data.dart';
+export '../app/internet_connection/connection.dart';
 export 'domain/domain.dart';
 export '../app/di/di.dart';
 export 'locale/locale_manager.dart';

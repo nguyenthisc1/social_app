@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:social_app/core/data/firebase/firebase_service.dart';
 
 import 'core/core.dart';
 import 'core/l10n/app_localizations.dart';
@@ -29,6 +28,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(lazy: false, create: (_) => sl<AuthBloc>()),
+        BlocProvider<InternetConnectionCubit>(
+          lazy: false,
+          create: (_) => sl<InternetConnectionCubit>(),
+        ),
       ],
       child: AnimatedBuilder(
         animation: Listenable.merge([themeManager, localeManager]),
@@ -55,7 +58,6 @@ class MyApp extends StatelessWidget {
               Locale('vi'), // Vietnamese
             ],
             locale: localeManager.locale,
-            // App configuration
             title: 'Social App',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,

@@ -1,4 +1,4 @@
-import 'package:social_app/core/data/http/network_info.dart';
+import 'package:social_app/app/internet_connection/network_info.dart';
 import 'package:social_app/features/reaction/data/datasources/reaction_remote_data_source.dart';
 import 'package:social_app/features/reaction/domain/entities/reaction_entity.dart';
 import 'package:social_app/features/reaction/domain/entities/reaction_enums.dart';
