@@ -1,0 +1,140 @@
+# Cursor AI Assistant Rules
+
+The Cursor AI Assistant must strictly follow these structured rules for every task within this project.
+
+---
+
+## 1. Task Analysis & Planning
+
+- Review the project's tech stack, patterns, and restrictions before proposing or starting.
+- Identify special requirements, edge cases, dependencies, or risks.
+- Break the assignment into actionable, logical steps.
+- Check for existing solutions or redundant logic before creating new code.
+
+---
+
+## 2. Implementation
+
+- Follow the project directory and naming conventions exactly.
+- Work step-by-step according to the breakdown.
+- Make only changes required by user instructions.
+- Do not introduce new features or refactors without explicit written approval.
+
+---
+
+## 3. Quality Control & Validation
+
+- Verify each update matches the requirements and expected output.
+- If issues or bugs occur:
+  - Isolate the cause with appropriate debugging.
+  - Fix the root issue systematically.
+  - Re-test until the expected result is achieved.
+
+---
+
+## 4. Project Guardrails
+
+- Never act outside explicit user instructions.
+- Do not change any visual styles (color, font, spacing, design) unless specifically requested.
+- Do not upgrade/downgrade Flutter, libraries, or frameworks without user permission.
+- Prompt the user if constraints or project rules seem to conflict with the requested task.
+
+---
+
+## Project Tech Stack
+
+- **Flutter**: SDK ^3.11.0 (Dart 3)
+- **State Management**: BLoC/Cubit (`flutter_bloc ^9.x`)
+- **Dependency Injection**: `get_it ^9.x`
+- **Routing**: `go_router ^17.x`
+- **Networking**: `http ^1.6.x`, `connectivity_plus ^7.x`
+- **Local Storage**: `shared_preferences ^2.x`
+- **Firebase**: Firebase Auth, Firestore, Storage, Messaging (as integrated)
+- **Utilities**: `equatable`, `dartz`, `intl`, `unique_device_identifier`
+- **UI**: `flex_color_scheme`, `google_fonts`, `lucide_icons_flutter`
+- **Media**: `camera`, `image_picker`, `photo_manager`
+- **Testing**: `flutter_test`, `bloc_test ^10.x`, `mockito ^5.x`, `build_runner`
+- **Error Handling**: `dartz Either<Failure, T>` for repository return types
+
+---
+
+## Project Structure & Naming
+
+Split layout: `lib/features/` for data+domain layers, `lib/presentation/` for UI+BLoC.
+
+```
+lib/
+├── core/                          # Shared infrastructure
+│   ├── di/                        # GetIt service locator
+│   ├── errors/                    # AppException, Failure classes
+│   ├── network/                   # ApiClient, NetworkInfo
+│   ├── routes/                    # GoRouter config (app_router.dart)
+│   ├── theme/                     # ThemeManager, AppTheme, AppTextStyles
+│   ├── locale/                    # LocaleManager, l10n
+│   ├── utils/                     # Constants, DeviceService, DateFormatter
+│   └── widgets/                   # RootScreen (shell), shared widgets
+├── features/<name>/               # Feature modules (data + domain only)
+│   ├── data/
+│   │   ├── datasources/           # Remote + Local data sources
+│   │   ├── models/                # JSON-serializable models
+│   │   └── repositories/          # Repository implementations
+│   └── domain/
+│       ├── entities/              # Pure Dart domain entities
+│       ├── mappers/               # Model ↔ Entity conversion
+│       ├── repositories/          # Abstract repository interfaces
+│       └── usecases/              # Single-action business logic
+│       └── value_objects/         # value objects
+├── presentation/<area>/           # UI layer per area
+│   ├── bloc/                      # BLoC classes
+│   ├── pages/                     # Screen/page widgets
+│   ├── screens/                   # Full screens
+│   └── widgets/                   # Feature-specific widgets
+└── main.dart                      # App entry, DI init, MaterialApp.router
+```
+
+**Active Features**: `auth`, `post`, `comment`, `reaction`, `friendship`
+
+**Naming Conventions**:
+- BLoC Events: past tense (`LoginButtonPressed`, `PostCreated`)
+- BLoC States: noun snapshot (`AuthAuthenticated`, `PostLoaded`)
+- Use Cases: `VerbNounUseCase` / `VerbNounUsecase` (`LoginUseCase`, `CreatePostUsecase`)
+- Entities: `NounEntity` (`UserEntity`, `PostEntity`)
+- Models: `NounModel` (`AuthTokensModel`, `PostModel`)
+- Data Sources: `*RemoteDataSource` / `*LocalDataSource`
+- Repositories: `*Repository` (interface), `*RepositoryImpl` (implementation)
+
+---
+
+## Key Architecture & Code Principles
+
+- Clean Architecture: strict separation between presentation, domain, and data layers.
+- UI → BLoC → UseCase → Repository → DataSource (unidirectional data flow).
+- Features must be modular and self-contained.
+- One file/class = one purpose (SRP). Eliminate duplicate code (DRY).
+- Repository interfaces return `Either<Failure, T>` (dartz).
+- Use cases are single-purpose classes injected with repository interfaces.
+- BLoCs are constructed via GetIt and provided via `BlocProvider`.
+- Never expose data models to the presentation layer — use entities and mappers.
+- Register dependencies in `lib/core/di/service_locator.dart` following the section order:
+  External → Core → Data Sources → Repositories → Use Cases → BLoCs.
+
+---
+
+## Firebase Integration
+
+When working with Firebase services:
+- Initialize Firebase in `main.dart` before `runApp()` using `Firebase.initializeApp()`.
+- Keep Firebase service calls inside data sources (remote), never in BLoCs or UI.
+- Use the same Clean Architecture pattern: Firebase calls go in `*RemoteDataSource`.
+- Register Firebase-backed data sources in the service locator like any other dependency.
+- Handle Firebase exceptions in the data layer and map to domain `Failure` types.
+
+---
+
+## Theme & Styling
+
+- Use `flex_color_scheme` for theme generation (`AppTheme.light`, `AppTheme.dark`).
+- Use `ThemeManager` (ChangeNotifier) for runtime theme switching.
+- Use `LocaleManager` (ChangeNotifier) for runtime locale switching.
+- Prefer `Theme.of(context)` for accessing theme values in widgets.
+- Custom text styles in `AppTextStyles`, sizes in `AppSize`.

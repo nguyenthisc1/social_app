@@ -1,0 +1,265 @@
+{
+  "@@locale": "en",
+  
+  "@_AUTH": {},
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot Password text/link"
+  },
+  "register": "Register",
+  "@register": {
+    "description": "Register button text"
+  },
+  "loginError": "Login failed",
+  "@loginError": {
+    "description": "Login failed error message"
+  },
+  "emailRequired": "Email is required",
+  "@emailRequired": {
+    "description": "Email required error message"
+  },
+  "passwordRequired": "Password is required",
+  "@passwordRequired": {
+    "description": "Password required error message"
+  },
+  "invalidEmail": "Invalid email address",
+  "@invalidEmail": {
+    "description": "Invalid email error message"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button text"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile menu or screen title"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings menu or screen title"
+  },
+  "signInContinue": "Sign in to continue",
+  "@signInContinue": {
+    "description": "Subtitle on login screen"
+  },
+  "signUpContinue": "Sign up to get started",
+  "@signUpContinue": {
+    "description": "Subtitle on register screen"
+  },
+  "username": "Username",
+  "@username": {
+    "description": "Username field label"
+  },
+  "chooseUsername": "Choose a username",
+  "@chooseUsername": {
+    "description": "Username field placeholder"
+  },
+  "chooseYourUsername": "Choose your username",
+  "@chooseYourUsername": {
+    "description": "Alternative username field placeholder"
+  },
+  "createPassword": "Create a password",
+  "@createPassword": {
+    "description": "Password creation field placeholder"
+  },
+  "createYourPassword": "Create your password",
+  "@createYourPassword": {
+    "description": "Alternative password creation field placeholder"
+  },
+  "enterYourEmail": "Enter your email",
+  "@enterYourEmail": {
+    "description": "Field placeholder for entering email"
+  },
+  "enterYourPassword": "Enter your password",
+  "@enterYourPassword": {
+    "description": "Field placeholder for entering password"
+  },
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "description": "Title for the register screen"
+  },
+  "alreadyHaveAccount": "Already have an account?",
+  "@alreadyHaveAccount": {
+    "description": "Prompt text on register screen"
+  },
+  "signIn": "Sign In",
+  "@signIn": {
+    "description": "Sign in button text"
+  },
+  "signUp": "Sign Up",
+  "@signUp": {
+    "description": "Sign up button text"
+  },
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "confirmYourPassword": "Confirm your password",
+  "@confirmYourPassword": {
+    "description": "Confirm password field placeholder"
+  },
+  "termsAndPrivacyNote": "By signing up, you agree to our Terms of Service and Privacy Policy",
+  "@termsAndPrivacyNote": {
+    "description": "Terms and privacy agreement note"
+  },
+  "dontHaveAccount": "Don't have an account?",
+  "@dontHaveAccount": {
+    "description": "Prompt text on login screen"
+  },
+  
+  "@_COMMON": {},
+  "appName": "Social App",
+  "@appName": {
+    "description": "Application display name"
+  },
+  "cancel": "Cancel",
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "confirm": "Confirm",
+  "yes": "Yes",
+  "no": "No",
+  "ok": "OK",
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "retry": "Retry",
+  "close": "Close",
+  "or": "OR",
+  "@or": {
+    "description": "Divider text for alternative actions (e.g., sign in OR sign up)"
+  },
+  "copiedToClipboard": "Copied to clipboard",
+  "@copiedToClipboard": {
+    "description": "Message when something is copied"
+  },
+
+  "@_POSTS": {},
+  "posts": "Posts",
+  "createPost": "Create Post",
+  "editPost": "Edit Post",
+  "deletePost": "Delete Post",
+  "likePost": "Like",
+  "sharePost": "Share",
+  "commentPost": "Comment",
+  "postDeleted": "Post deleted",
+  "postCreated": "Post created",
+  "postUpdated": "Post updated",
+  "noPostsYet": "No posts yet",
+  "writePost": "What's on your mind?",
+  "viewPost": "View Post",
+  "@viewPost": {
+    "description": "Button or link to view a post"
+  },
+  "postNotFound": "Post not found",
+  "@postNotFound": {
+    "description": "Displayed when a post is not found"
+  },
+
+  "@_COMMENTS": {},
+  "comments": "Comments",
+  "writeComment": "Write a comment...",
+  "reply": "Reply",
+  "replies": "Replies",
+  "noComments": "No comments yet",
+  "commentDeleted": "Comment deleted",
+  "addComment": "Add Comment",
+  "@addComment": {
+    "description": "Button for adding a comment"
+  },
+  
+  "@_FRIENDS": {},
+  "friends": "Friends",
+  "addFriend": "Add Friend",
+  "removeFriend": "Remove Friend",
+  "friendRequests": "Friend Requests",
+  "acceptRequest": "Accept",
+  "rejectRequest": "Reject",
+  "pendingRequests": "Pending Requests",
+  "sentRequests": "Sent Requests",
+  "noFriends": "No friends yet",
+  "friendRequestSent": "Friend request sent",
+  "friendRequestAccepted": "Friend request accepted",
+  "friendRequestRejected": "Friend request rejected",
+  "unfriend": "Unfriend",
+  "@unfriend": {
+    "description": "Button to remove someone from friends"
+  },
+
+  "@_REACTIONS": {},
+  "like": "Like",
+  "love": "Love",
+  "haha": "Haha",
+  "wow": "Wow",
+  "sad": "Sad",
+  "angry": "Angry",
+  "dislike": "Dislike",
+  "@dislike": {
+    "description": "Dislike reaction"
+  },
+  "reacted": "You reacted",
+  "@reacted": {
+    "description": "Message indicating the user has reacted"
+  },
+
+  "@_NAVIGATION": {},
+  "home": "Home",
+  "explore": "Explore",
+  "notifications": "Notifications",
+  "messages": "Messages",
+  "search": "Search",
+  "@search": {
+    "description": "Navigation label for search tab"
+  },
+  "profileTab": "Profile",
+  "@profileTab": {
+    "description": "Profile navigation tab"
+  },
+  
+  "@_SETTINGS": {},
+  "darkMode": "Dark Mode",
+  "language": "Language",
+  "about": "About",
+  "version": "Version",
+  "privacyPolicy": "Privacy Policy",
+  "termsOfService": "Terms of Service",
+  "accountSettings": "Account Settings",
+  "@accountSettings": {
+    "description": "Account settings screen title"
+  },
+  "notificationSettings": "Notification Settings",
+  "@notificationSettings": {
+    "description": "Notification settings title"
+  },
+
+  "@_ERRORS": {},
+  "networkError": "Network error. Please check your connection.",
+  "serverError": "Server error. Please try again later.",
+  "unknownError": "An unknown error occurred",
+  "unauthorized": "Unauthorized. Please login again.",
+  "notFound": "Not found",
+  "timeoutError": "Request timed out. Please try again.",
+  "@timeoutError": {
+    "description": "Displayed when a request times out"
+  },
+  "forbidden": "You do not have permission to perform this action.",
+  "@forbidden": {
+    "description": "Displayed when access is forbidden"
+  },
+  "validationError": "Some fields are invalid. Please check and try again.",
+  "@validationError": {
+    "description": "Shown when form validation fails"
+  }
+}
