@@ -7,6 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:social_app/core/core.dart';
 import 'package:social_app/core/data/firebase/firebase_seed_service.dart';
 import 'package:social_app/core/utils/extensions.dart';
+import 'package:social_app/core/widgets/internet_status_banner.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
 
@@ -23,9 +24,9 @@ class RootScreen extends StatelessWidget {
     final index = navigationShell.currentIndex;
     return BlocBuilder<ConversationCubit, ConversationState>(
       builder: (context, conversationState) {
-        final unreadCount = context.read<ConversationCubit>().getTotalUnreadCount(
-          conversationState,
-        );
+        final unreadCount = context
+            .read<ConversationCubit>()
+            .getTotalUnreadCount(conversationState);
 
         return Scaffold(
           appBar: AppBar(
@@ -65,7 +66,17 @@ class RootScreen extends StatelessWidget {
               ),
             ],
           ),
-          body: navigationShell,
+          body: Stack(
+            children: [
+              Positioned.fill(child: navigationShell),
+              Positioned(
+                bottom: AppSize.lg,
+                left: 0,
+                right: 0,
+                child: const InternetStatusBanner(),
+              ),
+            ],
+          ),
           bottomNavigationBar: NavigationBar(
             selectedIndex: index,
             onDestinationSelected: (i) {

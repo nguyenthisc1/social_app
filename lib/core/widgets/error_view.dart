@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:social_app/core/core.dart';
-import 'package:social_app/core/theme/app_size.dart';
 
 /// Reusable error display widget for failed states.
 ///

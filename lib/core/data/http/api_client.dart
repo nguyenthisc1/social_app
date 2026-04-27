@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:social_app/app/internet_connection/network_info.dart';
 import 'package:social_app/core/domain/exceptions/generic_exception.dart';
 import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:social_app/features/auth/domain/auth_exceptions.dart';
 
 import '../../utils/device_service.dart';
-import 'network_info.dart';
 
 class ApiClient {
   final http.Client httpClient;
@@ -179,20 +179,6 @@ class ApiClient {
       return 'An error occurred';
     } catch (_) {
       return 'An error occurred';
-    }
-  }
-
-  /// Extract validation errors from response
-  Map<String, dynamic>? _extractValidationErrors(http.Response response) {
-    try {
-      final data = jsonDecode(response.body);
-      if (data is Map<String, dynamic> &&
-          data['errors'] is Map<String, dynamic>) {
-        return data['errors'] as Map<String, dynamic>?;
-      }
-      return null;
-    } catch (_) {
-      return null;
     }
   }
 }

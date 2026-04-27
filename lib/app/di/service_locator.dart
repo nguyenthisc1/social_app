@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_app/app/internet_connection/connection.dart';
 import 'package:social_app/core/data/http/api_client.dart';
-import 'package:social_app/core/data/http/network_info.dart';
 import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
 import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
@@ -97,9 +96,6 @@ Future<void> initializeDependencies() async {
   // HTTP Client
   sl.registerLazySingleton<http.Client>(() => http.Client());
 
-  // Connectivity
-  sl.registerLazySingleton<Connectivity>(() => Connectivity());
-
   // Firebase
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
@@ -111,9 +107,7 @@ Future<void> initializeDependencies() async {
   // ============================================================================
 
   // Network Info
-  sl.registerLazySingleton<NetworkInfo>(
-    () => NetworkInfoImpl(connectivity: sl()),
-  );
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
 
   // API Client
   sl.registerLazySingleton<ApiClient>(
@@ -357,6 +351,10 @@ Future<void> initializeDependencies() async {
       requestPermissionUsecase: sl(),
       syncFcmTokenUsecase: sl(),
     ),
+  );
+
+  sl.registerLazySingleton(
+    () => InternetConnectionCubit(networkInfo: sl<NetworkInfo>()),
   );
 }
 
