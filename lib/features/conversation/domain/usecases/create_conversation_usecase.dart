@@ -1,18 +1,21 @@
+import 'package:social_app/core/domain/usecases/usecases.dart';
+import 'package:social_app/features/conversation/domain/conversation_types.dart';
 import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart';
 import 'package:social_app/features/conversation/domain/repositories/conversation_repository.dart';
+import 'package:social_app/features/conversation/domain/value_objects/participant_ids.dart';
 
-class CreateConversationUsecase {
+class CreateConversationUsecase
+    extends UseCase<ConversationEntity, CreateConversationCommand> {
   final ConversationRepository _conversationRepository;
 
   const CreateConversationUsecase(this._conversationRepository);
 
-  Future<ConversationEntity> call(List<String> participantIds) {
-    // if (participantIds.isEmpty) {
-    //   throw ConversationCreateException(
-    //     message: 'Conversation must have at least one member.',
-    //   );
-    // }
+  @override
+  Future<ConversationEntity> call(CreateConversationCommand params) {
+    final validatedParticipants = ParticipantIds(params.participantIds);
 
-    return _conversationRepository.createConversation(participantIds);
+    return _conversationRepository.createConversation(
+      validatedParticipants.value,
+    );
   }
 }
