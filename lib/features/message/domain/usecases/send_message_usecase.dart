@@ -2,18 +2,18 @@ import 'package:social_app/core/domain/exceptions/generic_exception.dart';
 import 'package:social_app/core/domain/usecases/usecases.dart';
 import 'package:social_app/features/conversation/domain/value_objects/conversation_id.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
-import 'package:social_app/features/message/domain/message_types.dart';
+import 'package:social_app/features/message/domain/message_params.dart';
 import 'package:social_app/features/message/domain/repositories/message_repository.dart';
 import 'package:social_app/features/message/domain/value_objects/message_text.dart';
 import 'package:social_app/features/user/domain/value_objects/value_objects.dart';
 
-class SendMessageUsecase extends UseCase<MessageEntity, SendMessageCommand> {
+class SendMessageUsecase extends UseCase<MessageEntity, SendMessageParams> {
   final MessageRepository _messageRepository;
 
   const SendMessageUsecase(this._messageRepository);
 
   @override
-  Future<MessageEntity> call(SendMessageCommand params) {
+  Future<MessageEntity> call(SendMessageParams params) {
     final validatedConversationId = ConversationId(params.conversationId);
     final validatedCurrentUserId = UserId(params.currentUserId);
     final hasMedia = params.message.mediaUrl?.trim().isNotEmpty == true;

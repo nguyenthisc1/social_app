@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-class LoginCommand extends Equatable {
+class LoginParams extends Equatable {
   final String email;
   final String password;
 
-  const LoginCommand({
+  const LoginParams({
     required this.email,
     required this.password,
   });
@@ -13,12 +13,12 @@ class LoginCommand extends Equatable {
   List<Object?> get props => [email, password];
 }
 
-class RegisterCommand extends Equatable {
+class RegisterParams extends Equatable {
   final String email;
   final String username;
   final String password;
 
-  const RegisterCommand({
+  const RegisterParams({
     required this.email,
     required this.username,
     required this.password,

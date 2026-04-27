@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
 
-class SendMessageCommand extends Equatable {
+class SendMessageParams extends Equatable {
   final String conversationId;
   final MessageEntity message;
   final String currentUserId;
 
-  const SendMessageCommand({
+  const SendMessageParams({
     required this.conversationId,
     required this.message,
     required this.currentUserId,

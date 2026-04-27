@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/core/domain/exceptions/exception_base.dart';
 import 'package:social_app/core/domain/usecases/usecases.dart';
-import 'package:social_app/features/auth/domain/auth_types.dart';
+import 'package:social_app/features/auth/domain/auth_params.dart';
 import 'package:social_app/features/user/domain/entites/user_entity.dart';
 
 import '../../domain/usecases/check_auth_status_usecase.dart';
@@ -155,7 +155,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final user = await loginUseCase(
-        LoginCommand(email: event.email, password: event.password),
+        LoginParams(email: event.email, password: event.password),
       );
       emit(AuthAuthenticated(user));
     } catch (error) {
@@ -172,7 +172,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final user = await registerUseCase(
-        RegisterCommand(
+        RegisterParams(
           email: event.email,
           username: event.username,
           password: event.password,
