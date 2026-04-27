@@ -9,7 +9,5 @@ class CheckAuthStatusUseCase extends UseCase<bool, NoParams> {
   CheckAuthStatusUseCase(this.repository);
 
   @override
-  Future<bool> call(NoParams params) async {
-    return await repository.isAuthenticated();
-  }
+  Future<bool> call(NoParams params) => repository.isAuthenticated();
 }
