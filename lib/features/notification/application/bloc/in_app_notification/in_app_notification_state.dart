@@ -25,4 +25,30 @@ class InAppNotificationState {
       history: history ?? this.history,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is InAppNotificationState &&
+        _listEquals(other.displayQueue, displayQueue) &&
+        other.current == current &&
+        _listEquals(other.history, history);
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    Object.hashAll(displayQueue),
+    current,
+    Object.hashAll(history),
+  );
+
+  static bool _listEquals<T>(List<T> a, List<T> b) {
+    if (identical(a, b)) return true;
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 }

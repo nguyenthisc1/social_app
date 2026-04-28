@@ -355,7 +355,7 @@ Future<void> initializeDependencies() async {
   );
 
   // In App Notification Bloc
-  sl.registerFactory(() => InAppNotificationBloc());
+  sl.registerLazySingleton(() => InAppNotificationBloc());
 
   sl.registerLazySingleton(
     () => InternetConnectionCubit(networkInfo: sl<NetworkInfo>()),
