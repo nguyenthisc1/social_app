@@ -69,6 +69,7 @@ dependencies:
   google_fonts: ^6.2.1
   flex_color_scheme: ^8.4.0
   lucide_icons_flutter: ^3.1.10
+  flutter_screenutil: ^5.9.3
 
   camera: ^0.12.0
   image_picker: ^1.2.1
