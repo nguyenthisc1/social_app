@@ -321,10 +321,12 @@ class AppRouter {
         location == AppRoutes.verifyEmail;
 
     final isAuthenticated = authState is AuthAuthenticated;
-    final isLoading = authState is AuthInitial || authState is AuthLoading;
+    final isBootstrapping = authState is AuthInitial;
 
-    // Auth state still loading — stay on or go to splash
-    if (isLoading) {
+    // Only the initial auth bootstrap should force the splash route.
+    // Login/logout loading states must not remount SplashScreen because it
+    // dispatches a new AuthCheckRequested in initState.
+    if (isBootstrapping) {
       return isOnSplash ? null : AppRoutes.splash;
     }
 

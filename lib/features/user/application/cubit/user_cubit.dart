@@ -21,7 +21,7 @@ class UserCubit extends Cubit<UserState> {
        _getUsersByIdsUsecase = getUsersByIdsUsecase,
        super(UserState.initial());
 
-  Future<void> initializeSession() async {
+  Future<void> initialize() async {
     await _loadCachedProfile();
     await getProfile();
   }

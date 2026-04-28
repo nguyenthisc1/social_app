@@ -22,62 +22,57 @@ class RootScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final index = navigationShell.currentIndex;
-    return BlocBuilder<ConversationCubit, ConversationState>(
-      builder: (context, conversationState) {
-        final unreadCount = context
-            .read<ConversationCubit>()
-            .getTotalUnreadCount(conversationState);
-
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: theme.colorScheme.surface,
-            surfaceTintColor: Colors.transparent,
-            elevation: 0,
-            scrolledUnderElevation: 0.5,
-            centerTitle: true,
-            title: index == 0
-                ? Text(
-                    'Social',
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.8,
-                    ),
-                  )
-                : Text(
-                    _titles[index],
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-            leading: IconButton(
-              icon: const Icon(LucideIcons.plus, size: AppSize.icon),
-              onPressed: () => context.push(AppRoutes.createPost),
-            ),
-            actions: [
-              if (kDebugMode)
-                IconButton(
-                  icon: const Icon(LucideIcons.databaseZap, size: AppSize.icon),
-                  tooltip: 'Seed sample chat data',
-                  onPressed: () => _seedSampleData(context),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: theme.colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0.5,
+        centerTitle: true,
+        title: index == 0
+            ? Text(
+                'Social',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.8,
                 ),
-              IconButton(
-                icon: const Icon(LucideIcons.heart, size: AppSize.icon),
-                onPressed: () {},
+              )
+            : Text(
+                _titles[index],
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ],
+        leading: IconButton(
+          icon: const Icon(LucideIcons.plus, size: AppSize.icon),
+          onPressed: () => context.push(AppRoutes.createPost),
+        ),
+        actions: [
+          if (kDebugMode)
+            IconButton(
+              icon: const Icon(LucideIcons.databaseZap, size: AppSize.icon),
+              tooltip: 'Seed sample chat data',
+              onPressed: () => _seedSampleData(context),
+            ),
+          IconButton(
+            icon: const Icon(LucideIcons.heart, size: AppSize.icon),
+            onPressed: () {},
           ),
-          body: Stack(
-            children: [
-              Positioned.fill(child: navigationShell),
-              Positioned(
-                bottom: AppSize.lg,
-                left: 0,
-                right: 0,
-                child: const InternetStatusBanner(),
-              ),
-            ],
-          ),
-          bottomNavigationBar: NavigationBar(
+        ],
+      ),
+      body: Column(
+        children: [
+          const InternetStatusBanner(),
+          Expanded(child: navigationShell),
+        ],
+      ),
+      bottomNavigationBar: BlocBuilder<ConversationCubit, ConversationState>(
+        builder: (context, conversationState) {
+          final unreadCount = context
+              .read<ConversationCubit>()
+              .getTotalUnreadCount(conversationState);
+
+          return NavigationBar(
             selectedIndex: index,
             onDestinationSelected: (i) {
               navigationShell.goBranch(
@@ -142,9 +137,9 @@ class RootScreen extends StatelessWidget {
                 label: 'Profile',
               ),
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
