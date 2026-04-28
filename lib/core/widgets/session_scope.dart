@@ -25,13 +25,7 @@ class SessionScope extends StatelessWidget {
       providers: [
         BlocProvider<UserCubit>(
           lazy: false,
-          create: (_) {
-            final cubit = sl<UserCubit>();
-            if (isAuthenticated) {
-              cubit.initializeSession();
-            }
-            return cubit;
-          },
+          create: (_) => sl<UserCubit>(),
         ),
         BlocProvider<ConversationCubit>(
           lazy: false,
@@ -51,7 +45,7 @@ class SessionScope extends StatelessWidget {
             listener: (context, state) {
               final userId = state.profile?.id;
               if (userId != null) {
-                context.read<ConversationCubit>().initializeSession(userId);
+                context.read<ConversationCubit>().initialize(userId);
                 context.read<NotificationCubit>().initialize(userId);
               }
             },
@@ -95,8 +89,49 @@ class SessionScope extends StatelessWidget {
             },
           ),
         ],
-        child: child,
+        child: _SessionBootstrap(
+          isAuthenticated: isAuthenticated,
+          child: child,
+        ),
       ),
     );
+  }
+}
+
+class _SessionBootstrap extends StatefulWidget {
+  const _SessionBootstrap({
+    required this.isAuthenticated,
+    required this.child,
+  });
+
+  final bool isAuthenticated;
+  final Widget child;
+
+  @override
+  State<_SessionBootstrap> createState() => _SessionBootstrapState();
+}
+
+class _SessionBootstrapState extends State<_SessionBootstrap> {
+  bool _initialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_initialized || !widget.isAuthenticated) {
+      return;
+    }
+
+    _initialized = true;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<UserCubit>().initialize();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }

@@ -44,6 +44,7 @@ import 'package:social_app/features/message/domain/repositories/message_reposito
 import 'package:social_app/features/message/domain/usecases/get_messages_by_conversation_usecase.dart';
 import 'package:social_app/features/message/domain/usecases/send_message_usecase.dart';
 import 'package:social_app/features/message/domain/usecases/watch_messages_by_conversation_usecase.dart';
+import 'package:social_app/features/notification/application/bloc/in_app_notification/in_app_notification_bloc.dart';
 import 'package:social_app/features/notification/application/cubit/notification_cubit.dart';
 import 'package:social_app/features/notification/data/datasources/remote/firebase/notification_firebase_data_source_impl.dart';
 import 'package:social_app/features/notification/data/datasources/remote/notification_remote_data_source.dart';
@@ -352,6 +353,9 @@ Future<void> initializeDependencies() async {
       syncFcmTokenUsecase: sl(),
     ),
   );
+
+  // In App Notification Bloc
+  sl.registerFactory(() => InAppNotificationBloc());
 
   sl.registerLazySingleton(
     () => InternetConnectionCubit(networkInfo: sl<NetworkInfo>()),
