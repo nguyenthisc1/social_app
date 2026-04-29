@@ -12,6 +12,8 @@ class InAppNotificationEntity extends AppNoticationProps {
     required super.payload,
     required super.createdAt,
     required super.isRead,
+    super.avatarUrl,
+    super.thumbnailUrl,
   });
 
   InAppNotificationEntity copyWith({
@@ -23,6 +25,8 @@ class InAppNotificationEntity extends AppNoticationProps {
     Map<String, dynamic>? payload,
     DateTime? createdAt,
     bool? isRead,
+    String? avatarUrl,
+    String? thumbnailUrl,
   }) {
     return InAppNotificationEntity(
       id: id ?? this.id,
@@ -33,6 +37,8 @@ class InAppNotificationEntity extends AppNoticationProps {
       payload: payload ?? super.payload,
       createdAt: createdAt ?? super.createdAt,
       isRead: isRead ?? super.isRead,
+      avatarUrl: avatarUrl ?? super.avatarUrl,
+      thumbnailUrl: thumbnailUrl ?? super.thumbnailUrl,
     );
   }
 }

@@ -69,19 +69,19 @@ class InAppNotificationBloc
   }
 
   void _onAutoDismiss(InAppNotificationAutoDismiss event, Emitter emit) {
-    // if (state.current?.id != event.notificationId) return;
+    if (state.current?.id != event.notificationId) return;
 
-    // _dismissTimers.remove(event.notificationId)?.cancel();
+    _dismissTimers.remove(event.notificationId)?.cancel();
 
-    // // have notification in queue → show next notification
-    // if (state.displayQueue.isNotEmpty) {
-    //   final next = state.displayQueue.first;
-    //   final remaining = state.displayQueue.skip(1).toList();
-    //   _showAndScheduleDismiss(next, emit);
-    //   emit(state.copyWith(current: next, displayQueue: remaining));
-    // } else {
-    //   emit(state.copyWith(clearCurrent: true));
-    // }
+    // have notification in queue → show next notification
+    if (state.displayQueue.isNotEmpty) {
+      final next = state.displayQueue.first;
+      final remaining = state.displayQueue.skip(1).toList();
+      _showAndScheduleDismiss(next, emit);
+      emit(state.copyWith(current: next, displayQueue: remaining));
+    } else {
+      emit(state.copyWith(clearCurrent: true));
+    }
   }
 
   void _onAllCleared(InAppAllNotificationsCleared event, Emitter emit) {

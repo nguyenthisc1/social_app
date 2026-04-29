@@ -7,14 +7,9 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:social_app/core/core.dart';
 import 'package:social_app/core/data/firebase/firebase_seed_service.dart';
 import 'package:social_app/core/utils/extensions.dart';
-import 'package:social_app/core/widgets/in_app_notification.dart';
-import 'package:social_app/core/widgets/internet_status_banner.dart';
+import 'package:social_app/core/widgets/app_notification.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
-import 'package:social_app/features/notification/application/bloc/in_app_notification/in_app_notification_bloc.dart';
-import 'package:social_app/features/notification/application/bloc/in_app_notification/in_app_notification_event.dart';
-import 'package:social_app/features/notification/domain/entities/in_app_notification_entity.dart';
-import 'package:social_app/features/notification/domain/entities/notification_types.dart';
 
 class RootScreen extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -25,21 +20,6 @@ class RootScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<InAppNotificationBloc>().add(
-      InAppNotificationReceived(
-        InAppNotificationEntity(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          type: NotificationType.newMessage,
-          priority: NotificationPriority.normal,
-          title: 'Alice',
-          body: 'Sent you a new message',
-          payload: const {'conversationId': 'conversation_1'},
-          createdAt: DateTime.now(),
-          isRead: false,
-        ),
-      ),
-    );
-
     final theme = Theme.of(context);
     final index = navigationShell.currentIndex;
     return Scaffold(
@@ -80,14 +60,7 @@ class RootScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: InAppNotification(
-        child: Column(
-          children: [
-            const InternetStatusBanner(),
-            Expanded(child: navigationShell),
-          ],
-        ),
-      ),
+      body: AppNotification(child: navigationShell),
       bottomNavigationBar: BlocBuilder<ConversationCubit, ConversationState>(
         builder: (context, conversationState) {
           final unreadCount = context

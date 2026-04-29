@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/core/utils/extensions.dart';
 import 'package:social_app/core/widgets/error_view.dart';
-import 'package:social_app/core/widgets/in_app_status_wrapper.dart';
+import 'package:social_app/core/widgets/side_effect_status_wrapper.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_state.dart';
@@ -146,10 +146,14 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
           return ErrorView(message: detailState.errorMessage);
         }
 
-        final otherUserId = detailState.conversation?.participantIds
-            .firstWhere((id) => id != currentUserId, orElse: () => '');
-        final otherUser =
-            context.watch<UserCubit>().state.usersById[otherUserId];
+        final otherUserId = detailState.conversation?.participantIds.firstWhere(
+          (id) => id != currentUserId,
+          orElse: () => '',
+        );
+        final otherUser = context
+            .watch<UserCubit>()
+            .state
+            .usersById[otherUserId];
 
         return BlocConsumer<MessageCubit, MessageState>(
           listener: (context, state) {
@@ -169,7 +173,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
                 hasText: _hasText,
                 onSend: _sendMessage,
               ),
-              body: InAppStatusWrapper(
+              body: SideEffectStatusWrapper(
                 hasContent: messageState.messages.isNotEmpty,
                 isLoading: messageState.isLoading,
                 child: ChatMessageList(

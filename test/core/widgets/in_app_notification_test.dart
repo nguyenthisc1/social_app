@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:social_app/core/widgets/in_app_notification.dart';
+import 'package:social_app/core/widgets/app_notification.dart';
 import 'package:social_app/features/notification/application/bloc/in_app_notification/in_app_notification_bloc.dart';
 import 'package:social_app/features/notification/application/bloc/in_app_notification/in_app_notification_event.dart';
 import 'package:social_app/features/notification/domain/entities/in_app_notification_entity.dart';
@@ -28,7 +28,7 @@ void main() {
       MaterialApp(
         home: BlocProvider.value(
           value: bloc,
-          child: const InAppNotification(
+          child: const AppNotification(
             child: Scaffold(body: SizedBox.shrink()),
           ),
         ),
@@ -52,7 +52,7 @@ void main() {
       MaterialApp(
         home: BlocProvider.value(
           value: bloc,
-          child: const InAppNotification(
+          child: const AppNotification(
             child: Scaffold(body: SizedBox.shrink()),
           ),
         ),
@@ -84,7 +84,7 @@ void main() {
       MaterialApp(
         home: BlocProvider.value(
           value: bloc,
-          child: const InAppNotification(
+          child: const AppNotification(
             child: Scaffold(body: SizedBox.shrink()),
           ),
         ),
