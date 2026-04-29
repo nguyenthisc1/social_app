@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:social_app/core/widgets/error_view.dart';
-import 'package:social_app/core/widgets/in_app_status_banner.dart';
 import 'package:social_app/core/widgets/loading_indicator.dart';
+import 'package:social_app/core/widgets/side_effect_status_banner.dart';
 
-class InAppStatusWrapper extends StatelessWidget {
-  const InAppStatusWrapper({
+class SideEffectStatusWrapper extends StatelessWidget {
+  const SideEffectStatusWrapper({
     super.key,
     required this.child,
     required this.hasContent,
@@ -40,7 +40,7 @@ class InAppStatusWrapper extends StatelessWidget {
 
     return Column(
       children: [
-        InAppStatusBanner(
+        SideEffectStatusBanner(
           show: bannerText != null,
           text: bannerText ?? '',
         ),

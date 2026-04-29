@@ -7,7 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:social_app/core/core.dart';
 import 'package:social_app/core/data/firebase/firebase_seed_service.dart';
 import 'package:social_app/core/utils/extensions.dart';
-import 'package:social_app/core/widgets/internet_status_banner.dart';
+import 'package:social_app/core/widgets/app_notification.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_state.dart';
 
@@ -60,12 +60,7 @@ class RootScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const InternetStatusBanner(),
-          Expanded(child: navigationShell),
-        ],
-      ),
+      body: AppNotification(child: navigationShell),
       bottomNavigationBar: BlocBuilder<ConversationCubit, ConversationState>(
         builder: (context, conversationState) {
           final unreadCount = context

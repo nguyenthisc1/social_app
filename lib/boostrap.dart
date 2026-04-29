@@ -12,6 +12,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/app/di/injection_container.dart';
 import 'package:social_app/core/data/firebase/firebase_service.dart';
+import 'package:social_app/features/conversation/application/services/local-notification.dart/local_notification_service.dart';
 
 class AppBlocObserver extends BlocObserver {
   @override
@@ -32,6 +33,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   await FirebaseService.initialize();
   await InjectionContainer.init();
+  sl<LocalNotificationService>().initialize();
 
   // await configureDependencies(environment: environment);
   FlutterError.onError = (details) {

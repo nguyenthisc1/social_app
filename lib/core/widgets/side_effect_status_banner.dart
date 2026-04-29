@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:social_app/core/utils/utils.dart';
 
-class InAppStatusBanner extends StatefulWidget {
-  const InAppStatusBanner({super.key, required this.text, this.show = true});
+class SideEffectStatusBanner extends StatefulWidget {
+  const SideEffectStatusBanner({
+    super.key,
+    required this.text,
+    this.show = true,
+  });
 
   final String text;
   final bool show;
 
   @override
-  State<InAppStatusBanner> createState() => _InAppStatusBannerState();
+  State<SideEffectStatusBanner> createState() =>
+      SideEffectStatusBannerState();
 }
 
-class _InAppStatusBannerState extends State<InAppStatusBanner>
+class SideEffectStatusBannerState extends State<SideEffectStatusBanner>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
@@ -37,7 +42,7 @@ class _InAppStatusBannerState extends State<InAppStatusBanner>
   }
 
   @override
-  void didUpdateWidget(InAppStatusBanner oldWidget) {
+  void didUpdateWidget(SideEffectStatusBanner oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.show != oldWidget.show) {
       if (widget.show) {
