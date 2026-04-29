@@ -76,11 +76,7 @@ class _AppNotificationState extends State<AppNotification> {
     final currentRoute = GoRouterState.of(context).uri.toString();
 
     for (final conversation in state.conversations) {
-      final conversationNotificationRoutes =
-          '${AppRoutes.chat}/${conversation.id}';
-
-      if (currentRoute == conversationNotificationRoutes ||
-          currentRoute == AppRoutes.conversations) {
+      if (currentRoute == AppRoutes.conversations) {
         continue;
       }
 
@@ -88,6 +84,7 @@ class _AppNotificationState extends State<AppNotification> {
 
       if (lastMessage == null) continue;
 
+      // check its a new message
       final previousLastMessageId = _lastMessageIds[conversation.id];
 
       final isNewMessage =
