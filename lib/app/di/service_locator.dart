@@ -23,6 +23,7 @@ import 'package:social_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
 import 'package:social_app/features/conversation/application/services/bardge-service/badge_service.dart';
+import 'package:social_app/features/conversation/application/services/local-notification.dart/local_notification_service.dart';
 import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
 import 'package:social_app/features/conversation/data/datasources/local/hive/conversation_hive_local_data_source.dart';
 import 'package:social_app/features/conversation/data/datasources/remote/conversation_remote_data_source.dart';
@@ -132,6 +133,9 @@ Future<void> initializeDependencies() async {
   );
 
   sl.registerLazySingleton<BadgeService>(() => AppIconBadgeService());
+  sl.registerLazySingleton<LocalNotificationService>(
+    () => LocalNotificationServiceImpl(),
+  );
 
   // ============================================================================
   // Data Sources
