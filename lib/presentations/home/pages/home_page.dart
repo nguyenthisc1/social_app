@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:social_app/core/di/service_locator.dart';
+import 'package:social_app/app/di/service_locator.dart';
 import 'package:social_app/core/theme/app_size.dart';
 import 'package:social_app/presentations/post/bloc/post_bloc.dart';
 import 'package:social_app/presentations/post/widgets/post_list_widget.dart';

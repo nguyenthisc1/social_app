@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
-import 'package:social_app/core/domain-base/exceptions/generic_exception.dart';
+import 'package:social_app/core/domain/exceptions/generic_exception.dart';
 import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
 import 'package:social_app/features/conversation/data/models/conversation_last_message_model.dart';
 import 'package:social_app/features/conversation/data/models/conversation_model.dart';

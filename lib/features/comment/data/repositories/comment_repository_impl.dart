@@ -1,5 +1,5 @@
 import 'package:social_app/core/core.dart';
-import 'package:social_app/core/network/base_response.dart';
+import 'package:social_app/core/data/http/http_response.dart';
 import 'package:social_app/features/comment/data/datasources/comment_remote_data_source.dart';
 import 'package:social_app/features/comment/data/models/comment_model.dart';
 import 'package:social_app/features/comment/domain/comment_exceptions.dart';
@@ -27,7 +27,7 @@ class CommentRepositoryImpl extends CommentRepository {
       );
     }
     try {
-      final BaseResponse<CommentModel> response = await remote.createComment(
+      final HttpResponse<CommentModel> response = await remote.createComment(
         postId: postId,
         content: content,
         parentCommentId: parentCommentId,
@@ -63,7 +63,7 @@ class CommentRepositoryImpl extends CommentRepository {
       );
     }
     try {
-      final BaseResponse<CommentModel> response = await remote.updateComment(
+      final HttpResponse<CommentModel> response = await remote.updateComment(
         commentId: commentId,
         content: content,
       );
@@ -118,7 +118,7 @@ class CommentRepositoryImpl extends CommentRepository {
       );
     }
     try {
-      final BaseResponse<List<CommentModel>> response = await remote
+      final HttpResponse<List<CommentModel>> response = await remote
           .getCommentByPost(postId: postId, pagination: query);
       final comments = response.data;
 
@@ -150,7 +150,7 @@ class CommentRepositoryImpl extends CommentRepository {
       );
     }
     try {
-      final BaseResponse<List<CommentModel>> response = await remote.getReplies(
+      final HttpResponse<List<CommentModel>> response = await remote.getReplies(
         commentId: commentId,
         pagination: query,
       );

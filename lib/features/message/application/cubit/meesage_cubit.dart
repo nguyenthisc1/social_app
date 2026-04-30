@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/features/message/application/cubit/message_state.dart';
 import 'package:social_app/features/message/domain/entites/message_entity.dart';
+import 'package:social_app/features/message/domain/message_params.dart';
 import 'package:social_app/features/message/domain/usecases/get_messages_by_conversation_usecase.dart';
 import 'package:social_app/features/message/domain/usecases/send_message_usecase.dart';
 import 'package:social_app/features/message/domain/usecases/watch_messages_by_conversation_usecase.dart';
@@ -58,9 +59,11 @@ class MessageCubit extends Cubit<MessageState> {
 
     try {
       await _sendMessageUsecase(
-        conversationId: conversationId,
-        message: message,
-        currentUserId: currentUserId,
+        SendMessageParams(
+          conversationId: conversationId,
+          message: message,
+          currentUserId: currentUserId,
+        ),
       );
 
       // final newMessages = [
@@ -96,7 +99,6 @@ class MessageCubit extends Cubit<MessageState> {
         // retain any "pending" (clientMessageId) messages not yet on server that are missing from Firestore result
         final pendingMessages = state.messages.where(
           (m) =>
-              m.clientMessageId != null &&
               !messages.any((msg) => msg.clientMessageId == m.clientMessageId),
         );
         emit(

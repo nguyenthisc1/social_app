@@ -1,4 +1,5 @@
-import 'constants.dart';
+
+import 'package:social_app/core/utils/app_constants.dart';
 
 /// Input validation utilities
 class Validators {

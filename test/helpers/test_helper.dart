@@ -1,9 +1,15 @@
 import 'package:mockito/annotations.dart';
-import 'package:social_app/core/network/api_client.dart';
-import 'package:social_app/core/network/network_info.dart';
+import 'package:social_app/app/internet_connection/network_info.dart';
+import 'package:social_app/core/data/http/api_client.dart';
 import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart';
+import 'package:social_app/features/auth/data/datasources/remote/auth_firebase_remote_data_souce.dart';
 import 'package:social_app/features/auth/data/datasources/remote/auth_remote_data_source.dart';
 import 'package:social_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:social_app/features/auth/domain/usecases/check_auth_status_usecase.dart';
+import 'package:social_app/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:social_app/features/auth/domain/usecases/login_usecase.dart';
+import 'package:social_app/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:social_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:social_app/features/comment/data/datasources/comment_remote_data_source.dart';
 import 'package:social_app/features/comment/domain/repositories/comment_repository.dart';
 import 'package:social_app/features/friendship/data/datasources/friendship_remote_data_source.dart';
@@ -18,25 +24,31 @@ import 'package:social_app/features/reaction/domain/repositories/reaction_reposi
   // Core
   ApiClient,
   NetworkInfo,
-  
+
   // Auth
   AuthRepository,
   AuthRemoteDataSource,
   AuthLocalDataSource,
-  
+  AuthFirebaseRemoteDataSource,
+  LoginUseCase,
+  RegisterUseCase,
+  LogoutUseCase,
+  GetCurrentUserUseCase,
+  CheckAuthStatusUseCase,
+
   // Post
   PostRepository,
   PostRemoteDataSource,
   PostLocalDataSource,
-  
+
   // Comment
   CommentRepository,
   CommentRemoteDataSource,
-  
+
   // Reaction
   ReactionRepository,
   ReactionRemoteDataSource,
-  
+
   // Friendship
   FriendshipRepository,
   FriendshipRemoteDataSource,

@@ -1,6 +1,6 @@
-import 'package:social_app/core/domain-base/exceptions/exception_base.dart';
-import 'package:social_app/core/domain-base/exceptions/generic_exception.dart';
-import 'package:social_app/core/network/network.dart';
+import 'package:social_app/app/internet_connection/network_info.dart';
+import 'package:social_app/core/domain/exceptions/exception_base.dart';
+import 'package:social_app/core/domain/exceptions/generic_exception.dart';
 import 'package:social_app/features/auth/data/datasources/remote/auth_firebase_remote_data_souce.dart';
 import 'package:social_app/features/auth/domain/auth_exceptions.dart';
 import 'package:social_app/features/user/data/models/user_model.dart';

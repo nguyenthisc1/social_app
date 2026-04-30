@@ -50,7 +50,7 @@ dependencies:
   
   # Network & API
   http: ^1.6.0
-  connectivity_plus: ^7.0.0
+  internet_connection_checker: ^3.0.1
   crypto: ^3.0.7
   
   # Date & Time
@@ -69,6 +69,7 @@ dependencies:
   google_fonts: ^6.2.1
   flex_color_scheme: ^8.4.0
   lucide_icons_flutter: ^3.1.10
+  flutter_screenutil: ^5.9.3
 
   camera: ^0.12.0
   image_picker: ^1.2.1
@@ -83,6 +84,8 @@ dependencies:
 
   # Notification
   flutter_app_badger: ^1.5.0
+  flutter_local_notifications: ^21.0.0
+  fluttertoast: ^9.0.0
 
 dev_dependencies:
   flutter_test:
@@ -96,8 +99,8 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   
   # Testing
-  mockito: ^5.6.1
-  build_runner: ^2.10.4
+  mockito: ^5.6.4
+  build_runner: ^2.14.1
   bloc_test: ^10.0.0
 
 # For information on the generic Dart part of this file, see the

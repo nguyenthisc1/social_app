@@ -1,27 +1,27 @@
-import 'package:social_app/core/network/base_response.dart';
+import 'package:social_app/core/data/http/http_response.dart';
 import 'package:social_app/features/comment/data/models/comment_model.dart';
 import 'package:social_app/features/comment/domain/value_objects/pagination_params.dart';
 
 abstract class CommentRemoteDataSource {
-  Future<BaseResponse<CommentModel>> createComment({
+  Future<HttpResponse<CommentModel>> createComment({
     required String postId,
     required String content,
     String? parentCommentId,
   });
 
-  Future<BaseResponse<CommentModel>> updateComment({
+  Future<HttpResponse<CommentModel>> updateComment({
     required String commentId,
     required String content,
   });
 
-  Future<BaseResponse<void>> deleteComment(String commentId);
+  Future<HttpResponse<void>> deleteComment(String commentId);
 
-  Future<BaseResponse<List<CommentModel>>> getCommentByPost({
+  Future<HttpResponse<List<CommentModel>>> getCommentByPost({
     required String postId,
     PaginationParams? pagination,
   });
 
-  Future<BaseResponse<List<CommentModel>>> getReplies({
+  Future<HttpResponse<List<CommentModel>>> getReplies({
     required String commentId,
     PaginationParams? pagination,
   });

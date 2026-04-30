@@ -1,5 +1,5 @@
 import 'package:social_app/core/core.dart';
-import 'package:social_app/core/network/base_response.dart';
+import 'package:social_app/core/data/http/http_response.dart';
 import 'package:social_app/features/post/data/datasources/post_local_data_source.dart';
 import 'package:social_app/features/post/data/datasources/post_remote_data_source.dart';
 import 'package:social_app/features/post/data/models/post_model.dart';
@@ -33,7 +33,7 @@ class PostRepositoryImpl implements PostRepository {
       );
     }
     try {
-      final BaseResponse<PostModel> response = await remote.createPost(
+      final HttpResponse<PostModel> response = await remote.createPost(
         content: content,
         visibility: visibility.name,
         type: type.name,
@@ -68,7 +68,7 @@ class PostRepositoryImpl implements PostRepository {
       );
     }
     try {
-      final BaseResponse<PostModel> response = await remote.updatePost(
+      final HttpResponse<PostModel> response = await remote.updatePost(
         postId: postId,
         content: content,
         visibility: visibility.name,
@@ -118,7 +118,7 @@ class PostRepositoryImpl implements PostRepository {
       );
     }
     try {
-      final BaseResponse<List<PostModel>> response = await remote.getHomePost();
+      final HttpResponse<List<PostModel>> response = await remote.getHomePost();
       final postModels = response.data;
       if (postModels == null) {
         throw PostLoadException(
@@ -145,7 +145,7 @@ class PostRepositoryImpl implements PostRepository {
       );
     }
     try {
-      final BaseResponse<PostModel> response = await remote.getPost(postId);
+      final HttpResponse<PostModel> response = await remote.getPost(postId);
       final postModel = response.data;
       if (postModel == null) {
         throw PostLoadException(
@@ -173,7 +173,7 @@ class PostRepositoryImpl implements PostRepository {
       );
     }
     try {
-      final BaseResponse<List<PostModel>> response = await remote
+      final HttpResponse<List<PostModel>> response = await remote
           .getPostsByUser(viewerId);
       final postModels = response.data;
       if (postModels == null) {

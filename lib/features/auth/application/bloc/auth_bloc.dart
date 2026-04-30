@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/core/domain-base/exceptions/exception_base.dart';
+import 'package:social_app/core/domain/exceptions/exception_base.dart';
+import 'package:social_app/core/domain/usecases/usecases.dart';
+import 'package:social_app/features/auth/domain/auth_params.dart';
+import 'package:social_app/features/user/domain/entites/user_entity.dart';
 
 import '../../domain/usecases/check_auth_status_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
@@ -81,7 +84,7 @@ class AuthLoading extends AuthState {}
 
 /// Authenticated state
 class AuthAuthenticated extends AuthState {
-  final dynamic user; // Changed to dynamic as User may be undefined
+  final UserEntity user;
   const AuthAuthenticated(this.user);
 
   @override
@@ -129,11 +132,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthEventState(event));
     emit(AuthLoading());
 
-    final isAuthenticated = await checkAuthStatusUseCase();
+    final authenticated = await checkAuthStatusUseCase(NoParams());
 
-    if (isAuthenticated) {
+    if (authenticated) {
       try {
-        final user = await getCurrentUserUseCase();
+        final user = await getCurrentUserUseCase(NoParams());
         emit(AuthAuthenticated(user));
       } catch (_) {
         emit(AuthUnauthenticated());
@@ -152,8 +155,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final user = await loginUseCase(
-        email: event.email,
-        password: event.password,
+        LoginParams(email: event.email, password: event.password),
       );
       emit(AuthAuthenticated(user));
     } catch (error) {
@@ -170,9 +172,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final user = await registerUseCase(
-        email: event.email,
-        username: event.username,
-        password: event.password,
+        RegisterParams(
+          email: event.email,
+          username: event.username,
+          password: event.password,
+        ),
       );
       emit(AuthAuthenticated(user));
     } catch (error) {
@@ -188,7 +192,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
-      await logoutUseCase();
+      await logoutUseCase(NoParams());
       emit(AuthUnauthenticated());
     } catch (error) {
       emit(AuthError(_mapErrorMessage(error)));
@@ -203,7 +207,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
-      final user = await getCurrentUserUseCase();
+      final user = await getCurrentUserUseCase(NoParams());
       emit(AuthAuthenticated(user));
     } catch (error) {
       emit(AuthError(_mapErrorMessage(error)));

@@ -1,5 +1,5 @@
-import 'package:social_app/core/domain-base/exceptions/exception_base.dart';
-import 'package:social_app/core/domain-base/exceptions/exception_factory.dart';
+import 'package:social_app/core/domain/exceptions/exception_base.dart';
+import 'package:social_app/core/domain/exceptions/exception_factory.dart';
 
 abstract class CommentException extends ExceptionBase {
   const CommentException({
