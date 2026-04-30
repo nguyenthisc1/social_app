@@ -12,6 +12,14 @@ import 'package:social_app/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:social_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:social_app/features/comment/data/datasources/comment_remote_data_source.dart';
 import 'package:social_app/features/comment/domain/repositories/comment_repository.dart';
+import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
+import 'package:social_app/features/conversation/data/datasources/remote/conversation_remote_data_source.dart';
+import 'package:social_app/features/conversation/domain/repositories/conversation_repository.dart';
+import 'package:social_app/features/conversation/domain/usecases/create_conversation_usecase.dart';
+import 'package:social_app/features/conversation/domain/usecases/get_conversation_usecase.dart';
+import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart';
+import 'package:social_app/features/conversation/domain/usecases/update_conversation_usecase.dart';
+import 'package:social_app/features/conversation/domain/usecases/watch_conversations_usecase.dart';
 import 'package:social_app/features/friendship/data/datasources/friendship_remote_data_source.dart';
 import 'package:social_app/features/friendship/domain/repositories/friendship_repository.dart';
 import 'package:social_app/features/post/data/datasources/post_local_data_source.dart';
@@ -44,6 +52,16 @@ import 'package:social_app/features/reaction/domain/repositories/reaction_reposi
   // Comment
   CommentRepository,
   CommentRemoteDataSource,
+
+  // Conversation
+  ConversationRepository,
+  ConversationRemoteDataSource,
+  ConversationLocalDataSource,
+  GetConversationUsecase,
+  GetConversationsUsecase,
+  CreateConversationUsecase,
+  UpdateConversationsUsecase,
+  WatchConversationsUsecase,
 
   // Reaction
   ReactionRepository,
