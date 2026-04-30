@@ -10,4 +10,7 @@ abstract final class ExceptionCodes {
   static const network = 'GENERIC.NETWORK';
   static const server = 'GENERIC.SERVER';
   static const unknown = 'GENERIC.UNKNOWN';
+  static const tooManyRequests = 'GENERIC.TOMANYREQUESTS';
+  static const serviceUnavailable = 'GENERIC.SERVICEUNVAIlABLE';
+  static const badRequest = 'GENERIC.BADREQUEST';
 }
