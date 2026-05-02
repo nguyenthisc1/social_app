@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:social_app/core/theme/app_size.dart';
+import 'package:social_app/core/widgets/expanded_modal_bottom_sheet.dart';
+import 'package:social_app/core/widgets/gallery_grid_select.dart';
 
 class ChatInputBar extends StatelessWidget {
   const ChatInputBar({
@@ -10,6 +13,7 @@ class ChatInputBar extends StatelessWidget {
     required this.onSend,
     this.onAttach,
     this.onEmoji,
+    required this.images,
   });
 
   final TextEditingController controller;
@@ -17,75 +21,131 @@ class ChatInputBar extends StatelessWidget {
   final VoidCallback onSend;
   final VoidCallback? onAttach;
   final VoidCallback? onEmoji;
+  final List<AssetEntity> images;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    void openGalleryModalBottomSheet() {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        // useSafeArea: true,
+        // showDragHandle: true,
+        builder: (context) => ExpandedModalBottomSheet(
+          child: GalleryGridSelect(images: images)
+        ),
+      );
+    }
+
     return SafeArea(
       top: false,
       child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppSize.sm),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSize.sm,
-          vertical: AppSize.sm,
+          vertical: AppSize.xs,
         ),
+        constraints: BoxConstraints(maxHeight: 120),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          border: Border(
-            top: BorderSide(color: theme.colorScheme.outline.withAlpha(30)),
-          ),
+          color: theme.colorScheme.surfaceContainerHigh,
+          borderRadius: BorderRadius.circular(AppSize.borderRadiusXLarge),
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              icon: Icon(LucideIcons.paperclip, color: theme.colorScheme.outline),
-              onPressed: onAttach,
-              tooltip: 'Attach file',
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              transitionBuilder: (child, animation) =>
+                  FadeTransition(opacity: animation, child: child),
+              child: hasText
+                  ? IconInputButton(
+                      key: const ValueKey('search'),
+                      onPressed: onSend,
+                      icon: LucideIcons.search,
+                      colorIcon: theme.colorScheme.primary,
+                      color: Colors.white,
+                      tooltip: 'search',
+                    )
+                  : IconInputButton(
+                      key: const ValueKey('camera'),
+                      onPressed: () {},
+                      icon: Icons.camera_alt,
+                      color: theme.colorScheme.primary,
+                      tooltip: 'Camera',
+                    ),
             ),
+            const SizedBox(width: AppSize.xs),
             Expanded(
-              child: Container(
-                constraints: const BoxConstraints(maxHeight: 120),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(AppSize.borderRadiusXLarge),
-                ),
-                child: TextField(
-                  controller: controller,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.newline,
-                  style: theme.textTheme.bodyMedium,
-                  decoration: InputDecoration(
-                    hintText: 'Message…',
-                    hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.outline,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: AppSize.md,
-                      vertical: AppSize.sm + 2,
-                    ),
-                    isDense: true,
+              child: TextField(
+                controller: controller,
+                maxLines: 1,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
+                style: theme.textTheme.bodyMedium,
+                decoration: const InputDecoration(
+                  hintText: 'Message…',
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 0,
+                    vertical: AppSize.sm,
                   ),
+                  isDense: true,
+                  filled: true,
+                  fillColor: Colors.transparent,
                 ),
               ),
             ),
             const SizedBox(width: AppSize.xs),
-            SizedBox(
-              width: 42,
-              height: 42,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                transitionBuilder: (child, animation) =>
-                    ScaleTransition(scale: animation, child: child),
-                child: hasText
-                    ? ChatSendButton(key: const ValueKey('send'), onTap: onSend)
-                    : ChatEmojiButton(
-                        key: const ValueKey('emoji'),
-                        onTap: onEmoji ?? () {},
-                      ),
-              ),
+            Stack(
+              alignment: Alignment.centerRight,
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  transitionBuilder: (child, animation) =>
+                      FadeTransition(opacity: animation, child: child),
+                  child: !hasText
+                      ? Row(
+                          key: const ValueKey('actions'),
+                          children: [
+                            IconInputButton(
+                              onPressed: () {},
+                              icon: LucideIcons.mic,
+                              tooltip: 'Emoji',
+                            ),
+                            IconInputButton(
+                              onPressed: () {
+                                onAttach;
+                                openGalleryModalBottomSheet();
+                              },
+                              icon: LucideIcons.image,
+                              tooltip: 'Gallery',
+                            ),
+                            IconInputButton(
+                              onPressed: () {},
+                              icon: LucideIcons.sticker,
+                              tooltip: 'Emoji',
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                ),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  transitionBuilder: (child, animation) =>
+                      FadeTransition(opacity: animation, child: child),
+                  child: hasText
+                      ? IconInputButton(
+                          key: const ValueKey('send'),
+                          onPressed: onSend,
+                          icon: LucideIcons.send,
+                          colorIcon: theme.colorScheme.primary,
+                          tooltip: 'Send',
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
             ),
           ],
         ),
@@ -94,46 +154,47 @@ class ChatInputBar extends StatelessWidget {
   }
 }
 
-class ChatSendButton extends StatelessWidget {
-  const ChatSendButton({super.key, required this.onTap});
+class IconInputButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final double? size;
+  final IconData icon;
+  final Color? color;
+  final Color? colorIcon;
+  final String tooltip;
 
-  final VoidCallback onTap;
+  const IconInputButton({
+    super.key,
+    required this.onPressed,
+    this.size = 36,
+    required this.icon,
+    required this.tooltip,
+    this.color,
+    this.colorIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primary,
-          shape: BoxShape.circle,
-        ),
-        alignment: Alignment.center,
-        child: Icon(
-          LucideIcons.sendHorizontal,
-          size: AppSize.iconSmall + 2,
-          color: theme.colorScheme.onPrimary,
-        ),
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color ?? Colors.transparent,
+        borderRadius: BorderRadius.circular(AppSize.borderRadiusFull),
       ),
-    );
-  }
-}
+      child: IconButton(
+        padding: const EdgeInsets.all(0),
+        iconSize: size! / 1.5,
+        icon: Icon(
+          icon,
+          color:
+              colorIcon ??
+              (color != null ? Colors.white : theme.colorScheme.onSurface),
+        ),
 
-class ChatEmojiButton extends StatelessWidget {
-  const ChatEmojiButton({super.key, required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return IconButton(
-      onPressed: onTap,
-      icon: Icon(LucideIcons.smile, color: theme.colorScheme.outline),
-      tooltip: 'Emoji',
+        onPressed: onPressed,
+        tooltip: tooltip,
+      ),
     );
   }
 }
