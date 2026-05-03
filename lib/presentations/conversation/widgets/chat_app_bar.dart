@@ -28,7 +28,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
       scrolledUnderElevation: 1,
       titleSpacing: 0,
       leading: IconButton(
-        icon: const Icon(LucideIcons.arrowLeft),
+        icon: const Icon(Icons.arrow_back_ios_new),
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: Row(

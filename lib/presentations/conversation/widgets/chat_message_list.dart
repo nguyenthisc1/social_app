@@ -52,7 +52,7 @@ class ChatMessageList extends StatelessWidget {
 
     return ListView.builder(
       controller: scrollController,
-      padding: const EdgeInsets.only(top: AppSize.sm, bottom: AppSize.sm),
+      padding: const EdgeInsets.only(top: AppSize.sm, bottom: AppSize.sm + 56),
       reverse: true,
       itemCount: messages.length,
       itemBuilder: (context, index) {

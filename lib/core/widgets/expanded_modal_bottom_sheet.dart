@@ -85,7 +85,7 @@ class _SheetHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final double topPadding = MediaQuery.of(context).padding.top;
     return Container(
-      height: isExpanded ? kToolbarHeight + topPadding : 60,
+      height: 24,
       padding: EdgeInsets.only(top: isExpanded ? topPadding : 0),
       child: Stack(
         children: [

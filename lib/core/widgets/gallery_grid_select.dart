@@ -136,12 +136,12 @@ class _GalleryGridSelectState extends State<GalleryGridSelect> {
 
     _ensureThumbnailLoaded(id);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _selectedListKey.currentState?.insertItem(
-        insertIndex,
-        duration: const Duration(milliseconds: 220),
-      );
+    _selectedListKey.currentState?.insertItem(
+      insertIndex,
+      duration: const Duration(milliseconds: 220),
+    );
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_selectedScrollController.hasClients) return;
 
       _selectedScrollController.animateTo(
@@ -293,7 +293,7 @@ class _GalleryGridSelectState extends State<GalleryGridSelect> {
                             initialItemCount: _selectedPreviewIds.length,
                             padding: const EdgeInsets.only(
                               left: AppSize.md,
-                              right: 0,
+                              right: 40,
                             ),
                             itemBuilder: (context, index, animation) {
                               if (index < 0 ||
@@ -373,8 +373,8 @@ class _SelectedPreviewItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final curvedAnimation = CurvedAnimation(
       parent: animation,
-      curve: Curves.easeOutBack,
-      reverseCurve: Curves.easeIn,
+      curve: Curves.ease,
+      reverseCurve: Curves.ease,
     );
 
     return SizeTransition(

@@ -1,11 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:social_app/core/theme/app_size.dart';
-import 'package:social_app/core/widgets/expanded_modal_bottom_sheet.dart';
-import 'package:social_app/core/widgets/gallery_grid_select.dart';
+import 'package:social_app/core/utils/utils.dart';
 
-class ChatInputBar extends StatelessWidget {
+class ChatInputBar extends StatefulWidget {
   const ChatInputBar({
     super.key,
     required this.controller,
@@ -24,130 +25,128 @@ class ChatInputBar extends StatelessWidget {
   final List<AssetEntity> images;
 
   @override
+  State<ChatInputBar> createState() => _ChatInputBarState();
+}
+
+class _ChatInputBarState extends State<ChatInputBar> {
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    void openGalleryModalBottomSheet() {
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        // useSafeArea: true,
-        // showDragHandle: true,
-        builder: (context) => ExpandedModalBottomSheet(
-          child: GalleryGridSelect(images: images)
-        ),
-      );
-    }
-
-    return SafeArea(
-      top: false,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: AppSize.sm),
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSize.sm,
-          vertical: AppSize.xs,
-        ),
-        constraints: BoxConstraints(maxHeight: 120),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(AppSize.borderRadiusXLarge),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              transitionBuilder: (child, animation) =>
-                  FadeTransition(opacity: animation, child: child),
-              child: hasText
-                  ? IconInputButton(
-                      key: const ValueKey('search'),
-                      onPressed: onSend,
-                      icon: LucideIcons.search,
-                      colorIcon: theme.colorScheme.primary,
-                      color: Colors.white,
-                      tooltip: 'search',
-                    )
-                  : IconInputButton(
-                      key: const ValueKey('camera'),
-                      onPressed: () {},
-                      icon: Icons.camera_alt,
-                      color: theme.colorScheme.primary,
-                      tooltip: 'Camera',
-                    ),
+    return Container(
+      margin: EdgeInsets.only(
+        right: AppSize.sm,
+        left: AppSize.sm,
+        bottom: AppSize.xs,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSize.borderRadiusXLarge),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSize.xs,
+              vertical: AppSize.xs,
             ),
-            const SizedBox(width: AppSize.xs),
-            Expanded(
-              child: TextField(
-                controller: controller,
-                maxLines: 1,
-                keyboardType: TextInputType.multiline,
-                textInputAction: TextInputAction.newline,
-                style: theme.textTheme.bodyMedium,
-                decoration: const InputDecoration(
-                  hintText: 'Message…',
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 0,
-                    vertical: AppSize.sm,
-                  ),
-                  isDense: true,
-                  filled: true,
-                  fillColor: Colors.transparent,
-                ),
-              ),
+            constraints: BoxConstraints(maxHeight: 120),
+            decoration: BoxDecoration(
+              color: context.theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.8),
+              borderRadius: BorderRadius.circular(AppSize.borderRadiusXLarge),
             ),
-            const SizedBox(width: AppSize.xs),
-            Stack(
-              alignment: Alignment.centerRight,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
                   transitionBuilder: (child, animation) =>
                       FadeTransition(opacity: animation, child: child),
-                  child: !hasText
-                      ? Row(
-                          key: const ValueKey('actions'),
-                          children: [
-                            IconInputButton(
-                              onPressed: () {},
-                              icon: LucideIcons.mic,
-                              tooltip: 'Emoji',
-                            ),
-                            IconInputButton(
-                              onPressed: () {
-                                onAttach;
-                                openGalleryModalBottomSheet();
-                              },
-                              icon: LucideIcons.image,
-                              tooltip: 'Gallery',
-                            ),
-                            IconInputButton(
-                              onPressed: () {},
-                              icon: LucideIcons.sticker,
-                              tooltip: 'Emoji',
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
-                ),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  transitionBuilder: (child, animation) =>
-                      FadeTransition(opacity: animation, child: child),
-                  child: hasText
+                  child: widget.hasText
                       ? IconInputButton(
-                          key: const ValueKey('send'),
-                          onPressed: onSend,
-                          icon: LucideIcons.send,
-                          colorIcon: theme.colorScheme.primary,
-                          tooltip: 'Send',
+                          key: const ValueKey('search'),
+                          onPressed: widget.onSend,
+                          icon: LucideIcons.search,
+                          colorIcon: context.theme.colorScheme.primary,
+                          color: Colors.white,
+                          tooltip: 'search',
                         )
-                      : const SizedBox.shrink(),
+                      : IconInputButton(
+                          key: const ValueKey('camera'),
+                          onPressed: () {},
+                          icon: Icons.camera_alt,
+                          color: context.theme.colorScheme.primary,
+                          tooltip: 'Camera',
+                        ),
+                ),
+                const SizedBox(width: AppSize.xs),
+                Expanded(
+                  child: TextField(
+                    controller: widget.controller,
+                    maxLines: 1,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    style: context.theme.textTheme.bodyMedium,
+                    decoration: const InputDecoration(
+                      hintText: 'Message…',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 0,
+                        vertical: AppSize.sm,
+                      ),
+                      isDense: true,
+                      filled: true,
+                      fillColor: Colors.transparent,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSize.xs),
+                Stack(
+                  alignment: Alignment.centerRight,
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      transitionBuilder: (child, animation) =>
+                          FadeTransition(opacity: animation, child: child),
+                      child: !widget.hasText
+                          ? Row(
+                              key: const ValueKey('actions'),
+                              children: [
+                                IconInputButton(
+                                  onPressed: () {},
+                                  icon: LucideIcons.mic,
+                                  tooltip: 'Emoji',
+                                ),
+                                IconInputButton(
+                                  onPressed: () => widget.onAttach?.call(),
+                                  icon: LucideIcons.image,
+                                  tooltip: 'Gallery',
+                                ),
+                                IconInputButton(
+                                  onPressed: () {},
+                                  icon: LucideIcons.sticker,
+                                  tooltip: 'Emoji',
+                                ),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      transitionBuilder: (child, animation) =>
+                          FadeTransition(opacity: animation, child: child),
+                      child: widget.hasText
+                          ? IconInputButton(
+                              key: const ValueKey('send'),
+                              onPressed: widget.onSend,
+                              icon: LucideIcons.send,
+                              colorIcon: context.theme.colorScheme.primary,
+                              tooltip: 'Send',
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
