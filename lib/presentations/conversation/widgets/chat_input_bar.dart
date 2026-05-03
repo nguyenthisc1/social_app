@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:photo_manager/photo_manager.dart';
 import 'package:social_app/core/theme/app_size.dart';
 import 'package:social_app/core/utils/utils.dart';
 
@@ -14,7 +13,6 @@ class ChatInputBar extends StatefulWidget {
     required this.onSend,
     this.onAttach,
     this.onEmoji,
-    required this.images,
   });
 
   final TextEditingController controller;
@@ -22,7 +20,6 @@ class ChatInputBar extends StatefulWidget {
   final VoidCallback onSend;
   final VoidCallback? onAttach;
   final VoidCallback? onEmoji;
-  final List<AssetEntity> images;
 
   @override
   State<ChatInputBar> createState() => _ChatInputBarState();
