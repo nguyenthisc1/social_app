@@ -47,3 +47,4 @@ app.*.map.json
 
 .dart-tool
 .dartServer
+.test_helper.mocks.dart

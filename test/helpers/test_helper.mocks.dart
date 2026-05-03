@@ -3,79 +3,101 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i18;
+import 'dart:async' as _i20;
 
 import 'package:http/http.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i17;
+import 'package:mockito/src/dummies.dart' as _i19;
 import 'package:social_app/app/internet_connection/connection_status.dart'
-    as _i19;
+    as _i21;
 import 'package:social_app/app/internet_connection/network_info.dart' as _i3;
-import 'package:social_app/core/core.dart' as _i16;
+import 'package:social_app/core/core.dart' as _i18;
 import 'package:social_app/core/data/http/http_response.dart' as _i7;
-import 'package:social_app/core/domain/usecases/usecases.dart' as _i27;
+import 'package:social_app/core/domain/usecases/usecases.dart' as _i29;
 import 'package:social_app/features/auth/data/datasources/local/auth_local_data_source.dart'
     as _i4;
 import 'package:social_app/features/auth/data/datasources/remote/auth_firebase_remote_data_souce.dart'
-    as _i22;
+    as _i24;
 import 'package:social_app/features/auth/data/datasources/remote/auth_remote_data_source.dart'
-    as _i20;
+    as _i22;
 import 'package:social_app/features/auth/data/models/auth_tokens_model.dart'
-    as _i21;
-import 'package:social_app/features/auth/domain/auth_params.dart' as _i24;
+    as _i23;
+import 'package:social_app/features/auth/domain/auth_params.dart' as _i26;
 import 'package:social_app/features/auth/domain/entities/auth_tokens.dart'
     as _i6;
 import 'package:social_app/features/auth/domain/repositories/auth_repository.dart'
     as _i9;
 import 'package:social_app/features/auth/domain/usecases/check_auth_status_usecase.dart'
-    as _i29;
+    as _i31;
 import 'package:social_app/features/auth/domain/usecases/get_current_user_usecase.dart'
-    as _i28;
+    as _i30;
 import 'package:social_app/features/auth/domain/usecases/login_usecase.dart'
-    as _i23;
-import 'package:social_app/features/auth/domain/usecases/logout_usecase.dart'
-    as _i26;
-import 'package:social_app/features/auth/domain/usecases/register_usecase.dart'
     as _i25;
+import 'package:social_app/features/auth/domain/usecases/logout_usecase.dart'
+    as _i28;
+import 'package:social_app/features/auth/domain/usecases/register_usecase.dart'
+    as _i27;
 import 'package:social_app/features/comment/data/datasources/comment_remote_data_source.dart'
-    as _i37;
+    as _i39;
 import 'package:social_app/features/comment/data/models/comment_model.dart'
-    as _i38;
+    as _i40;
 import 'package:social_app/features/comment/domain/entities/comment_entity.dart'
     as _i11;
 import 'package:social_app/features/comment/domain/repositories/comment_repository.dart'
-    as _i35;
+    as _i37;
 import 'package:social_app/features/comment/domain/value_objects/pagination_params.dart'
-    as _i36;
-import 'package:social_app/features/friendship/data/datasources/friendship_remote_data_source.dart'
+    as _i38;
+import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart'
     as _i43;
-import 'package:social_app/features/friendship/data/models/friendship_model.dart'
-    as _i15;
-import 'package:social_app/features/friendship/domain/entities/friendship_entity.dart'
-    as _i14;
-import 'package:social_app/features/friendship/domain/repositories/friendship_repository.dart'
+import 'package:social_app/features/conversation/data/datasources/remote/conversation_remote_data_source.dart'
     as _i42;
+import 'package:social_app/features/conversation/data/models/conversation_model.dart'
+    as _i13;
+import 'package:social_app/features/conversation/domain/conversation_params.dart'
+    as _i47;
+import 'package:social_app/features/conversation/domain/entites/conversation_entity.dart'
+    as _i12;
+import 'package:social_app/features/conversation/domain/repositories/conversation_repository.dart'
+    as _i41;
+import 'package:social_app/features/conversation/domain/usecases/create_conversation_usecase.dart'
+    as _i46;
+import 'package:social_app/features/conversation/domain/usecases/get_conversation_usecase.dart'
+    as _i44;
+import 'package:social_app/features/conversation/domain/usecases/get_conversations_usecase.dart'
+    as _i45;
+import 'package:social_app/features/conversation/domain/usecases/update_conversation_usecase.dart'
+    as _i48;
+import 'package:social_app/features/conversation/domain/usecases/watch_conversations_usecase.dart'
+    as _i49;
+import 'package:social_app/features/friendship/data/datasources/friendship_remote_data_source.dart'
+    as _i54;
+import 'package:social_app/features/friendship/data/models/friendship_model.dart'
+    as _i17;
+import 'package:social_app/features/friendship/domain/entities/friendship_entity.dart'
+    as _i16;
+import 'package:social_app/features/friendship/domain/repositories/friendship_repository.dart'
+    as _i53;
 import 'package:social_app/features/post/data/datasources/post_local_data_source.dart'
-    as _i34;
+    as _i36;
 import 'package:social_app/features/post/data/datasources/post_remote_data_source.dart'
-    as _i32;
-import 'package:social_app/features/post/data/models/post_model.dart' as _i33;
+    as _i34;
+import 'package:social_app/features/post/data/models/post_model.dart' as _i35;
 import 'package:social_app/features/post/domain/entities/post_entity.dart'
     as _i10;
 import 'package:social_app/features/post/domain/entities/post_enum.dart'
-    as _i31;
+    as _i33;
 import 'package:social_app/features/post/domain/repositories/post_repository.dart'
-    as _i30;
+    as _i32;
 import 'package:social_app/features/reaction/data/datasources/reaction_remote_data_source.dart'
-    as _i41;
+    as _i52;
 import 'package:social_app/features/reaction/data/models/reaction_model.dart'
-    as _i13;
+    as _i15;
 import 'package:social_app/features/reaction/domain/entities/reaction_entity.dart'
-    as _i12;
+    as _i14;
 import 'package:social_app/features/reaction/domain/entities/reaction_enums.dart'
-    as _i40;
+    as _i51;
 import 'package:social_app/features/reaction/domain/repositories/reaction_repository.dart'
-    as _i39;
+    as _i50;
 import 'package:social_app/features/user/data/models/user_model.dart' as _i8;
 import 'package:social_app/features/user/domain/entites/user_entity.dart'
     as _i5;
@@ -148,46 +170,58 @@ class _FakeCommentEntity_9 extends _i1.SmartFake implements _i11.CommentEntity {
     : super(parent, parentInvocation);
 }
 
-class _FakeReactionResponseEntity_10 extends _i1.SmartFake
-    implements _i12.ReactionResponseEntity {
-  _FakeReactionResponseEntity_10(Object parent, Invocation parentInvocation)
+class _FakeConversationEntity_10 extends _i1.SmartFake
+    implements _i12.ConversationEntity {
+  _FakeConversationEntity_10(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeReactionResponseModel_11 extends _i1.SmartFake
-    implements _i13.ReactionResponseModel {
-  _FakeReactionResponseModel_11(Object parent, Invocation parentInvocation)
+class _FakeConversationModel_11 extends _i1.SmartFake
+    implements _i13.ConversationModel {
+  _FakeConversationModel_11(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeFriendshipResponseEntity_12 extends _i1.SmartFake
-    implements _i14.FriendshipResponseEntity {
-  _FakeFriendshipResponseEntity_12(Object parent, Invocation parentInvocation)
+class _FakeReactionResponseEntity_12 extends _i1.SmartFake
+    implements _i14.ReactionResponseEntity {
+  _FakeReactionResponseEntity_12(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeFriendshipStatusEntity_13 extends _i1.SmartFake
-    implements _i14.FriendshipStatusEntity {
-  _FakeFriendshipStatusEntity_13(Object parent, Invocation parentInvocation)
+class _FakeReactionResponseModel_13 extends _i1.SmartFake
+    implements _i15.ReactionResponseModel {
+  _FakeReactionResponseModel_13(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeFriendshipResponseModel_14 extends _i1.SmartFake
-    implements _i15.FriendshipResponseModel {
-  _FakeFriendshipResponseModel_14(Object parent, Invocation parentInvocation)
+class _FakeFriendshipResponseEntity_14 extends _i1.SmartFake
+    implements _i16.FriendshipResponseEntity {
+  _FakeFriendshipResponseEntity_14(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeFriendshipStatusModel_15 extends _i1.SmartFake
-    implements _i15.FriendshipStatusModel {
-  _FakeFriendshipStatusModel_15(Object parent, Invocation parentInvocation)
+class _FakeFriendshipStatusEntity_15 extends _i1.SmartFake
+    implements _i16.FriendshipStatusEntity {
+  _FakeFriendshipStatusEntity_15(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeFriendshipResponseModel_16 extends _i1.SmartFake
+    implements _i17.FriendshipResponseModel {
+  _FakeFriendshipResponseModel_16(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeFriendshipStatusModel_17 extends _i1.SmartFake
+    implements _i17.FriendshipStatusModel {
+  _FakeFriendshipStatusModel_17(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
 /// A class which mocks [ApiClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockApiClient extends _i1.Mock implements _i16.ApiClient {
+class MockApiClient extends _i1.Mock implements _i18.ApiClient {
   MockApiClient() {
     _i1.throwOnMissingStub(this);
   }
@@ -215,7 +249,7 @@ class MockApiClient extends _i1.Mock implements _i16.ApiClient {
   String get baseUrl =>
       (super.noSuchMethod(
             Invocation.getter(#baseUrl),
-            returnValue: _i17.dummyValue<String>(
+            returnValue: _i19.dummyValue<String>(
               this,
               Invocation.getter(#baseUrl),
             ),
@@ -234,7 +268,7 @@ class MockApiClient extends _i1.Mock implements _i16.ApiClient {
           as _i4.AuthLocalDataSource);
 
   @override
-  _i18.Future<Map<String, dynamic>> request({
+  _i20.Future<Map<String, dynamic>> request({
     required String? method,
     required String? endpoint,
     Map<String, dynamic>? body,
@@ -251,14 +285,14 @@ class MockApiClient extends _i1.Mock implements _i16.ApiClient {
               #token: token,
               #headers: headers,
             }),
-            returnValue: _i18.Future<Map<String, dynamic>>.value(
+            returnValue: _i20.Future<Map<String, dynamic>>.value(
               <String, dynamic>{},
             ),
           )
-          as _i18.Future<Map<String, dynamic>>);
+          as _i20.Future<Map<String, dynamic>>);
 
   @override
-  _i18.Future<Map<String, dynamic>?> upload({
+  _i20.Future<Map<String, dynamic>?> upload({
     required String? endpoint,
     required _i2.MultipartRequest? request,
     String? token,
@@ -271,9 +305,9 @@ class MockApiClient extends _i1.Mock implements _i16.ApiClient {
               #token: token,
               #headers: headers,
             }),
-            returnValue: _i18.Future<Map<String, dynamic>?>.value(),
+            returnValue: _i20.Future<Map<String, dynamic>?>.value(),
           )
-          as _i18.Future<Map<String, dynamic>?>);
+          as _i20.Future<Map<String, dynamic>?>);
 }
 
 /// A class which mocks [NetworkInfo].
@@ -285,30 +319,30 @@ class MockNetworkInfo extends _i1.Mock implements _i3.NetworkInfo {
   }
 
   @override
-  _i18.Future<bool> get isConnected =>
+  _i20.Future<bool> get isConnected =>
       (super.noSuchMethod(
             Invocation.getter(#isConnected),
-            returnValue: _i18.Future<bool>.value(false),
+            returnValue: _i20.Future<bool>.value(false),
           )
-          as _i18.Future<bool>);
+          as _i20.Future<bool>);
 
   @override
-  _i18.Future<_i19.ConnectionStatus> get connectionStatus =>
+  _i20.Future<_i21.ConnectionStatus> get connectionStatus =>
       (super.noSuchMethod(
             Invocation.getter(#connectionStatus),
-            returnValue: _i18.Future<_i19.ConnectionStatus>.value(
-              _i19.ConnectionStatus.unknown,
+            returnValue: _i20.Future<_i21.ConnectionStatus>.value(
+              _i21.ConnectionStatus.unknown,
             ),
           )
-          as _i18.Future<_i19.ConnectionStatus>);
+          as _i20.Future<_i21.ConnectionStatus>);
 
   @override
-  _i18.Stream<_i19.ConnectionStatus> get onStatusChange =>
+  _i20.Stream<_i21.ConnectionStatus> get onStatusChange =>
       (super.noSuchMethod(
             Invocation.getter(#onStatusChange),
-            returnValue: _i18.Stream<_i19.ConnectionStatus>.empty(),
+            returnValue: _i20.Stream<_i21.ConnectionStatus>.empty(),
           )
-          as _i18.Stream<_i19.ConnectionStatus>);
+          as _i20.Stream<_i21.ConnectionStatus>);
 }
 
 /// A class which mocks [AuthRepository].
@@ -320,13 +354,13 @@ class MockAuthRepository extends _i1.Mock implements _i9.AuthRepository {
   }
 
   @override
-  _i18.Future<_i5.UserEntity> login({
+  _i20.Future<_i5.UserEntity> login({
     required String? email,
     required String? password,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#login, [], {#email: email, #password: password}),
-            returnValue: _i18.Future<_i5.UserEntity>.value(
+            returnValue: _i20.Future<_i5.UserEntity>.value(
               _FakeUserEntity_3(
                 this,
                 Invocation.method(#login, [], {
@@ -336,10 +370,10 @@ class MockAuthRepository extends _i1.Mock implements _i9.AuthRepository {
               ),
             ),
           )
-          as _i18.Future<_i5.UserEntity>);
+          as _i20.Future<_i5.UserEntity>);
 
   @override
-  _i18.Future<_i5.UserEntity> register({
+  _i20.Future<_i5.UserEntity> register({
     required String? email,
     required String? username,
     required String? password,
@@ -350,7 +384,7 @@ class MockAuthRepository extends _i1.Mock implements _i9.AuthRepository {
               #username: username,
               #password: password,
             }),
-            returnValue: _i18.Future<_i5.UserEntity>.value(
+            returnValue: _i20.Future<_i5.UserEntity>.value(
               _FakeUserEntity_3(
                 this,
                 Invocation.method(#register, [], {
@@ -361,55 +395,55 @@ class MockAuthRepository extends _i1.Mock implements _i9.AuthRepository {
               ),
             ),
           )
-          as _i18.Future<_i5.UserEntity>);
+          as _i20.Future<_i5.UserEntity>);
 
   @override
-  _i18.Future<void> logout() =>
+  _i20.Future<void> logout() =>
       (super.noSuchMethod(
             Invocation.method(#logout, []),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<_i5.UserEntity> getCurrentUser() =>
+  _i20.Future<_i5.UserEntity> getCurrentUser() =>
       (super.noSuchMethod(
             Invocation.method(#getCurrentUser, []),
-            returnValue: _i18.Future<_i5.UserEntity>.value(
+            returnValue: _i20.Future<_i5.UserEntity>.value(
               _FakeUserEntity_3(this, Invocation.method(#getCurrentUser, [])),
             ),
           )
-          as _i18.Future<_i5.UserEntity>);
+          as _i20.Future<_i5.UserEntity>);
 
   @override
-  _i18.Future<bool> isAuthenticated() =>
+  _i20.Future<bool> isAuthenticated() =>
       (super.noSuchMethod(
             Invocation.method(#isAuthenticated, []),
-            returnValue: _i18.Future<bool>.value(false),
+            returnValue: _i20.Future<bool>.value(false),
           )
-          as _i18.Future<bool>);
+          as _i20.Future<bool>);
 
   @override
-  _i18.Future<_i6.AuthTokens?> getAuthTokens() =>
+  _i20.Future<_i6.AuthTokens?> getAuthTokens() =>
       (super.noSuchMethod(
             Invocation.method(#getAuthTokens, []),
-            returnValue: _i18.Future<_i6.AuthTokens?>.value(),
+            returnValue: _i20.Future<_i6.AuthTokens?>.value(),
           )
-          as _i18.Future<_i6.AuthTokens?>);
+          as _i20.Future<_i6.AuthTokens?>);
 
   @override
-  _i18.Future<_i6.AuthTokens> refreshToken() =>
+  _i20.Future<_i6.AuthTokens> refreshToken() =>
       (super.noSuchMethod(
             Invocation.method(#refreshToken, []),
-            returnValue: _i18.Future<_i6.AuthTokens>.value(
+            returnValue: _i20.Future<_i6.AuthTokens>.value(
               _FakeAuthTokens_4(this, Invocation.method(#refreshToken, [])),
             ),
           )
-          as _i18.Future<_i6.AuthTokens>);
+          as _i20.Future<_i6.AuthTokens>);
 
   @override
-  _i18.Future<_i5.UserEntity> updateProfile({
+  _i20.Future<_i5.UserEntity> updateProfile({
     String? displayName,
     String? bio,
     String? avatarUrl,
@@ -420,7 +454,7 @@ class MockAuthRepository extends _i1.Mock implements _i9.AuthRepository {
               #bio: bio,
               #avatarUrl: avatarUrl,
             }),
-            returnValue: _i18.Future<_i5.UserEntity>.value(
+            returnValue: _i20.Future<_i5.UserEntity>.value(
               _FakeUserEntity_3(
                 this,
                 Invocation.method(#updateProfile, [], {
@@ -431,10 +465,10 @@ class MockAuthRepository extends _i1.Mock implements _i9.AuthRepository {
               ),
             ),
           )
-          as _i18.Future<_i5.UserEntity>);
+          as _i20.Future<_i5.UserEntity>);
 
   @override
-  _i18.Future<void> changePassword({
+  _i20.Future<void> changePassword({
     required String? currentPassword,
     required String? newPassword,
   }) =>
@@ -443,22 +477,22 @@ class MockAuthRepository extends _i1.Mock implements _i9.AuthRepository {
               #currentPassword: currentPassword,
               #newPassword: newPassword,
             }),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<void> requestPasswordReset({required String? email}) =>
+  _i20.Future<void> requestPasswordReset({required String? email}) =>
       (super.noSuchMethod(
             Invocation.method(#requestPasswordReset, [], {#email: email}),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<void> resetPassword({
+  _i20.Future<void> resetPassword({
     required String? token,
     required String? newPassword,
   }) =>
@@ -467,39 +501,39 @@ class MockAuthRepository extends _i1.Mock implements _i9.AuthRepository {
               #token: token,
               #newPassword: newPassword,
             }),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<void> verifyEmail({required String? token}) =>
+  _i20.Future<void> verifyEmail({required String? token}) =>
       (super.noSuchMethod(
             Invocation.method(#verifyEmail, [], {#token: token}),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 }
 
 /// A class which mocks [AuthRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthRemoteDataSource extends _i1.Mock
-    implements _i20.AuthRemoteDataSource {
+    implements _i22.AuthRemoteDataSource {
   MockAuthRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<_i7.HttpResponse<Map<String, dynamic>>> login({
+  _i20.Future<_i7.HttpResponse<Map<String, dynamic>>> login({
     required String? email,
     required String? password,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#login, [], {#email: email, #password: password}),
             returnValue:
-                _i18.Future<_i7.HttpResponse<Map<String, dynamic>>>.value(
+                _i20.Future<_i7.HttpResponse<Map<String, dynamic>>>.value(
                   _FakeHttpResponse_5<Map<String, dynamic>>(
                     this,
                     Invocation.method(#login, [], {
@@ -509,10 +543,10 @@ class MockAuthRemoteDataSource extends _i1.Mock
                   ),
                 ),
           )
-          as _i18.Future<_i7.HttpResponse<Map<String, dynamic>>>);
+          as _i20.Future<_i7.HttpResponse<Map<String, dynamic>>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<Map<String, dynamic>>> register({
+  _i20.Future<_i7.HttpResponse<Map<String, dynamic>>> register({
     required String? email,
     required String? username,
     required String? password,
@@ -524,7 +558,7 @@ class MockAuthRemoteDataSource extends _i1.Mock
               #password: password,
             }),
             returnValue:
-                _i18.Future<_i7.HttpResponse<Map<String, dynamic>>>.value(
+                _i20.Future<_i7.HttpResponse<Map<String, dynamic>>>.value(
                   _FakeHttpResponse_5<Map<String, dynamic>>(
                     this,
                     Invocation.method(#register, [], {
@@ -535,28 +569,28 @@ class MockAuthRemoteDataSource extends _i1.Mock
                   ),
                 ),
           )
-          as _i18.Future<_i7.HttpResponse<Map<String, dynamic>>>);
+          as _i20.Future<_i7.HttpResponse<Map<String, dynamic>>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<void>> logout(String? userId) =>
+  _i20.Future<_i7.HttpResponse<void>> logout(String? userId) =>
       (super.noSuchMethod(
             Invocation.method(#logout, [userId]),
-            returnValue: _i18.Future<_i7.HttpResponse<void>>.value(
+            returnValue: _i20.Future<_i7.HttpResponse<void>>.value(
               _FakeHttpResponse_5<void>(
                 this,
                 Invocation.method(#logout, [userId]),
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<void>>);
+          as _i20.Future<_i7.HttpResponse<void>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<_i8.UserModel>> getCurrentUser({
+  _i20.Future<_i7.HttpResponse<_i8.UserModel>> getCurrentUser({
     required String? accessToken,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getCurrentUser, [], {#accessToken: accessToken}),
-            returnValue: _i18.Future<_i7.HttpResponse<_i8.UserModel>>.value(
+            returnValue: _i20.Future<_i7.HttpResponse<_i8.UserModel>>.value(
               _FakeHttpResponse_5<_i8.UserModel>(
                 this,
                 Invocation.method(#getCurrentUser, [], {
@@ -565,10 +599,10 @@ class MockAuthRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<_i8.UserModel>>);
+          as _i20.Future<_i7.HttpResponse<_i8.UserModel>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<_i8.UserModel>> updateProfile({
+  _i20.Future<_i7.HttpResponse<_i8.UserModel>> updateProfile({
     required String? accessToken,
     String? displayName,
     String? bio,
@@ -581,7 +615,7 @@ class MockAuthRemoteDataSource extends _i1.Mock
               #bio: bio,
               #avatarUrl: avatarUrl,
             }),
-            returnValue: _i18.Future<_i7.HttpResponse<_i8.UserModel>>.value(
+            returnValue: _i20.Future<_i7.HttpResponse<_i8.UserModel>>.value(
               _FakeHttpResponse_5<_i8.UserModel>(
                 this,
                 Invocation.method(#updateProfile, [], {
@@ -593,10 +627,10 @@ class MockAuthRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<_i8.UserModel>>);
+          as _i20.Future<_i7.HttpResponse<_i8.UserModel>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<void>> changePassword({
+  _i20.Future<_i7.HttpResponse<void>> changePassword({
     required String? accessToken,
     required String? currentPassword,
     required String? newPassword,
@@ -607,7 +641,7 @@ class MockAuthRemoteDataSource extends _i1.Mock
               #currentPassword: currentPassword,
               #newPassword: newPassword,
             }),
-            returnValue: _i18.Future<_i7.HttpResponse<void>>.value(
+            returnValue: _i20.Future<_i7.HttpResponse<void>>.value(
               _FakeHttpResponse_5<void>(
                 this,
                 Invocation.method(#changePassword, [], {
@@ -618,25 +652,25 @@ class MockAuthRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<void>>);
+          as _i20.Future<_i7.HttpResponse<void>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<void>> requestPasswordReset({
+  _i20.Future<_i7.HttpResponse<void>> requestPasswordReset({
     required String? email,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#requestPasswordReset, [], {#email: email}),
-            returnValue: _i18.Future<_i7.HttpResponse<void>>.value(
+            returnValue: _i20.Future<_i7.HttpResponse<void>>.value(
               _FakeHttpResponse_5<void>(
                 this,
                 Invocation.method(#requestPasswordReset, [], {#email: email}),
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<void>>);
+          as _i20.Future<_i7.HttpResponse<void>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<void>> resetPassword({
+  _i20.Future<_i7.HttpResponse<void>> resetPassword({
     required String? token,
     required String? newPassword,
   }) =>
@@ -645,7 +679,7 @@ class MockAuthRemoteDataSource extends _i1.Mock
               #token: token,
               #newPassword: newPassword,
             }),
-            returnValue: _i18.Future<_i7.HttpResponse<void>>.value(
+            returnValue: _i20.Future<_i7.HttpResponse<void>>.value(
               _FakeHttpResponse_5<void>(
                 this,
                 Invocation.method(#resetPassword, [], {
@@ -655,29 +689,29 @@ class MockAuthRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<void>>);
+          as _i20.Future<_i7.HttpResponse<void>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<void>> verifyEmail({required String? token}) =>
+  _i20.Future<_i7.HttpResponse<void>> verifyEmail({required String? token}) =>
       (super.noSuchMethod(
             Invocation.method(#verifyEmail, [], {#token: token}),
-            returnValue: _i18.Future<_i7.HttpResponse<void>>.value(
+            returnValue: _i20.Future<_i7.HttpResponse<void>>.value(
               _FakeHttpResponse_5<void>(
                 this,
                 Invocation.method(#verifyEmail, [], {#token: token}),
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<void>>);
+          as _i20.Future<_i7.HttpResponse<void>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<Map<String, dynamic>>> refreshToken({
+  _i20.Future<_i7.HttpResponse<Map<String, dynamic>>> refreshToken({
     required String? refreshToken,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#refreshToken, [], {#refreshToken: refreshToken}),
             returnValue:
-                _i18.Future<_i7.HttpResponse<Map<String, dynamic>>>.value(
+                _i20.Future<_i7.HttpResponse<Map<String, dynamic>>>.value(
                   _FakeHttpResponse_5<Map<String, dynamic>>(
                     this,
                     Invocation.method(#refreshToken, [], {
@@ -686,7 +720,7 @@ class MockAuthRemoteDataSource extends _i1.Mock
                   ),
                 ),
           )
-          as _i18.Future<_i7.HttpResponse<Map<String, dynamic>>>);
+          as _i20.Future<_i7.HttpResponse<Map<String, dynamic>>>);
 }
 
 /// A class which mocks [AuthLocalDataSource].
@@ -699,91 +733,91 @@ class MockAuthLocalDataSource extends _i1.Mock
   }
 
   @override
-  _i18.Future<void> cacheUser(_i8.UserModel? user) =>
+  _i20.Future<void> cacheUser(_i8.UserModel? user) =>
       (super.noSuchMethod(
             Invocation.method(#cacheUser, [user]),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<_i8.UserModel?> getCachedUser() =>
+  _i20.Future<_i8.UserModel?> getCachedUser() =>
       (super.noSuchMethod(
             Invocation.method(#getCachedUser, []),
-            returnValue: _i18.Future<_i8.UserModel?>.value(),
+            returnValue: _i20.Future<_i8.UserModel?>.value(),
           )
-          as _i18.Future<_i8.UserModel?>);
+          as _i20.Future<_i8.UserModel?>);
 
   @override
-  _i18.Future<void> clearCachedUser() =>
+  _i20.Future<void> clearCachedUser() =>
       (super.noSuchMethod(
             Invocation.method(#clearCachedUser, []),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<void> cacheTokens(_i21.AuthTokensModel? tokens) =>
+  _i20.Future<void> cacheTokens(_i23.AuthTokensModel? tokens) =>
       (super.noSuchMethod(
             Invocation.method(#cacheTokens, [tokens]),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<_i21.AuthTokensModel?> getCachedTokens() =>
+  _i20.Future<_i23.AuthTokensModel?> getCachedTokens() =>
       (super.noSuchMethod(
             Invocation.method(#getCachedTokens, []),
-            returnValue: _i18.Future<_i21.AuthTokensModel?>.value(),
+            returnValue: _i20.Future<_i23.AuthTokensModel?>.value(),
           )
-          as _i18.Future<_i21.AuthTokensModel?>);
+          as _i20.Future<_i23.AuthTokensModel?>);
 
   @override
-  _i18.Future<void> clearCachedTokens() =>
+  _i20.Future<void> clearCachedTokens() =>
       (super.noSuchMethod(
             Invocation.method(#clearCachedTokens, []),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<void> clearAllData() =>
+  _i20.Future<void> clearAllData() =>
       (super.noSuchMethod(
             Invocation.method(#clearAllData, []),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 }
 
 /// A class which mocks [AuthFirebaseRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthFirebaseRemoteDataSource extends _i1.Mock
-    implements _i22.AuthFirebaseRemoteDataSource {
+    implements _i24.AuthFirebaseRemoteDataSource {
   MockAuthFirebaseRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<Map<String, dynamic>> login({
+  _i20.Future<Map<String, dynamic>> login({
     required String? email,
     required String? password,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#login, [], {#email: email, #password: password}),
-            returnValue: _i18.Future<Map<String, dynamic>>.value(
+            returnValue: _i20.Future<Map<String, dynamic>>.value(
               <String, dynamic>{},
             ),
           )
-          as _i18.Future<Map<String, dynamic>>);
+          as _i20.Future<Map<String, dynamic>>);
 
   @override
-  _i18.Future<Map<String, dynamic>> register({
+  _i20.Future<Map<String, dynamic>> register({
     required String? email,
     required String? username,
     required String? password,
@@ -794,26 +828,26 @@ class MockAuthFirebaseRemoteDataSource extends _i1.Mock
               #username: username,
               #password: password,
             }),
-            returnValue: _i18.Future<Map<String, dynamic>>.value(
+            returnValue: _i20.Future<Map<String, dynamic>>.value(
               <String, dynamic>{},
             ),
           )
-          as _i18.Future<Map<String, dynamic>>);
+          as _i20.Future<Map<String, dynamic>>);
 
   @override
-  _i18.Future<void> logout(String? userId) =>
+  _i20.Future<void> logout(String? userId) =>
       (super.noSuchMethod(
             Invocation.method(#logout, [userId]),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<_i8.UserModel> getCurrentUser({required String? accessToken}) =>
+  _i20.Future<_i8.UserModel> getCurrentUser({required String? accessToken}) =>
       (super.noSuchMethod(
             Invocation.method(#getCurrentUser, [], {#accessToken: accessToken}),
-            returnValue: _i18.Future<_i8.UserModel>.value(
+            returnValue: _i20.Future<_i8.UserModel>.value(
               _FakeUserModel_6(
                 this,
                 Invocation.method(#getCurrentUser, [], {
@@ -822,10 +856,10 @@ class MockAuthFirebaseRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i8.UserModel>);
+          as _i20.Future<_i8.UserModel>);
 
   @override
-  _i18.Future<_i8.UserModel> updateProfile({
+  _i20.Future<_i8.UserModel> updateProfile({
     required String? accessToken,
     String? displayName,
     String? bio,
@@ -838,7 +872,7 @@ class MockAuthFirebaseRemoteDataSource extends _i1.Mock
               #bio: bio,
               #avatarUrl: avatarUrl,
             }),
-            returnValue: _i18.Future<_i8.UserModel>.value(
+            returnValue: _i20.Future<_i8.UserModel>.value(
               _FakeUserModel_6(
                 this,
                 Invocation.method(#updateProfile, [], {
@@ -850,10 +884,10 @@ class MockAuthFirebaseRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i8.UserModel>);
+          as _i20.Future<_i8.UserModel>);
 
   @override
-  _i18.Future<void> changePassword({
+  _i20.Future<void> changePassword({
     required String? accessToken,
     required String? currentPassword,
     required String? newPassword,
@@ -864,22 +898,22 @@ class MockAuthFirebaseRemoteDataSource extends _i1.Mock
               #currentPassword: currentPassword,
               #newPassword: newPassword,
             }),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<void> requestPasswordReset({required String? email}) =>
+  _i20.Future<void> requestPasswordReset({required String? email}) =>
       (super.noSuchMethod(
             Invocation.method(#requestPasswordReset, [], {#email: email}),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<void> resetPassword({
+  _i20.Future<void> resetPassword({
     required String? token,
     required String? newPassword,
   }) =>
@@ -888,37 +922,37 @@ class MockAuthFirebaseRemoteDataSource extends _i1.Mock
               #token: token,
               #newPassword: newPassword,
             }),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<void> verifyEmail({required String? token}) =>
+  _i20.Future<void> verifyEmail({required String? token}) =>
       (super.noSuchMethod(
             Invocation.method(#verifyEmail, [], {#token: token}),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<Map<String, dynamic>> refreshToken({
+  _i20.Future<Map<String, dynamic>> refreshToken({
     required String? refreshToken,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#refreshToken, [], {#refreshToken: refreshToken}),
-            returnValue: _i18.Future<Map<String, dynamic>>.value(
+            returnValue: _i20.Future<Map<String, dynamic>>.value(
               <String, dynamic>{},
             ),
           )
-          as _i18.Future<Map<String, dynamic>>);
+          as _i20.Future<Map<String, dynamic>>);
 }
 
 /// A class which mocks [LoginUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLoginUseCase extends _i1.Mock implements _i23.LoginUseCase {
+class MockLoginUseCase extends _i1.Mock implements _i25.LoginUseCase {
   MockLoginUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -935,20 +969,20 @@ class MockLoginUseCase extends _i1.Mock implements _i23.LoginUseCase {
           as _i9.AuthRepository);
 
   @override
-  _i18.Future<_i5.UserEntity> call(_i24.LoginParams? params) =>
+  _i20.Future<_i5.UserEntity> call(_i26.LoginParams? params) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i18.Future<_i5.UserEntity>.value(
+            returnValue: _i20.Future<_i5.UserEntity>.value(
               _FakeUserEntity_3(this, Invocation.method(#call, [params])),
             ),
           )
-          as _i18.Future<_i5.UserEntity>);
+          as _i20.Future<_i5.UserEntity>);
 }
 
 /// A class which mocks [RegisterUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockRegisterUseCase extends _i1.Mock implements _i25.RegisterUseCase {
+class MockRegisterUseCase extends _i1.Mock implements _i27.RegisterUseCase {
   MockRegisterUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -965,20 +999,20 @@ class MockRegisterUseCase extends _i1.Mock implements _i25.RegisterUseCase {
           as _i9.AuthRepository);
 
   @override
-  _i18.Future<_i5.UserEntity> call(_i24.RegisterParams? params) =>
+  _i20.Future<_i5.UserEntity> call(_i26.RegisterParams? params) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i18.Future<_i5.UserEntity>.value(
+            returnValue: _i20.Future<_i5.UserEntity>.value(
               _FakeUserEntity_3(this, Invocation.method(#call, [params])),
             ),
           )
-          as _i18.Future<_i5.UserEntity>);
+          as _i20.Future<_i5.UserEntity>);
 }
 
 /// A class which mocks [LogoutUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLogoutUseCase extends _i1.Mock implements _i26.LogoutUseCase {
+class MockLogoutUseCase extends _i1.Mock implements _i28.LogoutUseCase {
   MockLogoutUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -995,20 +1029,20 @@ class MockLogoutUseCase extends _i1.Mock implements _i26.LogoutUseCase {
           as _i9.AuthRepository);
 
   @override
-  _i18.Future<void> call(_i27.NoParams? params) =>
+  _i20.Future<void> call(_i29.NoParams? params) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 }
 
 /// A class which mocks [GetCurrentUserUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetCurrentUserUseCase extends _i1.Mock
-    implements _i28.GetCurrentUserUseCase {
+    implements _i30.GetCurrentUserUseCase {
   MockGetCurrentUserUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -1025,21 +1059,21 @@ class MockGetCurrentUserUseCase extends _i1.Mock
           as _i9.AuthRepository);
 
   @override
-  _i18.Future<_i5.UserEntity> call(_i27.NoParams? params) =>
+  _i20.Future<_i5.UserEntity> call(_i29.NoParams? params) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i18.Future<_i5.UserEntity>.value(
+            returnValue: _i20.Future<_i5.UserEntity>.value(
               _FakeUserEntity_3(this, Invocation.method(#call, [params])),
             ),
           )
-          as _i18.Future<_i5.UserEntity>);
+          as _i20.Future<_i5.UserEntity>);
 }
 
 /// A class which mocks [CheckAuthStatusUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockCheckAuthStatusUseCase extends _i1.Mock
-    implements _i29.CheckAuthStatusUseCase {
+    implements _i31.CheckAuthStatusUseCase {
   MockCheckAuthStatusUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -1056,27 +1090,27 @@ class MockCheckAuthStatusUseCase extends _i1.Mock
           as _i9.AuthRepository);
 
   @override
-  _i18.Future<bool> call(_i27.NoParams? params) =>
+  _i20.Future<bool> call(_i29.NoParams? params) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i18.Future<bool>.value(false),
+            returnValue: _i20.Future<bool>.value(false),
           )
-          as _i18.Future<bool>);
+          as _i20.Future<bool>);
 }
 
 /// A class which mocks [PostRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPostRepository extends _i1.Mock implements _i30.PostRepository {
+class MockPostRepository extends _i1.Mock implements _i32.PostRepository {
   MockPostRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<_i10.PostEntity> createPost({
+  _i20.Future<_i10.PostEntity> createPost({
     required String? content,
-    required _i31.PostVisibility? visibility,
-    required _i31.PostType? type,
+    required _i33.PostVisibility? visibility,
+    required _i33.PostType? type,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#createPost, [], {
@@ -1084,7 +1118,7 @@ class MockPostRepository extends _i1.Mock implements _i30.PostRepository {
               #visibility: visibility,
               #type: type,
             }),
-            returnValue: _i18.Future<_i10.PostEntity>.value(
+            returnValue: _i20.Future<_i10.PostEntity>.value(
               _FakePostEntity_8(
                 this,
                 Invocation.method(#createPost, [], {
@@ -1095,14 +1129,14 @@ class MockPostRepository extends _i1.Mock implements _i30.PostRepository {
               ),
             ),
           )
-          as _i18.Future<_i10.PostEntity>);
+          as _i20.Future<_i10.PostEntity>);
 
   @override
-  _i18.Future<_i10.PostEntity> updatePost({
+  _i20.Future<_i10.PostEntity> updatePost({
     required String? postId,
     required String? content,
-    required _i31.PostVisibility? visibility,
-    required _i31.PostType? type,
+    required _i33.PostVisibility? visibility,
+    required _i33.PostType? type,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#updatePost, [], {
@@ -1111,7 +1145,7 @@ class MockPostRepository extends _i1.Mock implements _i30.PostRepository {
               #visibility: visibility,
               #type: type,
             }),
-            returnValue: _i18.Future<_i10.PostEntity>.value(
+            returnValue: _i20.Future<_i10.PostEntity>.value(
               _FakePostEntity_8(
                 this,
                 Invocation.method(#updatePost, [], {
@@ -1123,59 +1157,59 @@ class MockPostRepository extends _i1.Mock implements _i30.PostRepository {
               ),
             ),
           )
-          as _i18.Future<_i10.PostEntity>);
+          as _i20.Future<_i10.PostEntity>);
 
   @override
-  _i18.Future<void> deletePost(String? postId) =>
+  _i20.Future<void> deletePost(String? postId) =>
       (super.noSuchMethod(
             Invocation.method(#deletePost, [postId]),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<_i10.PostEntity> getPost(String? postId) =>
+  _i20.Future<_i10.PostEntity> getPost(String? postId) =>
       (super.noSuchMethod(
             Invocation.method(#getPost, [postId]),
-            returnValue: _i18.Future<_i10.PostEntity>.value(
+            returnValue: _i20.Future<_i10.PostEntity>.value(
               _FakePostEntity_8(this, Invocation.method(#getPost, [postId])),
             ),
           )
-          as _i18.Future<_i10.PostEntity>);
+          as _i20.Future<_i10.PostEntity>);
 
   @override
-  _i18.Future<List<_i10.PostEntity>> getHomePost() =>
+  _i20.Future<List<_i10.PostEntity>> getHomePost() =>
       (super.noSuchMethod(
             Invocation.method(#getHomePost, []),
-            returnValue: _i18.Future<List<_i10.PostEntity>>.value(
+            returnValue: _i20.Future<List<_i10.PostEntity>>.value(
               <_i10.PostEntity>[],
             ),
           )
-          as _i18.Future<List<_i10.PostEntity>>);
+          as _i20.Future<List<_i10.PostEntity>>);
 
   @override
-  _i18.Future<List<_i10.PostEntity>> getPostsByUser(String? viewerId) =>
+  _i20.Future<List<_i10.PostEntity>> getPostsByUser(String? viewerId) =>
       (super.noSuchMethod(
             Invocation.method(#getPostsByUser, [viewerId]),
-            returnValue: _i18.Future<List<_i10.PostEntity>>.value(
+            returnValue: _i20.Future<List<_i10.PostEntity>>.value(
               <_i10.PostEntity>[],
             ),
           )
-          as _i18.Future<List<_i10.PostEntity>>);
+          as _i20.Future<List<_i10.PostEntity>>);
 }
 
 /// A class which mocks [PostRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockPostRemoteDataSource extends _i1.Mock
-    implements _i32.PostRemoteDataSource {
+    implements _i34.PostRemoteDataSource {
   MockPostRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<_i7.HttpResponse<_i33.PostModel>> createPost({
+  _i20.Future<_i7.HttpResponse<_i35.PostModel>> createPost({
     required String? content,
     required String? visibility,
     required String? type,
@@ -1186,8 +1220,8 @@ class MockPostRemoteDataSource extends _i1.Mock
               #visibility: visibility,
               #type: type,
             }),
-            returnValue: _i18.Future<_i7.HttpResponse<_i33.PostModel>>.value(
-              _FakeHttpResponse_5<_i33.PostModel>(
+            returnValue: _i20.Future<_i7.HttpResponse<_i35.PostModel>>.value(
+              _FakeHttpResponse_5<_i35.PostModel>(
                 this,
                 Invocation.method(#createPost, [], {
                   #content: content,
@@ -1197,10 +1231,10 @@ class MockPostRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<_i33.PostModel>>);
+          as _i20.Future<_i7.HttpResponse<_i35.PostModel>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<_i33.PostModel>> updatePost({
+  _i20.Future<_i7.HttpResponse<_i35.PostModel>> updatePost({
     required String? postId,
     required String? content,
     required String? visibility,
@@ -1213,8 +1247,8 @@ class MockPostRemoteDataSource extends _i1.Mock
               #visibility: visibility,
               #type: type,
             }),
-            returnValue: _i18.Future<_i7.HttpResponse<_i33.PostModel>>.value(
-              _FakeHttpResponse_5<_i33.PostModel>(
+            returnValue: _i20.Future<_i7.HttpResponse<_i35.PostModel>>.value(
+              _FakeHttpResponse_5<_i35.PostModel>(
                 this,
                 Invocation.method(#updatePost, [], {
                   #postId: postId,
@@ -1225,111 +1259,111 @@ class MockPostRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<_i33.PostModel>>);
+          as _i20.Future<_i7.HttpResponse<_i35.PostModel>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<void>> deletePost(String? postId) =>
+  _i20.Future<_i7.HttpResponse<void>> deletePost(String? postId) =>
       (super.noSuchMethod(
             Invocation.method(#deletePost, [postId]),
-            returnValue: _i18.Future<_i7.HttpResponse<void>>.value(
+            returnValue: _i20.Future<_i7.HttpResponse<void>>.value(
               _FakeHttpResponse_5<void>(
                 this,
                 Invocation.method(#deletePost, [postId]),
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<void>>);
+          as _i20.Future<_i7.HttpResponse<void>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<_i33.PostModel>> getPost(String? postId) =>
+  _i20.Future<_i7.HttpResponse<_i35.PostModel>> getPost(String? postId) =>
       (super.noSuchMethod(
             Invocation.method(#getPost, [postId]),
-            returnValue: _i18.Future<_i7.HttpResponse<_i33.PostModel>>.value(
-              _FakeHttpResponse_5<_i33.PostModel>(
+            returnValue: _i20.Future<_i7.HttpResponse<_i35.PostModel>>.value(
+              _FakeHttpResponse_5<_i35.PostModel>(
                 this,
                 Invocation.method(#getPost, [postId]),
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<_i33.PostModel>>);
+          as _i20.Future<_i7.HttpResponse<_i35.PostModel>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<List<_i33.PostModel>>> getHomePost() =>
+  _i20.Future<_i7.HttpResponse<List<_i35.PostModel>>> getHomePost() =>
       (super.noSuchMethod(
             Invocation.method(#getHomePost, []),
             returnValue:
-                _i18.Future<_i7.HttpResponse<List<_i33.PostModel>>>.value(
-                  _FakeHttpResponse_5<List<_i33.PostModel>>(
+                _i20.Future<_i7.HttpResponse<List<_i35.PostModel>>>.value(
+                  _FakeHttpResponse_5<List<_i35.PostModel>>(
                     this,
                     Invocation.method(#getHomePost, []),
                   ),
                 ),
           )
-          as _i18.Future<_i7.HttpResponse<List<_i33.PostModel>>>);
+          as _i20.Future<_i7.HttpResponse<List<_i35.PostModel>>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<List<_i33.PostModel>>> getPostsByUser(
+  _i20.Future<_i7.HttpResponse<List<_i35.PostModel>>> getPostsByUser(
     String? viewerId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getPostsByUser, [viewerId]),
             returnValue:
-                _i18.Future<_i7.HttpResponse<List<_i33.PostModel>>>.value(
-                  _FakeHttpResponse_5<List<_i33.PostModel>>(
+                _i20.Future<_i7.HttpResponse<List<_i35.PostModel>>>.value(
+                  _FakeHttpResponse_5<List<_i35.PostModel>>(
                     this,
                     Invocation.method(#getPostsByUser, [viewerId]),
                   ),
                 ),
           )
-          as _i18.Future<_i7.HttpResponse<List<_i33.PostModel>>>);
+          as _i20.Future<_i7.HttpResponse<List<_i35.PostModel>>>);
 }
 
 /// A class which mocks [PostLocalDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockPostLocalDataSource extends _i1.Mock
-    implements _i34.PostLocalDataSource {
+    implements _i36.PostLocalDataSource {
   MockPostLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<void> cachePosts(List<_i33.PostModel>? posts) =>
+  _i20.Future<void> cachePosts(List<_i35.PostModel>? posts) =>
       (super.noSuchMethod(
             Invocation.method(#cachePosts, [posts]),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<List<_i33.PostModel>?> getCachedPosts() =>
+  _i20.Future<List<_i35.PostModel>?> getCachedPosts() =>
       (super.noSuchMethod(
             Invocation.method(#getCachedPosts, []),
-            returnValue: _i18.Future<List<_i33.PostModel>?>.value(),
+            returnValue: _i20.Future<List<_i35.PostModel>?>.value(),
           )
-          as _i18.Future<List<_i33.PostModel>?>);
+          as _i20.Future<List<_i35.PostModel>?>);
 
   @override
-  _i18.Future<void> clearCachedPosts() =>
+  _i20.Future<void> clearCachedPosts() =>
       (super.noSuchMethod(
             Invocation.method(#clearCachedPosts, []),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 }
 
 /// A class which mocks [CommentRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockCommentRepository extends _i1.Mock implements _i35.CommentRepository {
+class MockCommentRepository extends _i1.Mock implements _i37.CommentRepository {
   MockCommentRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<_i11.CommentEntity> createComment({
+  _i20.Future<_i11.CommentEntity> createComment({
     required String? postId,
     required String? content,
     String? parentCommentId,
@@ -1340,7 +1374,7 @@ class MockCommentRepository extends _i1.Mock implements _i35.CommentRepository {
               #content: content,
               #parentCommentId: parentCommentId,
             }),
-            returnValue: _i18.Future<_i11.CommentEntity>.value(
+            returnValue: _i20.Future<_i11.CommentEntity>.value(
               _FakeCommentEntity_9(
                 this,
                 Invocation.method(#createComment, [], {
@@ -1351,10 +1385,10 @@ class MockCommentRepository extends _i1.Mock implements _i35.CommentRepository {
               ),
             ),
           )
-          as _i18.Future<_i11.CommentEntity>);
+          as _i20.Future<_i11.CommentEntity>);
 
   @override
-  _i18.Future<_i11.CommentEntity> updateComment({
+  _i20.Future<_i11.CommentEntity> updateComment({
     required String? commentId,
     required String? content,
   }) =>
@@ -1363,7 +1397,7 @@ class MockCommentRepository extends _i1.Mock implements _i35.CommentRepository {
               #commentId: commentId,
               #content: content,
             }),
-            returnValue: _i18.Future<_i11.CommentEntity>.value(
+            returnValue: _i20.Future<_i11.CommentEntity>.value(
               _FakeCommentEntity_9(
                 this,
                 Invocation.method(#updateComment, [], {
@@ -1373,61 +1407,61 @@ class MockCommentRepository extends _i1.Mock implements _i35.CommentRepository {
               ),
             ),
           )
-          as _i18.Future<_i11.CommentEntity>);
+          as _i20.Future<_i11.CommentEntity>);
 
   @override
-  _i18.Future<void> deleteComment(String? commentId) =>
+  _i20.Future<void> deleteComment(String? commentId) =>
       (super.noSuchMethod(
             Invocation.method(#deleteComment, [commentId]),
-            returnValue: _i18.Future<void>.value(),
-            returnValueForMissingStub: _i18.Future<void>.value(),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
           )
-          as _i18.Future<void>);
+          as _i20.Future<void>);
 
   @override
-  _i18.Future<List<_i11.CommentEntity>> getCommentsByPost({
+  _i20.Future<List<_i11.CommentEntity>> getCommentsByPost({
     required String? postId,
-    required _i36.PaginationParams? query,
+    required _i38.PaginationParams? query,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getCommentsByPost, [], {
               #postId: postId,
               #query: query,
             }),
-            returnValue: _i18.Future<List<_i11.CommentEntity>>.value(
+            returnValue: _i20.Future<List<_i11.CommentEntity>>.value(
               <_i11.CommentEntity>[],
             ),
           )
-          as _i18.Future<List<_i11.CommentEntity>>);
+          as _i20.Future<List<_i11.CommentEntity>>);
 
   @override
-  _i18.Future<List<_i11.CommentEntity>> getReplies({
+  _i20.Future<List<_i11.CommentEntity>> getReplies({
     required String? commentId,
-    required _i36.PaginationParams? query,
+    required _i38.PaginationParams? query,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getReplies, [], {
               #commentId: commentId,
               #query: query,
             }),
-            returnValue: _i18.Future<List<_i11.CommentEntity>>.value(
+            returnValue: _i20.Future<List<_i11.CommentEntity>>.value(
               <_i11.CommentEntity>[],
             ),
           )
-          as _i18.Future<List<_i11.CommentEntity>>);
+          as _i20.Future<List<_i11.CommentEntity>>);
 }
 
 /// A class which mocks [CommentRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockCommentRemoteDataSource extends _i1.Mock
-    implements _i37.CommentRemoteDataSource {
+    implements _i39.CommentRemoteDataSource {
   MockCommentRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<_i7.HttpResponse<_i38.CommentModel>> createComment({
+  _i20.Future<_i7.HttpResponse<_i40.CommentModel>> createComment({
     required String? postId,
     required String? content,
     String? parentCommentId,
@@ -1438,8 +1472,8 @@ class MockCommentRemoteDataSource extends _i1.Mock
               #content: content,
               #parentCommentId: parentCommentId,
             }),
-            returnValue: _i18.Future<_i7.HttpResponse<_i38.CommentModel>>.value(
-              _FakeHttpResponse_5<_i38.CommentModel>(
+            returnValue: _i20.Future<_i7.HttpResponse<_i40.CommentModel>>.value(
+              _FakeHttpResponse_5<_i40.CommentModel>(
                 this,
                 Invocation.method(#createComment, [], {
                   #postId: postId,
@@ -1449,10 +1483,10 @@ class MockCommentRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<_i38.CommentModel>>);
+          as _i20.Future<_i7.HttpResponse<_i40.CommentModel>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<_i38.CommentModel>> updateComment({
+  _i20.Future<_i7.HttpResponse<_i40.CommentModel>> updateComment({
     required String? commentId,
     required String? content,
   }) =>
@@ -1461,8 +1495,8 @@ class MockCommentRemoteDataSource extends _i1.Mock
               #commentId: commentId,
               #content: content,
             }),
-            returnValue: _i18.Future<_i7.HttpResponse<_i38.CommentModel>>.value(
-              _FakeHttpResponse_5<_i38.CommentModel>(
+            returnValue: _i20.Future<_i7.HttpResponse<_i40.CommentModel>>.value(
+              _FakeHttpResponse_5<_i40.CommentModel>(
                 this,
                 Invocation.method(#updateComment, [], {
                   #commentId: commentId,
@@ -1471,25 +1505,25 @@ class MockCommentRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<_i38.CommentModel>>);
+          as _i20.Future<_i7.HttpResponse<_i40.CommentModel>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<void>> deleteComment(String? commentId) =>
+  _i20.Future<_i7.HttpResponse<void>> deleteComment(String? commentId) =>
       (super.noSuchMethod(
             Invocation.method(#deleteComment, [commentId]),
-            returnValue: _i18.Future<_i7.HttpResponse<void>>.value(
+            returnValue: _i20.Future<_i7.HttpResponse<void>>.value(
               _FakeHttpResponse_5<void>(
                 this,
                 Invocation.method(#deleteComment, [commentId]),
               ),
             ),
           )
-          as _i18.Future<_i7.HttpResponse<void>>);
+          as _i20.Future<_i7.HttpResponse<void>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<List<_i38.CommentModel>>> getCommentByPost({
+  _i20.Future<_i7.HttpResponse<List<_i40.CommentModel>>> getCommentByPost({
     required String? postId,
-    _i36.PaginationParams? pagination,
+    _i38.PaginationParams? pagination,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getCommentByPost, [], {
@@ -1497,8 +1531,8 @@ class MockCommentRemoteDataSource extends _i1.Mock
               #pagination: pagination,
             }),
             returnValue:
-                _i18.Future<_i7.HttpResponse<List<_i38.CommentModel>>>.value(
-                  _FakeHttpResponse_5<List<_i38.CommentModel>>(
+                _i20.Future<_i7.HttpResponse<List<_i40.CommentModel>>>.value(
+                  _FakeHttpResponse_5<List<_i40.CommentModel>>(
                     this,
                     Invocation.method(#getCommentByPost, [], {
                       #postId: postId,
@@ -1507,12 +1541,12 @@ class MockCommentRemoteDataSource extends _i1.Mock
                   ),
                 ),
           )
-          as _i18.Future<_i7.HttpResponse<List<_i38.CommentModel>>>);
+          as _i20.Future<_i7.HttpResponse<List<_i40.CommentModel>>>);
 
   @override
-  _i18.Future<_i7.HttpResponse<List<_i38.CommentModel>>> getReplies({
+  _i20.Future<_i7.HttpResponse<List<_i40.CommentModel>>> getReplies({
     required String? commentId,
-    _i36.PaginationParams? pagination,
+    _i38.PaginationParams? pagination,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getReplies, [], {
@@ -1520,8 +1554,8 @@ class MockCommentRemoteDataSource extends _i1.Mock
               #pagination: pagination,
             }),
             returnValue:
-                _i18.Future<_i7.HttpResponse<List<_i38.CommentModel>>>.value(
-                  _FakeHttpResponse_5<List<_i38.CommentModel>>(
+                _i20.Future<_i7.HttpResponse<List<_i40.CommentModel>>>.value(
+                  _FakeHttpResponse_5<List<_i40.CommentModel>>(
                     this,
                     Invocation.method(#getReplies, [], {
                       #commentId: commentId,
@@ -1530,23 +1564,312 @@ class MockCommentRemoteDataSource extends _i1.Mock
                   ),
                 ),
           )
-          as _i18.Future<_i7.HttpResponse<List<_i38.CommentModel>>>);
+          as _i20.Future<_i7.HttpResponse<List<_i40.CommentModel>>>);
+}
+
+/// A class which mocks [ConversationRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockConversationRepository extends _i1.Mock
+    implements _i41.ConversationRepository {
+  MockConversationRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i20.Future<_i12.ConversationEntity> createConversation(
+    List<String>? participantIds,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#createConversation, [participantIds]),
+            returnValue: _i20.Future<_i12.ConversationEntity>.value(
+              _FakeConversationEntity_10(
+                this,
+                Invocation.method(#createConversation, [participantIds]),
+              ),
+            ),
+          )
+          as _i20.Future<_i12.ConversationEntity>);
+
+  @override
+  _i20.Future<_i12.ConversationEntity?> getConversation(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#getConversation, [id]),
+            returnValue: _i20.Future<_i12.ConversationEntity?>.value(),
+          )
+          as _i20.Future<_i12.ConversationEntity?>);
+
+  @override
+  _i20.Future<List<_i12.ConversationEntity>> getConversations(
+    String? currentUserId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getConversations, [currentUserId]),
+            returnValue: _i20.Future<List<_i12.ConversationEntity>>.value(
+              <_i12.ConversationEntity>[],
+            ),
+          )
+          as _i20.Future<List<_i12.ConversationEntity>>);
+
+  @override
+  _i20.Future<_i12.ConversationEntity> updateConversation(
+    _i12.ConversationEntity? conversation,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateConversation, [conversation]),
+            returnValue: _i20.Future<_i12.ConversationEntity>.value(
+              _FakeConversationEntity_10(
+                this,
+                Invocation.method(#updateConversation, [conversation]),
+              ),
+            ),
+          )
+          as _i20.Future<_i12.ConversationEntity>);
+
+  @override
+  _i20.Stream<List<_i12.ConversationEntity>> watchConversations(
+    String? currentUserId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#watchConversations, [currentUserId]),
+            returnValue: _i20.Stream<List<_i12.ConversationEntity>>.empty(),
+          )
+          as _i20.Stream<List<_i12.ConversationEntity>>);
+}
+
+/// A class which mocks [ConversationRemoteDataSource].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockConversationRemoteDataSource extends _i1.Mock
+    implements _i42.ConversationRemoteDataSource {
+  MockConversationRemoteDataSource() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i20.Future<_i13.ConversationModel> createConversation(
+    List<String>? participantIds,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#createConversation, [participantIds]),
+            returnValue: _i20.Future<_i13.ConversationModel>.value(
+              _FakeConversationModel_11(
+                this,
+                Invocation.method(#createConversation, [participantIds]),
+              ),
+            ),
+          )
+          as _i20.Future<_i13.ConversationModel>);
+
+  @override
+  _i20.Future<_i13.ConversationModel?> getConversation(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#getConversation, [id]),
+            returnValue: _i20.Future<_i13.ConversationModel?>.value(),
+          )
+          as _i20.Future<_i13.ConversationModel?>);
+
+  @override
+  _i20.Future<List<_i13.ConversationModel>> getConversations(
+    String? currentUserId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getConversations, [currentUserId]),
+            returnValue: _i20.Future<List<_i13.ConversationModel>>.value(
+              <_i13.ConversationModel>[],
+            ),
+          )
+          as _i20.Future<List<_i13.ConversationModel>>);
+
+  @override
+  _i20.Future<_i13.ConversationModel> updateConversation(
+    _i12.ConversationEntity? conversation,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateConversation, [conversation]),
+            returnValue: _i20.Future<_i13.ConversationModel>.value(
+              _FakeConversationModel_11(
+                this,
+                Invocation.method(#updateConversation, [conversation]),
+              ),
+            ),
+          )
+          as _i20.Future<_i13.ConversationModel>);
+
+  @override
+  _i20.Stream<List<_i13.ConversationModel>> watchConversations(
+    String? currentUserId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#watchConversations, [currentUserId]),
+            returnValue: _i20.Stream<List<_i13.ConversationModel>>.empty(),
+          )
+          as _i20.Stream<List<_i13.ConversationModel>>);
+}
+
+/// A class which mocks [ConversationLocalDataSource].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockConversationLocalDataSource extends _i1.Mock
+    implements _i43.ConversationLocalDataSource {
+  MockConversationLocalDataSource() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i20.Future<void> cacheConversations(
+    String? userId,
+    List<_i13.ConversationModel>? conversations,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#cacheConversations, [userId, conversations]),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
+          )
+          as _i20.Future<void>);
+
+  @override
+  _i20.Future<List<_i13.ConversationModel>> getCachedConversations(
+    String? userId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getCachedConversations, [userId]),
+            returnValue: _i20.Future<List<_i13.ConversationModel>>.value(
+              <_i13.ConversationModel>[],
+            ),
+          )
+          as _i20.Future<List<_i13.ConversationModel>>);
+
+  @override
+  _i20.Future<void> clearConversations(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#clearConversations, [userId]),
+            returnValue: _i20.Future<void>.value(),
+            returnValueForMissingStub: _i20.Future<void>.value(),
+          )
+          as _i20.Future<void>);
+}
+
+/// A class which mocks [GetConversationUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetConversationUsecase extends _i1.Mock
+    implements _i44.GetConversationUsecase {
+  MockGetConversationUsecase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i20.Future<_i12.ConversationEntity?> call(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#call, [id]),
+            returnValue: _i20.Future<_i12.ConversationEntity?>.value(),
+          )
+          as _i20.Future<_i12.ConversationEntity?>);
+}
+
+/// A class which mocks [GetConversationsUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetConversationsUsecase extends _i1.Mock
+    implements _i45.GetConversationsUsecase {
+  MockGetConversationsUsecase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i20.Future<List<_i12.ConversationEntity>> call(String? currentUserId) =>
+      (super.noSuchMethod(
+            Invocation.method(#call, [currentUserId]),
+            returnValue: _i20.Future<List<_i12.ConversationEntity>>.value(
+              <_i12.ConversationEntity>[],
+            ),
+          )
+          as _i20.Future<List<_i12.ConversationEntity>>);
+}
+
+/// A class which mocks [CreateConversationUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockCreateConversationUsecase extends _i1.Mock
+    implements _i46.CreateConversationUsecase {
+  MockCreateConversationUsecase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i20.Future<_i12.ConversationEntity> call(
+    _i47.CreateConversationParams? params,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#call, [params]),
+            returnValue: _i20.Future<_i12.ConversationEntity>.value(
+              _FakeConversationEntity_10(
+                this,
+                Invocation.method(#call, [params]),
+              ),
+            ),
+          )
+          as _i20.Future<_i12.ConversationEntity>);
+}
+
+/// A class which mocks [UpdateConversationsUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockUpdateConversationsUsecase extends _i1.Mock
+    implements _i48.UpdateConversationsUsecase {
+  MockUpdateConversationsUsecase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i20.Future<_i12.ConversationEntity> call(
+    _i12.ConversationEntity? conversaion,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#call, [conversaion]),
+            returnValue: _i20.Future<_i12.ConversationEntity>.value(
+              _FakeConversationEntity_10(
+                this,
+                Invocation.method(#call, [conversaion]),
+              ),
+            ),
+          )
+          as _i20.Future<_i12.ConversationEntity>);
+}
+
+/// A class which mocks [WatchConversationsUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockWatchConversationsUsecase extends _i1.Mock
+    implements _i49.WatchConversationsUsecase {
+  MockWatchConversationsUsecase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i20.Stream<List<_i12.ConversationEntity>> call(String? currentUserId) =>
+      (super.noSuchMethod(
+            Invocation.method(#call, [currentUserId]),
+            returnValue: _i20.Stream<List<_i12.ConversationEntity>>.empty(),
+          )
+          as _i20.Stream<List<_i12.ConversationEntity>>);
 }
 
 /// A class which mocks [ReactionRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockReactionRepository extends _i1.Mock
-    implements _i39.ReactionRepository {
+    implements _i50.ReactionRepository {
   MockReactionRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<_i12.ReactionResponseEntity> react({
-    required _i40.ReactionTargetType? targetType,
+  _i20.Future<_i14.ReactionResponseEntity> react({
+    required _i51.ReactionTargetType? targetType,
     required String? targetId,
-    required _i40.ReactionType? type,
+    required _i51.ReactionType? type,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#react, [], {
@@ -1554,8 +1877,8 @@ class MockReactionRepository extends _i1.Mock
               #targetId: targetId,
               #type: type,
             }),
-            returnValue: _i18.Future<_i12.ReactionResponseEntity>.value(
-              _FakeReactionResponseEntity_10(
+            returnValue: _i20.Future<_i14.ReactionResponseEntity>.value(
+              _FakeReactionResponseEntity_12(
                 this,
                 Invocation.method(#react, [], {
                   #targetType: targetType,
@@ -1565,11 +1888,11 @@ class MockReactionRepository extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i12.ReactionResponseEntity>);
+          as _i20.Future<_i14.ReactionResponseEntity>);
 
   @override
-  _i18.Future<List<_i12.ReactionSummaryEntity>> getReactionSummary({
-    required _i40.ReactionTargetType? targetType,
+  _i20.Future<List<_i14.ReactionSummaryEntity>> getReactionSummary({
+    required _i51.ReactionTargetType? targetType,
     required String? targetId,
   }) =>
       (super.noSuchMethod(
@@ -1577,15 +1900,15 @@ class MockReactionRepository extends _i1.Mock
               #targetType: targetType,
               #targetId: targetId,
             }),
-            returnValue: _i18.Future<List<_i12.ReactionSummaryEntity>>.value(
-              <_i12.ReactionSummaryEntity>[],
+            returnValue: _i20.Future<List<_i14.ReactionSummaryEntity>>.value(
+              <_i14.ReactionSummaryEntity>[],
             ),
           )
-          as _i18.Future<List<_i12.ReactionSummaryEntity>>);
+          as _i20.Future<List<_i14.ReactionSummaryEntity>>);
 
   @override
-  _i18.Future<_i12.ReactionEntity?> getUserReaction({
-    required _i40.ReactionTargetType? targetType,
+  _i20.Future<_i14.ReactionEntity?> getUserReaction({
+    required _i51.ReactionTargetType? targetType,
     required String? targetId,
   }) =>
       (super.noSuchMethod(
@@ -1593,25 +1916,25 @@ class MockReactionRepository extends _i1.Mock
               #targetType: targetType,
               #targetId: targetId,
             }),
-            returnValue: _i18.Future<_i12.ReactionEntity?>.value(),
+            returnValue: _i20.Future<_i14.ReactionEntity?>.value(),
           )
-          as _i18.Future<_i12.ReactionEntity?>);
+          as _i20.Future<_i14.ReactionEntity?>);
 }
 
 /// A class which mocks [ReactionRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockReactionRemoteDataSource extends _i1.Mock
-    implements _i41.ReactionRemoteDataSource {
+    implements _i52.ReactionRemoteDataSource {
   MockReactionRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<_i13.ReactionResponseModel> react({
-    required _i40.ReactionTargetType? targetType,
+  _i20.Future<_i15.ReactionResponseModel> react({
+    required _i51.ReactionTargetType? targetType,
     required String? targetId,
-    required _i40.ReactionType? type,
+    required _i51.ReactionType? type,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#react, [], {
@@ -1619,8 +1942,8 @@ class MockReactionRemoteDataSource extends _i1.Mock
               #targetId: targetId,
               #type: type,
             }),
-            returnValue: _i18.Future<_i13.ReactionResponseModel>.value(
-              _FakeReactionResponseModel_11(
+            returnValue: _i20.Future<_i15.ReactionResponseModel>.value(
+              _FakeReactionResponseModel_13(
                 this,
                 Invocation.method(#react, [], {
                   #targetType: targetType,
@@ -1630,11 +1953,11 @@ class MockReactionRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i13.ReactionResponseModel>);
+          as _i20.Future<_i15.ReactionResponseModel>);
 
   @override
-  _i18.Future<List<_i13.ReactionSummaryModel>> getReactionSummary({
-    required _i40.ReactionTargetType? targetType,
+  _i20.Future<List<_i15.ReactionSummaryModel>> getReactionSummary({
+    required _i51.ReactionTargetType? targetType,
     required String? targetId,
   }) =>
       (super.noSuchMethod(
@@ -1642,15 +1965,15 @@ class MockReactionRemoteDataSource extends _i1.Mock
               #targetType: targetType,
               #targetId: targetId,
             }),
-            returnValue: _i18.Future<List<_i13.ReactionSummaryModel>>.value(
-              <_i13.ReactionSummaryModel>[],
+            returnValue: _i20.Future<List<_i15.ReactionSummaryModel>>.value(
+              <_i15.ReactionSummaryModel>[],
             ),
           )
-          as _i18.Future<List<_i13.ReactionSummaryModel>>);
+          as _i20.Future<List<_i15.ReactionSummaryModel>>);
 
   @override
-  _i18.Future<_i13.ReactionModel?> getUserReaction({
-    required _i40.ReactionTargetType? targetType,
+  _i20.Future<_i15.ReactionModel?> getUserReaction({
+    required _i51.ReactionTargetType? targetType,
     required String? targetId,
   }) =>
       (super.noSuchMethod(
@@ -1658,109 +1981,109 @@ class MockReactionRemoteDataSource extends _i1.Mock
               #targetType: targetType,
               #targetId: targetId,
             }),
-            returnValue: _i18.Future<_i13.ReactionModel?>.value(),
+            returnValue: _i20.Future<_i15.ReactionModel?>.value(),
           )
-          as _i18.Future<_i13.ReactionModel?>);
+          as _i20.Future<_i15.ReactionModel?>);
 }
 
 /// A class which mocks [FriendshipRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFriendshipRepository extends _i1.Mock
-    implements _i42.FriendshipRepository {
+    implements _i53.FriendshipRepository {
   MockFriendshipRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<_i14.FriendshipResponseEntity> sendRequest({
+  _i20.Future<_i16.FriendshipResponseEntity> sendRequest({
     required String? toUserId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#sendRequest, [], {#toUserId: toUserId}),
-            returnValue: _i18.Future<_i14.FriendshipResponseEntity>.value(
-              _FakeFriendshipResponseEntity_12(
+            returnValue: _i20.Future<_i16.FriendshipResponseEntity>.value(
+              _FakeFriendshipResponseEntity_14(
                 this,
                 Invocation.method(#sendRequest, [], {#toUserId: toUserId}),
               ),
             ),
           )
-          as _i18.Future<_i14.FriendshipResponseEntity>);
+          as _i20.Future<_i16.FriendshipResponseEntity>);
 
   @override
-  _i18.Future<_i14.FriendshipResponseEntity> acceptRequest({
+  _i20.Future<_i16.FriendshipResponseEntity> acceptRequest({
     required String? requestId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#acceptRequest, [], {#requestId: requestId}),
-            returnValue: _i18.Future<_i14.FriendshipResponseEntity>.value(
-              _FakeFriendshipResponseEntity_12(
+            returnValue: _i20.Future<_i16.FriendshipResponseEntity>.value(
+              _FakeFriendshipResponseEntity_14(
                 this,
                 Invocation.method(#acceptRequest, [], {#requestId: requestId}),
               ),
             ),
           )
-          as _i18.Future<_i14.FriendshipResponseEntity>);
+          as _i20.Future<_i16.FriendshipResponseEntity>);
 
   @override
-  _i18.Future<_i14.FriendshipResponseEntity> rejectRequest({
+  _i20.Future<_i16.FriendshipResponseEntity> rejectRequest({
     required String? requestId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#rejectRequest, [], {#requestId: requestId}),
-            returnValue: _i18.Future<_i14.FriendshipResponseEntity>.value(
-              _FakeFriendshipResponseEntity_12(
+            returnValue: _i20.Future<_i16.FriendshipResponseEntity>.value(
+              _FakeFriendshipResponseEntity_14(
                 this,
                 Invocation.method(#rejectRequest, [], {#requestId: requestId}),
               ),
             ),
           )
-          as _i18.Future<_i14.FriendshipResponseEntity>);
+          as _i20.Future<_i16.FriendshipResponseEntity>);
 
   @override
-  _i18.Future<List<_i14.FriendRequestEntity>> getPendingRequests() =>
+  _i20.Future<List<_i16.FriendRequestEntity>> getPendingRequests() =>
       (super.noSuchMethod(
             Invocation.method(#getPendingRequests, []),
-            returnValue: _i18.Future<List<_i14.FriendRequestEntity>>.value(
-              <_i14.FriendRequestEntity>[],
+            returnValue: _i20.Future<List<_i16.FriendRequestEntity>>.value(
+              <_i16.FriendRequestEntity>[],
             ),
           )
-          as _i18.Future<List<_i14.FriendRequestEntity>>);
+          as _i20.Future<List<_i16.FriendRequestEntity>>);
 
   @override
-  _i18.Future<List<_i14.FriendRequestEntity>> getSentRequests() =>
+  _i20.Future<List<_i16.FriendRequestEntity>> getSentRequests() =>
       (super.noSuchMethod(
             Invocation.method(#getSentRequests, []),
-            returnValue: _i18.Future<List<_i14.FriendRequestEntity>>.value(
-              <_i14.FriendRequestEntity>[],
+            returnValue: _i20.Future<List<_i16.FriendRequestEntity>>.value(
+              <_i16.FriendRequestEntity>[],
             ),
           )
-          as _i18.Future<List<_i14.FriendRequestEntity>>);
+          as _i20.Future<List<_i16.FriendRequestEntity>>);
 
   @override
-  _i18.Future<List<_i14.FriendEntity>> getFriends() =>
+  _i20.Future<List<_i16.FriendEntity>> getFriends() =>
       (super.noSuchMethod(
             Invocation.method(#getFriends, []),
-            returnValue: _i18.Future<List<_i14.FriendEntity>>.value(
-              <_i14.FriendEntity>[],
+            returnValue: _i20.Future<List<_i16.FriendEntity>>.value(
+              <_i16.FriendEntity>[],
             ),
           )
-          as _i18.Future<List<_i14.FriendEntity>>);
+          as _i20.Future<List<_i16.FriendEntity>>);
 
   @override
-  _i18.Future<List<_i14.FriendEntity>> getUserFriends({
+  _i20.Future<List<_i16.FriendEntity>> getUserFriends({
     required String? userId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getUserFriends, [], {#userId: userId}),
-            returnValue: _i18.Future<List<_i14.FriendEntity>>.value(
-              <_i14.FriendEntity>[],
+            returnValue: _i20.Future<List<_i16.FriendEntity>>.value(
+              <_i16.FriendEntity>[],
             ),
           )
-          as _i18.Future<List<_i14.FriendEntity>>);
+          as _i20.Future<List<_i16.FriendEntity>>);
 
   @override
-  _i18.Future<_i14.FriendshipStatusEntity> isFriend({
+  _i20.Future<_i16.FriendshipStatusEntity> isFriend({
     required String? userAId,
     required String? userBId,
   }) =>
@@ -1769,8 +2092,8 @@ class MockFriendshipRepository extends _i1.Mock
               #userAId: userAId,
               #userBId: userBId,
             }),
-            returnValue: _i18.Future<_i14.FriendshipStatusEntity>.value(
-              _FakeFriendshipStatusEntity_13(
+            returnValue: _i20.Future<_i16.FriendshipStatusEntity>.value(
+              _FakeFriendshipStatusEntity_15(
                 this,
                 Invocation.method(#isFriend, [], {
                   #userAId: userAId,
@@ -1779,115 +2102,115 @@ class MockFriendshipRepository extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i14.FriendshipStatusEntity>);
+          as _i20.Future<_i16.FriendshipStatusEntity>);
 
   @override
-  _i18.Future<List<String>> getFriendIds() =>
+  _i20.Future<List<String>> getFriendIds() =>
       (super.noSuchMethod(
             Invocation.method(#getFriendIds, []),
-            returnValue: _i18.Future<List<String>>.value(<String>[]),
+            returnValue: _i20.Future<List<String>>.value(<String>[]),
           )
-          as _i18.Future<List<String>>);
+          as _i20.Future<List<String>>);
 }
 
 /// A class which mocks [FriendshipRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFriendshipRemoteDataSource extends _i1.Mock
-    implements _i43.FriendshipRemoteDataSource {
+    implements _i54.FriendshipRemoteDataSource {
   MockFriendshipRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i18.Future<_i15.FriendshipResponseModel> sendRequest({
+  _i20.Future<_i17.FriendshipResponseModel> sendRequest({
     required String? toUserId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#sendRequest, [], {#toUserId: toUserId}),
-            returnValue: _i18.Future<_i15.FriendshipResponseModel>.value(
-              _FakeFriendshipResponseModel_14(
+            returnValue: _i20.Future<_i17.FriendshipResponseModel>.value(
+              _FakeFriendshipResponseModel_16(
                 this,
                 Invocation.method(#sendRequest, [], {#toUserId: toUserId}),
               ),
             ),
           )
-          as _i18.Future<_i15.FriendshipResponseModel>);
+          as _i20.Future<_i17.FriendshipResponseModel>);
 
   @override
-  _i18.Future<_i15.FriendshipResponseModel> acceptRequest({
+  _i20.Future<_i17.FriendshipResponseModel> acceptRequest({
     required String? requestId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#acceptRequest, [], {#requestId: requestId}),
-            returnValue: _i18.Future<_i15.FriendshipResponseModel>.value(
-              _FakeFriendshipResponseModel_14(
+            returnValue: _i20.Future<_i17.FriendshipResponseModel>.value(
+              _FakeFriendshipResponseModel_16(
                 this,
                 Invocation.method(#acceptRequest, [], {#requestId: requestId}),
               ),
             ),
           )
-          as _i18.Future<_i15.FriendshipResponseModel>);
+          as _i20.Future<_i17.FriendshipResponseModel>);
 
   @override
-  _i18.Future<_i15.FriendshipResponseModel> rejectRequest({
+  _i20.Future<_i17.FriendshipResponseModel> rejectRequest({
     required String? requestId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#rejectRequest, [], {#requestId: requestId}),
-            returnValue: _i18.Future<_i15.FriendshipResponseModel>.value(
-              _FakeFriendshipResponseModel_14(
+            returnValue: _i20.Future<_i17.FriendshipResponseModel>.value(
+              _FakeFriendshipResponseModel_16(
                 this,
                 Invocation.method(#rejectRequest, [], {#requestId: requestId}),
               ),
             ),
           )
-          as _i18.Future<_i15.FriendshipResponseModel>);
+          as _i20.Future<_i17.FriendshipResponseModel>);
 
   @override
-  _i18.Future<List<_i15.FriendRequestModel>> getPendingRequests() =>
+  _i20.Future<List<_i17.FriendRequestModel>> getPendingRequests() =>
       (super.noSuchMethod(
             Invocation.method(#getPendingRequests, []),
-            returnValue: _i18.Future<List<_i15.FriendRequestModel>>.value(
-              <_i15.FriendRequestModel>[],
+            returnValue: _i20.Future<List<_i17.FriendRequestModel>>.value(
+              <_i17.FriendRequestModel>[],
             ),
           )
-          as _i18.Future<List<_i15.FriendRequestModel>>);
+          as _i20.Future<List<_i17.FriendRequestModel>>);
 
   @override
-  _i18.Future<List<_i15.FriendRequestModel>> getSentRequests() =>
+  _i20.Future<List<_i17.FriendRequestModel>> getSentRequests() =>
       (super.noSuchMethod(
             Invocation.method(#getSentRequests, []),
-            returnValue: _i18.Future<List<_i15.FriendRequestModel>>.value(
-              <_i15.FriendRequestModel>[],
+            returnValue: _i20.Future<List<_i17.FriendRequestModel>>.value(
+              <_i17.FriendRequestModel>[],
             ),
           )
-          as _i18.Future<List<_i15.FriendRequestModel>>);
+          as _i20.Future<List<_i17.FriendRequestModel>>);
 
   @override
-  _i18.Future<List<_i15.FriendModel>> getFriends() =>
+  _i20.Future<List<_i17.FriendModel>> getFriends() =>
       (super.noSuchMethod(
             Invocation.method(#getFriends, []),
-            returnValue: _i18.Future<List<_i15.FriendModel>>.value(
-              <_i15.FriendModel>[],
+            returnValue: _i20.Future<List<_i17.FriendModel>>.value(
+              <_i17.FriendModel>[],
             ),
           )
-          as _i18.Future<List<_i15.FriendModel>>);
+          as _i20.Future<List<_i17.FriendModel>>);
 
   @override
-  _i18.Future<List<_i15.FriendModel>> getUserFriends({
+  _i20.Future<List<_i17.FriendModel>> getUserFriends({
     required String? userId,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getUserFriends, [], {#userId: userId}),
-            returnValue: _i18.Future<List<_i15.FriendModel>>.value(
-              <_i15.FriendModel>[],
+            returnValue: _i20.Future<List<_i17.FriendModel>>.value(
+              <_i17.FriendModel>[],
             ),
           )
-          as _i18.Future<List<_i15.FriendModel>>);
+          as _i20.Future<List<_i17.FriendModel>>);
 
   @override
-  _i18.Future<_i15.FriendshipStatusModel> isFriend({
+  _i20.Future<_i17.FriendshipStatusModel> isFriend({
     required String? userAId,
     required String? userBId,
   }) =>
@@ -1896,8 +2219,8 @@ class MockFriendshipRemoteDataSource extends _i1.Mock
               #userAId: userAId,
               #userBId: userBId,
             }),
-            returnValue: _i18.Future<_i15.FriendshipStatusModel>.value(
-              _FakeFriendshipStatusModel_15(
+            returnValue: _i20.Future<_i17.FriendshipStatusModel>.value(
+              _FakeFriendshipStatusModel_17(
                 this,
                 Invocation.method(#isFriend, [], {
                   #userAId: userAId,
@@ -1906,13 +2229,13 @@ class MockFriendshipRemoteDataSource extends _i1.Mock
               ),
             ),
           )
-          as _i18.Future<_i15.FriendshipStatusModel>);
+          as _i20.Future<_i17.FriendshipStatusModel>);
 
   @override
-  _i18.Future<List<String>> getFriendIds() =>
+  _i20.Future<List<String>> getFriendIds() =>
       (super.noSuchMethod(
             Invocation.method(#getFriendIds, []),
-            returnValue: _i18.Future<List<String>>.value(<String>[]),
+            returnValue: _i20.Future<List<String>>.value(<String>[]),
           )
-          as _i18.Future<List<String>>);
+          as _i20.Future<List<String>>);
 }
