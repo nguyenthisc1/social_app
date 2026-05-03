@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:social_app/core/utils/extensions.dart';
 import 'package:social_app/core/widgets/error_view.dart';
+import 'package:social_app/core/widgets/expanded_modal_bottom_sheet.dart';
+import 'package:social_app/core/widgets/gallery_grid_select.dart';
 import 'package:social_app/core/widgets/side_effect_status_wrapper.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
@@ -37,79 +39,74 @@ class ConversationDetailPage extends StatefulWidget {
 class _ConversationDetailPageState extends State<ConversationDetailPage> {
   final TextEditingController _inputController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  List<AssetEntity> images = [];
 
+  List<AssetEntity> _images = [];
   bool _hasText = false;
+  bool _isGalleryOpen = false;
 
-  String? get currentUserId => context.read<UserCubit>().state.profile?.id;
+  String? get _currentUserId => context.read<UserCubit>().state.profile?.id;
 
   @override
   void initState() {
     super.initState();
-    loadImages();
-
-    _inputController.addListener(_onInputChanged);
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => updateUnreadCountConversation(),
-    );
+    _loadImages();
+    _inputController.addListener(_handleInputChange);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateUnreadCount());
   }
 
   @override
   void dispose() {
     _inputController
-      ..removeListener(_onInputChanged)
+      ..removeListener(_handleInputChange)
       ..dispose();
     _scrollController.dispose();
     super.dispose();
   }
-  
 
-  void _onInputChanged() {
+  void _handleInputChange() {
     final hasText = _inputController.text.trim().isNotEmpty;
-    if (hasText != _hasText) {
+    if (_hasText != hasText) {
       setState(() => _hasText = hasText);
     }
   }
 
-  Future<bool> requestPermission() async {
+  Future<bool> _requestGalleryPermission() async {
     final PermissionState ps = await PhotoManager.requestPermissionExtend();
     return ps.isAuth;
   }
 
-  Future<void> loadImages() async {
-    final hasPermission = await requestPermission();
+  Future<void> _loadImages() async {
+    final hasPermission = await _requestGalleryPermission();
     if (!hasPermission) return;
 
     final albums = await PhotoManager.getAssetPathList(type: RequestType.image);
+    if (albums.isEmpty) return;
 
     final recentAlbum = albums.first;
-
     final media = await recentAlbum.getAssetListPaged(page: 0, size: 100);
 
-    setState(() {
-      images = media;
-    });
+    setState(() => _images = media);
   }
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
     final file = await picker.pickImage(source: source, imageQuality: 85);
-    if (file == null || !mounted) return;
-    // _sendImageMessage(file.path);
+    if (!mounted || file == null) return;
+    // _sendImageMessage(file.path); // Uncomment when implementation is ready
   }
 
   void _sendMessage() {
     final text = _inputController.text.trim();
-    if (text.isEmpty) return;
+    final userId = _currentUserId;
+    if (text.isEmpty || userId == null) return;
 
     final tempId = 'temp_${DateTime.now().millisecondsSinceEpoch}';
-
-    final newMessage = MessageEntity(
+    final message = MessageEntity(
       clientMessageId: tempId,
       id: tempId,
       conversationId: widget.conversationId,
       text: text,
-      senderId: currentUserId!,
+      senderId: userId,
       type: MessageType.text,
       status: MessageDeliveryStatus.sending,
       createdAt: Timestamp.now(),
@@ -118,29 +115,29 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
 
     context.read<MessageCubit>().sendMessage(
       conversationId: widget.conversationId,
-      message: newMessage,
-      currentUserId: currentUserId!,
+      message: message,
+      currentUserId: userId,
     );
 
     context.read<ConversationCubit>().updateNewMessageConversationLocal(
-      newMessage,
+      message,
     );
 
-    setState(() => _inputController.clear());
+    setState(_inputController.clear);
   }
 
   void _sendImageMessage(String path) {
     final text = _inputController.text.trim();
-    if (text.isEmpty) return;
+    final userId = _currentUserId;
+    if (text.isEmpty || userId == null) return;
 
     final tempId = 'temp_${DateTime.now().millisecondsSinceEpoch}';
-
-    final newMessage = MessageEntity(
+    final message = MessageEntity(
       clientMessageId: tempId,
       id: tempId,
       conversationId: widget.conversationId,
       text: text,
-      senderId: currentUserId!,
+      senderId: userId,
       type: MessageType.image,
       status: MessageDeliveryStatus.sending,
       createdAt: Timestamp.now(),
@@ -149,53 +146,63 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
 
     context.read<MessageCubit>().sendMessage(
       conversationId: widget.conversationId,
-      message: newMessage,
-      currentUserId: currentUserId!,
+      message: message,
+      currentUserId: userId,
     );
 
     context.read<ConversationCubit>().updateNewMessageConversationLocal(
-      newMessage,
+      message,
     );
 
-    setState(() => _inputController.clear());
+    setState(_inputController.clear);
   }
 
-  void updateUnreadCountConversation() {
+  void _updateUnreadCount() {
+    final userId = _currentUserId;
     final conversationState = context.read<ConversationDetailCubit>().state;
-
-    if (currentUserId == null || conversationState.conversation == null) {
-      return;
-    }
+    final conversation = conversationState.conversation;
+    if (userId == null || conversation == null) return;
 
     final newUnreadCount = Map<String, UnreadCount>.from(
-      conversationState.conversation!.unreadCountMap,
+      conversation.unreadCountMap,
     );
-
-    if (newUnreadCount[currentUserId!] != null) {
-      newUnreadCount[currentUserId!] = newUnreadCount[currentUserId!]!.copyWith(
+    if (newUnreadCount[userId] != null) {
+      newUnreadCount[userId] = newUnreadCount[userId]!.copyWith(
         count: 0,
         lastReadAt: Timestamp.now(),
-        lastReadMessageId: context
-            .read<ConversationDetailCubit>()
-            .state
-            .conversation
-            ?.lastMessage
-            ?.id,
+        lastReadMessageId: conversation.lastMessage?.id,
       );
     }
 
-    final updatedConversation = conversationState.conversation!.copyWith(
+    final updatedConversation = conversation.copyWith(
       unreadCountMap: newUnreadCount,
     );
 
     context.read<ConversationDetailCubit>().updateUnreadCountConversation(
       updatedConversation,
     );
-
     context.read<ConversationCubit>().updateLocalUnreadCountConversation(
-      currentUserId!,
+      userId,
       updatedConversation,
     );
+  }
+
+  double get _bottomInset => _isGalleryOpen ? context.screenHeight * 0.5 : 12;
+
+  Future<void> _openGalleryModalBottomSheet() async {
+    setState(() => _isGalleryOpen = true);
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      barrierColor: Colors.transparent,
+      builder: (context) =>
+          ExpandedModalBottomSheet(child: GalleryGridSelect(images: _images)),
+    );
+
+    if (!mounted) return;
+
+    setState(() => _isGalleryOpen = false);
   }
 
   @override
@@ -209,7 +216,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
         if (state.errorMessage != null) {
           context.showSnackBar(state.errorMessage!, isError: true);
         }
-        updateUnreadCountConversation();
+        _updateUnreadCount();
       },
       builder: (context, detailState) {
         if (detailState.errorMessage != null) {
@@ -217,7 +224,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
         }
 
         final otherUserId = detailState.conversation?.participantIds.firstWhere(
-          (id) => id != currentUserId,
+          (id) => id != _currentUserId,
           orElse: () => '',
         );
         final otherUser = context
@@ -238,20 +245,37 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
                 username: otherUser?.username ?? '',
                 avatarUrl: otherUser?.avatarUrl,
               ),
-              bottomNavigationBar: ChatInputBar(
-                controller: _inputController,
-                hasText: _hasText,
-                onAttach: () => _pickImage,
-                onSend: _sendMessage,
-                images: images,
-              ),
               body: SideEffectStatusWrapper(
                 hasContent: messageState.messages.isNotEmpty,
                 isLoading: messageState.isLoading,
-                child: ChatMessageList(
-                  messages: messageState.messages,
-                  currentUserId: currentUserId,
-                  scrollController: _scrollController,
+                child: SafeArea(
+                  bottom: false,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 230),
+                    curve: Curves.ease,
+                    margin: EdgeInsets.only(bottom: _bottomInset),
+                    child: Stack(
+                      children: [
+                        ChatMessageList(
+                          messages: messageState.messages,
+                          currentUserId: _currentUserId ?? '',
+                          scrollController: _scrollController,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: ChatInputBar(
+                            controller: _inputController,
+                            hasText: _hasText,
+                            onAttach: _openGalleryModalBottomSheet,
+                            onSend: _sendMessage,
+                            images: _images,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             );
