@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:social_app/app/di/service_locator.dart';
+import 'package:social_app/core/data/cloudinary/cloudinary_service.dart';
+import 'package:social_app/core/domain/exceptions/exception_base.dart';
 import 'package:social_app/core/utils/extensions.dart';
 import 'package:social_app/core/widgets/error_view.dart';
 import 'package:social_app/core/widgets/expanded_modal_bottom_sheet.dart';
@@ -28,10 +31,12 @@ class ConversationDetailPage extends StatefulWidget {
     super.key,
     required this.conversationId,
     this.onSelectionChanged,
+    this.onSendGallery,
   });
 
   final String conversationId;
   final ValueChanged<List<AssetEntity>>? onSelectionChanged;
+  final Future<void> Function(List<AssetEntity>)? onSendGallery;
 
   @override
   State<ConversationDetailPage> createState() => _ConversationDetailPageState();
@@ -43,6 +48,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
 
   bool _hasText = false;
   bool _isGalleryOpen = false;
+  double get _bottomInset => _isGalleryOpen ? context.screenHeight * 0.5 : 12;
 
   String? get _currentUserId => context.read<UserCubit>().state.profile?.id;
 
@@ -69,7 +75,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
     }
   }
 
-  void _sendMessage() {
+  Future<void> _sendTextMessage() async {
     final text = _inputController.text.trim();
     final userId = _currentUserId;
     if (text.isEmpty || userId == null) return;
@@ -100,7 +106,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
     setState(_inputController.clear);
   }
 
-  void _updateUnreadCount() {
+  Future<void> _updateUnreadCount() async {
     final userId = _currentUserId;
     final conversationState = context.read<ConversationDetailCubit>().state;
     final conversation = conversationState.conversation;
@@ -130,8 +136,6 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
     );
   }
 
-  double get _bottomInset => _isGalleryOpen ? context.screenHeight * 0.5 : 12;
-
   Future<void> _openGalleryModalBottomSheet() async {
     final galleryCubit = context.read<GalleryCubit>();
     if (galleryCubit.state.assets.isEmpty) {
@@ -153,13 +157,162 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
       barrierColor: Colors.transparent,
       builder: (context) => BlocProvider.value(
         value: galleryCubit,
-        child: const ExpandedModalBottomSheet(child: GalleryGridSelect()),
+        child: ExpandedModalBottomSheet(
+          child: GalleryGridSelect(onSend: _handleSendGallery),
+        ),
       ),
     );
 
     if (!mounted) return;
 
     setState(() => _isGalleryOpen = false);
+  }
+
+  Future<void> _handleSendGallery(List<AssetEntity> selectedAssets) async {
+    final galleryCubit = context.read<GalleryCubit>();
+    final navigator = Navigator.of(context);
+    try {
+      final onSendGallery = widget.onSendGallery;
+      if (onSendGallery != null) {
+        await onSendGallery(selectedAssets);
+      } else {
+        await _sendImagesMessages(selectedAssets);
+      }
+
+      galleryCubit.clearSelection();
+      if (mounted) {
+        navigator.pop();
+      }
+    } catch (error) {
+      if (!mounted) return;
+      final message = switch (error) {
+        ExceptionBase exception => exception.userMessage,
+        _ => error.toString(),
+      };
+      context.showSnackBar(message, isError: true);
+    }
+  }
+
+  Future<List<String>> _getLocalSelectedAssetPaths(
+    List<AssetEntity> selectedAssets,
+  ) async {
+    final List<String> paths = [];
+    for (final asset in selectedAssets) {
+      final file = await asset.file;
+      if (file != null) {
+        paths.add(file.path);
+      }
+    }
+    return paths;
+  }
+
+  Future<void> _sendImagesMessages(List<AssetEntity> selectedAssets) async {
+    final userId = _currentUserId;
+    if (userId == null) {
+      throw StateError('Current user is required to send gallery images.');
+    }
+
+    final localAssetPaths = await _getLocalSelectedAssetPaths(selectedAssets);
+    final tempId = 'temp_${DateTime.now().millisecondsSinceEpoch}';
+    final optimisticMessage = await _showOptimisticGalleryMessage(
+      tempId: tempId,
+      userId: userId,
+      localAssetPaths: localAssetPaths,
+    );
+    final uploadedUrls = await _uploadGalleryImages(
+      localAssetPaths: localAssetPaths,
+      tempId: tempId,
+      selectedAssets: selectedAssets,
+    );
+
+    if (uploadedUrls == null || uploadedUrls.isEmpty) {
+      return; // Error is already thrown in _uploadGalleryImages.
+    }
+
+    final messageCubit = context.read<MessageCubit>();
+    final conversationCubit = context.read<ConversationCubit>();
+    final sentMessage = optimisticMessage.copyWith(
+      mediaUrls: uploadedUrls,
+      status: MessageDeliveryStatus.sending,
+    );
+
+    await messageCubit.sendMessage(
+      conversationId: widget.conversationId,
+      message: sentMessage,
+      currentUserId: userId,
+    );
+
+    conversationCubit.updateNewMessageConversationLocal(sentMessage);
+
+    // if (uploadedUrls.length != selectedAssets.length && mounted) {
+    //   context.showSnackBar(
+    //     'Uploaded ${uploadedUrls.length}/${selectedAssets.length} images.',
+    //   );
+    // }
+  }
+
+  Future<MessageEntity> _showOptimisticGalleryMessage({
+    required String tempId,
+    required String userId,
+    required List<String> localAssetPaths,
+  }) async {
+    final messageCubit = context.read<MessageCubit>();
+    final conversationCubit = context.read<ConversationCubit>();
+
+    final optimisticMessage = MessageEntity(
+      clientMessageId: tempId,
+      id: tempId,
+      conversationId: widget.conversationId,
+      senderId: userId,
+      type: MessageType.image,
+      status: MessageDeliveryStatus.sending,
+      reactions: const {},
+      mediaUrls: localAssetPaths,
+      mediaType: MessageType.image.name,
+      createdAt: Timestamp.now(),
+    );
+
+    await messageCubit.sendMessageLocal(
+      conversationId: widget.conversationId,
+      message: optimisticMessage,
+      currentUserId: userId,
+    );
+    conversationCubit.updateNewMessageConversationLocal(optimisticMessage);
+
+    return optimisticMessage;
+  }
+
+  Future<List<String>?> _uploadGalleryImages({
+    required List<String> localAssetPaths,
+    required String tempId,
+    required List<AssetEntity> selectedAssets,
+  }) async {
+    final cloudinaryService = sl<CloudinaryService>();
+    final messageCubit = context.read<MessageCubit>();
+    final uploadedUrls = <String>[];
+    Object? lastError;
+    for (final path in localAssetPaths) {
+      try {
+        final uploaded = await cloudinaryService.uploadMedia(path);
+        uploadedUrls.add(uploaded.url);
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    if (uploadedUrls.isEmpty && lastError != null) {
+      await messageCubit.markMessageFailed(
+        conversationId: widget.conversationId,
+        clientMessageId: tempId,
+      );
+      throw lastError;
+    }
+
+    if (uploadedUrls.isEmpty) {
+      throw StateError('No images were uploaded.');
+    }
+
+    return uploadedUrls;
   }
 
   @override
@@ -172,7 +325,9 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
         if (state.errorMessage != null) {
           context.showSnackBar(state.errorMessage!, isError: true);
         }
-        widget.onSelectionChanged?.call(context.read<GalleryCubit>().getSelectedAssets());
+        widget.onSelectionChanged?.call(
+          context.read<GalleryCubit>().getSelectedAssets(),
+        );
       },
       child: BlocConsumer<ConversationDetailCubit, ConversationDetailState>(
         listenWhen: (previous, current) =>
@@ -190,10 +345,8 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
             return ErrorView(message: detailState.errorMessage);
           }
 
-          final otherUserId = detailState.conversation?.participantIds.firstWhere(
-            (id) => id != _currentUserId,
-            orElse: () => '',
-          );
+          final otherUserId = detailState.conversation?.participantIds
+              .firstWhere((id) => id != _currentUserId, orElse: () => '');
           final otherUser = context
               .watch<UserCubit>()
               .state
@@ -216,7 +369,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
                   hasContent: messageState.messages.isNotEmpty,
                   isLoading: messageState.isLoading,
                   child: SafeArea(
-                    bottom: false,
+                    bottom: true,
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 230),
                       curve: Curves.ease,
@@ -236,7 +389,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
                               controller: _inputController,
                               hasText: _hasText,
                               onAttach: _openGalleryModalBottomSheet,
-                              onSend: _sendMessage,
+                              onSend: _sendTextMessage,
                             ),
                           ),
                         ],

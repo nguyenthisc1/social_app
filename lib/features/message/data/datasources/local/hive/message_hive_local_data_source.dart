@@ -132,7 +132,7 @@ class MessageHiveLocalDataSource implements MessageLocalDataSource {
       'isDeleted': model.isDeleted,
       'replyTo': model.replyTo,
       'reactions': model.reactions,
-      'mediaUrl': model.mediaUrl,
+      'mediaUrls': model.mediaUrls,
       'mediaType': model.mediaType,
       'createdAt': model.createdAt.millisecondsSinceEpoch,
     };

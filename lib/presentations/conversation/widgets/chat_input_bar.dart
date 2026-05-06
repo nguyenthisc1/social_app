@@ -32,7 +32,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
       margin: EdgeInsets.only(
         right: AppSize.sm,
         left: AppSize.sm,
-        bottom: AppSize.xs,
+        // bottom: AppSize.sm,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppSize.borderRadiusXLarge),

@@ -6,6 +6,8 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_app/app/internet_connection/connection.dart';
+import 'package:social_app/core/data/cloudinary/cloudinary_service.dart';
+import 'package:social_app/core/data/cloudinary/cloudinary_service_impl.dart';
 import 'package:social_app/core/data/http/api_client.dart';
 import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/features/auth/application/bloc/auth_bloc.dart';
@@ -22,6 +24,7 @@ import 'package:social_app/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:social_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_cubit.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
+import 'package:social_app/features/conversation/application/cubit/gallery_cubit.dart';
 import 'package:social_app/features/conversation/application/services/bardge-service/badge_service.dart';
 import 'package:social_app/features/conversation/application/services/local-notification.dart/local_notification_service.dart';
 import 'package:social_app/features/conversation/data/datasources/local/conversation_local_data_source.dart';
@@ -104,6 +107,11 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<FirebaseStorage>(() => FirebaseStorage.instance);
   sl.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
 
+  // Cloudinary
+  sl.registerLazySingleton<ConfigCloudinaryService>(
+    () => ConfigCloudinaryService.instance,
+  );
+
   // ============================================================================
   // Core Dependencies
   // ============================================================================
@@ -130,6 +138,15 @@ Future<void> initializeDependencies() async {
   // Firebase Seed Service
   sl.registerLazySingleton<FirebaseSeedService>(
     () => FirebaseSeedService(firestore: sl<FirebaseFirestore>()),
+  );
+
+  // sl.registerLazySingleton<CloudinaryMediaService>(
+  //   () => CloudinaryMediaServiceImpl(),
+  // );
+
+  sl.registerLazySingleton<CloudinaryService>(
+    () =>
+        CloudinaryServiceImpl(cloudinaryService: sl<ConfigCloudinaryService>()),
   );
 
   sl.registerLazySingleton<BadgeService>(() => AppIconBadgeService());
@@ -340,12 +357,15 @@ Future<void> initializeDependencies() async {
     ),
   );
 
+  sl.registerFactory(() => GalleryCubit());
+
   // Message Cubit
   sl.registerFactory(
     () => MessageCubit(
       getMessagesByConversationUsecase: sl(),
       watchMessagesByConversationUseCase: sl(),
       sendMessageUsecase: sl(),
+      localDataSource: sl(),
     ),
   );
 

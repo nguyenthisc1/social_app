@@ -63,7 +63,8 @@ class _AppNotificationState extends State<AppNotification> {
       case MessageType.text:
         return conversation.lastMessage?.text.toString() ?? "Send message";
       case MessageType.image:
-        return "Sent a photo";
+        final mediaCount = conversation.lastMessage?.mediaCount ?? 0;
+        return mediaCount > 1 ? "Sent $mediaCount photos" : "Sent a photo";
       default:
         return "New message";
     }

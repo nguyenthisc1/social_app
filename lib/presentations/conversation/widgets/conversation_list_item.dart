@@ -70,7 +70,10 @@ class ConversationListItem extends StatelessWidget {
     if (conversation.lastMessage?.type == MessageType.text) {
       return conversation.lastMessage?.text ?? '';
     }
-    if (conversation.lastMessage?.type == MessageType.image) return 'Sent an image';
+    if (conversation.lastMessage?.type == MessageType.image) {
+      final mediaCount = conversation.lastMessage?.mediaCount ?? 0;
+      return mediaCount > 1 ? 'Sent $mediaCount images' : 'Sent an image';
+    }
     return '';
   }
 }

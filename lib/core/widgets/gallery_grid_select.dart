@@ -11,7 +11,12 @@ import 'package:social_app/features/conversation/application/cubit/gallery_cubit
 import 'package:social_app/features/conversation/application/cubit/gallery_state.dart';
 
 class GalleryGridSelect extends StatefulWidget {
-  const GalleryGridSelect({super.key});
+  const GalleryGridSelect({
+    super.key,
+    this.onSend,
+  });
+
+  final Future<void> Function(List<AssetEntity>)? onSend;
 
   @override
   State<GalleryGridSelect> createState() => _GalleryGridSelectState();
@@ -27,6 +32,7 @@ class _GalleryGridSelectState extends State<GalleryGridSelect> {
   final Map<String, Uint8List?> _thumbnailBytes = {};
   Map<String, Future<Uint8List?>> _thumbnailFutures = {};
   Map<String, AssetEntity> _imageById = {};
+  bool _isSending = false;
 
   @override
   void initState() {
@@ -137,6 +143,25 @@ class _GalleryGridSelectState extends State<GalleryGridSelect> {
     return true;
   }
 
+  Future<void> _handleSend(List<AssetEntity> selectedAssets) async {
+    final onSend = widget.onSend;
+    if (onSend == null || _isSending || selectedAssets.isEmpty) return;
+
+    setState(() {
+      _isSending = true;
+    });
+
+    try {
+      await onSend(selectedAssets);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GalleryCubit, GalleryState>(
@@ -158,6 +183,7 @@ class _GalleryGridSelectState extends State<GalleryGridSelect> {
       },
       builder: (context, state) {
         final galleryCubit = context.read<GalleryCubit>();
+        final selectedAssets = galleryCubit.getSelectedAssets();
         return Stack(
           children: [
             NotificationListener<ScrollNotification>(
@@ -339,10 +365,19 @@ class _GalleryGridSelectState extends State<GalleryGridSelect> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: context.colorScheme.primary,
                               ),
-                              onPressed: state.selectedIds.isEmpty
+                              onPressed: state.selectedIds.isEmpty || _isSending
                                   ? null
-                                  : () {},
-                              child: Row(
+                                  : () => _handleSend(selectedAssets),
+                              child: _isSending
+                                  ? const SizedBox(
+                                      width: 18,
+                                      height: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const Icon(

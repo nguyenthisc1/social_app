@@ -7,7 +7,7 @@ class ConversationLastMessageEntity extends Equatable {
   final String senderId;
   final MessageType type;
   final String? text;
-  final String? mediaUrl;
+  final List<String> mediaUrls;
   final String? mediaType;
   final bool isDeleted;
   final Timestamp createdAt;
@@ -17,11 +17,14 @@ class ConversationLastMessageEntity extends Equatable {
     required this.senderId,
     required this.type,
     this.text,
-    this.mediaUrl,
+    this.mediaUrls = const [],
     this.mediaType,
-     this.isDeleted = false,
+    this.isDeleted = false,
     required this.createdAt,
   });
+
+  String? get mediaUrl => mediaUrls.isNotEmpty ? mediaUrls.first : null;
+  int get mediaCount => mediaUrls.length;
 
   @override
   List<Object?> get props => [
@@ -29,7 +32,7 @@ class ConversationLastMessageEntity extends Equatable {
     senderId,
     type,
     text,
-    mediaUrl,
+    mediaUrls,
     mediaType,
     isDeleted,
     createdAt,
@@ -40,7 +43,7 @@ class ConversationLastMessageEntity extends Equatable {
     String? senderId,
     MessageType? type,
     String? text,
-    String? mediaUrl,
+    List<String>? mediaUrls,
     String? mediaType,
     bool? isDeleted,
     Timestamp? createdAt,
@@ -50,7 +53,7 @@ class ConversationLastMessageEntity extends Equatable {
       senderId: senderId ?? this.senderId,
       type: type ?? this.type,
       text: text ?? this.text,
-      mediaUrl: mediaUrl ?? this.mediaUrl,
+      mediaUrls: mediaUrls ?? this.mediaUrls,
       mediaType: mediaType ?? this.mediaType,
       isDeleted: isDeleted ?? this.isDeleted,
       createdAt: createdAt ?? this.createdAt,

@@ -26,7 +26,7 @@ class MessageMapper {
       reactions: model.reactions,
       replyTo: model.replyTo,
       mediaType: model.mediaType,
-      mediaUrl: model.mediaUrl,
+      mediaUrls: model.mediaUrls,
     );
   }
 
@@ -36,7 +36,7 @@ class MessageMapper {
       id: entity.id,
       conversationId: entity.conversationId,
       text: entity.text,
-      mediaUrl: entity.mediaUrl,
+      mediaUrls: entity.mediaUrls,
       mediaType: entity.mediaType,
       senderId: entity.senderId,
       type: entity.type.name,

@@ -37,20 +37,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDr38Po8dwHSCUQeGTHS4TLjcrBMvCNcrA',
-    appId: '1:386045576669:android:07d666213cdbefd4d72234',
-    messagingSenderId: '386045576669',
-    projectId: 'trading-784d6',
-    storageBucket: 'trading-784d6.firebasestorage.app',
+    apiKey: String.fromEnvironment('FIREBASE_ANDROID_API_KEY', defaultValue: 'AIzaSyDr38Po8dwHSCUQeGTHS4TLjcrBMvCNcrA'),
+    appId: String.fromEnvironment('FIREBASE_ANDROID_APP_ID', defaultValue: '1:386045576669:android:07d666213cdbefd4d72234'),
+    messagingSenderId: String.fromEnvironment('FIREBASE_ANDROID_MESSAGING_SENDER_ID', defaultValue: '386045576669'),
+    projectId: String.fromEnvironment('FIREBASE_ANDROID_PROJECT_ID', defaultValue: 'trading-784d6'),
+    storageBucket: String.fromEnvironment('FIREBASE_ANDROID_STORAGE_BUCKET', defaultValue: 'trading-784d6.firebasestorage.app'),
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAXRYeITZf23MLq7WJyULxDcYmd9pmbGmA',
-    appId: '1:386045576669:ios:eea992b575073054d72234',
-    messagingSenderId: '386045576669',
-    projectId: 'trading-784d6',
-    storageBucket: 'trading-784d6.firebasestorage.app',
-    iosBundleId: 'com.thinguyen.socialApp',
-    androidClientId: 'YOUR_IOS_ANDROID_CLIENT_ID',
+    apiKey: String.fromEnvironment('FIREBASE_IOS_API_KEY', defaultValue: 'AIzaSyAXRYeITZf23MLq7WJyULxDcYmd9pmbGmA'),
+    appId: String.fromEnvironment('FIREBASE_IOS_APP_ID', defaultValue: '1:386045576669:ios:eea992b575073054d72234'),
+    messagingSenderId: String.fromEnvironment('FIREBASE_IOS_MESSAGING_SENDER_ID', defaultValue: '386045576669'),
+    projectId: String.fromEnvironment('FIREBASE_IOS_PROJECT_ID', defaultValue: 'trading-784d6'),
+    storageBucket: String.fromEnvironment('FIREBASE_IOS_STORAGE_BUCKET', defaultValue: 'trading-784d6.firebasestorage.app'),
+    iosBundleId: String.fromEnvironment('FIREBASE_IOS_BUNDLE_ID', defaultValue: 'com.thinguyen.socialApp'),
+    androidClientId: String.fromEnvironment('FIREBASE_IOS_ANDROID_CLIENT_ID', defaultValue: 'YOUR_IOS_ANDROID_CLIENT_ID'),
   );
 }

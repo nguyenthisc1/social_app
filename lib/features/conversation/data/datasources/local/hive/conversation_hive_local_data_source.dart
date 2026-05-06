@@ -104,7 +104,7 @@ class ConversationHiveLocalDataSource implements ConversationLocalDataSource {
               'senderId': model.lastMessage!.senderId,
               'type': model.lastMessage!.type,
               'text': model.lastMessage!.text,
-              'mediaUrl': model.lastMessage!.mediaUrl,
+              'mediaUrls': model.lastMessage!.mediaUrls,
               'mediaType': model.lastMessage!.mediaType,
               'isDeleted': model.lastMessage!.isDeleted,
               'createdAt': model.lastMessage!.createdAt.millisecondsSinceEpoch,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_app/core/theme/app_size.dart';
@@ -101,25 +103,142 @@ class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
 
   Widget _buildBubble(BuildContext context, ThemeData theme) {
     final isImage = widget.message.type == MessageType.image;
+    final primaryMediaUrl = widget.message.mediaUrl;
+    final mediaCount = widget.message.mediaCount;
+    final isRemoteMedia =
+        primaryMediaUrl != null &&
+        (primaryMediaUrl.startsWith('http://') ||
+            primaryMediaUrl.startsWith('https://'));
 
-    if (isImage && widget.message.mediaUrl != null) {
+    if (isImage && primaryMediaUrl != null) {
       return ClipRRect(
         borderRadius: _bubbleRadius(),
-        child: Image.network(
-          widget.message.mediaUrl!,
-          width: 200,
-          height: 200,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stack) => Container(
-            width: 200,
-            height: 160,
-            color: theme.colorScheme.surfaceContainerHighest,
-            alignment: Alignment.center,
-            child: Icon(
-              Icons.broken_image_outlined,
-              color: theme.colorScheme.outline,
+        child: Row(
+          mainAxisAlignment: widget.isMine
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (widget.isMine &&
+                widget.message.status == MessageDeliveryStatus.sending) ...[
+              LoadingIndicator(size: 10, strokeWidth: 1),
+            ],
+            const SizedBox(width: AppSize.md),
+            Stack(
+              children: [
+                isRemoteMedia
+                    ? Image.network(
+                        primaryMediaUrl,
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.cover,
+                        loadingBuilder:
+                            (
+                              BuildContext context,
+                              Widget child,
+                              ImageChunkEvent? loadingProgress,
+                            ) {
+                              if (loadingProgress == null) {
+                                return child;
+                              } else {
+                                return Container(
+                                  width: 200,
+                                  height: 200,
+                                  color:
+                                      theme.colorScheme.surfaceContainerHighest,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                              null
+                                          ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                (loadingProgress
+                                                        .expectedTotalBytes ??
+                                                    1)
+                                          : null,
+                                      strokeWidth: 2,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                        errorBuilder: (context, error, stack) => Container(
+                          width: 200,
+                          height: 160,
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.broken_image_outlined,
+                            color: theme.colorScheme.outline,
+                          ),
+                        ),
+                      )
+                    : Image.file(
+                        File(primaryMediaUrl),
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stack) => Container(
+                          width: 200,
+                          height: 160,
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.broken_image_outlined,
+                            color: theme.colorScheme.outline,
+                          ),
+                        ),
+                      ),
+                if (widget.isMine &&
+                    widget.message.status == MessageDeliveryStatus.failed)
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withValues(alpha: 0.85),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(
+                        'Failed',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                if (mediaCount > 1)
+                  Positioned(
+                    right: 8,
+                    bottom: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(
+                        '+${mediaCount - 1}',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-          ),
+          ],
         ),
       );
     }
