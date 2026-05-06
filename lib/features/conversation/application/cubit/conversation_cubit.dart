@@ -87,7 +87,7 @@ class ConversationCubit extends Cubit<ConversationState> {
               senderId: newMessage.senderId,
               type: newMessage.type,
               text: newMessage.text,
-              mediaUrl: newMessage.mediaUrl,
+              mediaUrls: newMessage.mediaUrls,
               mediaType: newMessage.mediaType,
               isDeleted: newMessage.isDeleted,
               createdAt: newMessage.createdAt,
