@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/features/conversation/application/cubit/gallery_cubit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:social_app/features/conversation/application/cubit/conversation_detail_cubit.dart';
 import 'package:social_app/features/message/application/cubit/meesage_cubit.dart';
@@ -266,6 +267,9 @@ class AppRouter {
                 create: (context) =>
                     sl<ConversationDetailCubit>()
                       ..getConversation(conversationId),
+              ),
+              BlocProvider<GalleryCubit>(
+                create: (context) => sl<GalleryCubit>()..initialize(),
               ),
               BlocProvider<MessageCubit>(
                 create: (context) =>
