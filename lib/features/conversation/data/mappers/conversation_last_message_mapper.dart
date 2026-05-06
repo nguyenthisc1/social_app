@@ -12,7 +12,7 @@ class ConversationLastMessageMapper {
       id: model.id,
       senderId: model.senderId,
       text: model.text,
-      mediaUrl: model.mediaUrl,
+      mediaUrls: model.mediaUrls,
       mediaType: model.mediaType,
       type: MessageType.values.firstWhere(
         (e) => e.name == model.type,
@@ -30,7 +30,7 @@ class ConversationLastMessageMapper {
       id: entity.id,
       senderId: entity.senderId,
       text: entity.text,
-      mediaUrl: entity.mediaUrl,
+      mediaUrls: entity.mediaUrls,
       mediaType: entity.mediaType,
       type: entity.type.name,
       isDeleted: entity.isDeleted,

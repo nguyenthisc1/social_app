@@ -14,7 +14,7 @@ class MessageEntity extends Equatable {
   final bool isDeleted;
   final String? replyTo;
   final Map<String, dynamic> reactions;
-  final String? mediaUrl;
+  final List<String> mediaUrls;
   final String? mediaType;
   final Timestamp createdAt;
 
@@ -29,10 +29,14 @@ class MessageEntity extends Equatable {
     this.isDeleted = false,
     this.replyTo,
     required this.reactions,
-    this.mediaUrl,
+    this.mediaUrls = const [],
     this.mediaType,
     required this.createdAt,
   });
+
+  String? get mediaUrl => mediaUrls.isNotEmpty ? mediaUrls.first : null;
+  bool get hasMedia => mediaUrls.isNotEmpty;
+  int get mediaCount => mediaUrls.length;
 
   MessageEntity copyWith({
     String? clientMessageId,
@@ -45,7 +49,7 @@ class MessageEntity extends Equatable {
     bool? isDeleted,
     String? replyTo,
     Map<String, dynamic>? reactions,
-    String? mediaUrl,
+    List<String>? mediaUrls,
     String? mediaType,
     Timestamp? createdAt,
   }) {
@@ -60,7 +64,7 @@ class MessageEntity extends Equatable {
       isDeleted: isDeleted ?? this.isDeleted,
       replyTo: replyTo ?? this.replyTo,
       reactions: reactions ?? this.reactions,
-      mediaUrl: mediaUrl ?? this.mediaUrl,
+      mediaUrls: mediaUrls ?? this.mediaUrls,
       mediaType: mediaType ?? this.mediaType,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -78,7 +82,7 @@ class MessageEntity extends Equatable {
     isDeleted,
     replyTo,
     reactions,
-    mediaUrl,
+    mediaUrls,
     mediaType,
     createdAt,
   ];

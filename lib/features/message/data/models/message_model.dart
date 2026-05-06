@@ -12,7 +12,7 @@ class MessageModel extends Equatable {
   final bool isDeleted;
   final String? replyTo;
   final Map<String, dynamic> reactions;
-  final String? mediaUrl;
+  final List<String> mediaUrls;
   final String? mediaType;
   final Timestamp createdAt;
 
@@ -27,10 +27,12 @@ class MessageModel extends Equatable {
     this.isDeleted = false,
     this.replyTo,
     required this.reactions,
-    this.mediaUrl,
+    this.mediaUrls = const [],
     this.mediaType,
     required this.createdAt,
   });
+
+  String? get mediaUrl => mediaUrls.isNotEmpty ? mediaUrls.first : null;
 
   @override
   List<Object?> get props => [
@@ -44,7 +46,7 @@ class MessageModel extends Equatable {
     isDeleted,
     replyTo,
     reactions,
-    mediaUrl,
+    mediaUrls,
     mediaType,
     createdAt,
   ];
@@ -61,13 +63,23 @@ class MessageModel extends Equatable {
       'isDeleted': isDeleted,
       'replyTo': replyTo,
       'reactions': reactions,
-      'mediaUrl': mediaUrl,
+      'mediaUrls': mediaUrls,
       'mediaType': mediaType,
       'createdAt': createdAt,
     };
   }
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
+    final parsedMediaUrls = json['mediaUrls'] is List
+        ? List<String>.from(
+            (json['mediaUrls'] as List).whereType<Object?>().map(
+              (item) => item.toString(),
+            ),
+          )
+        : (json['mediaUrl']?.toString().isNotEmpty == true
+              ? [json['mediaUrl'].toString()]
+              : const <String>[]);
+
     return MessageModel(
       clientMessageId:
           json['clientMessageId']?.toString() ?? json['id']?.toString() ?? '',
@@ -82,7 +94,7 @@ class MessageModel extends Equatable {
       reactions: json['reactions'] is Map
           ? Map<String, dynamic>.from(json['reactions'] as Map)
           : <String, dynamic>{},
-      mediaUrl: json['mediaUrl'],
+      mediaUrls: parsedMediaUrls,
       mediaType: json['mediaType'],
       createdAt: json['createdAt'] is Timestamp
           ? json['createdAt']

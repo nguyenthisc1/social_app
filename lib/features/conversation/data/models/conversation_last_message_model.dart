@@ -6,7 +6,7 @@ class ConversationLastMessageModel extends Equatable {
   final String senderId;
   final String type;
   final String? text;
-  final String? mediaUrl;
+  final List<String> mediaUrls;
   final String? mediaType;
   final bool isDeleted;
   final Timestamp createdAt;
@@ -16,11 +16,13 @@ class ConversationLastMessageModel extends Equatable {
     required this.senderId,
     required this.type,
     this.text,
-    this.mediaUrl,
+    this.mediaUrls = const [],
     required this.createdAt,
     this.mediaType,
     this.isDeleted = false,
   });
+
+  String? get mediaUrl => mediaUrls.isNotEmpty ? mediaUrls.first : null;
 
   @override
   List<Object?> get props => [
@@ -28,19 +30,29 @@ class ConversationLastMessageModel extends Equatable {
     senderId,
     type,
     text,
-    mediaUrl,
+    mediaUrls,
     mediaType,
     isDeleted,
     createdAt,
   ];
 
   factory ConversationLastMessageModel.fromJson(Map<String, dynamic> json) {
+    final parsedMediaUrls = json['mediaUrls'] is List
+        ? List<String>.from(
+            (json['mediaUrls'] as List).whereType<Object?>().map(
+              (item) => item.toString(),
+            ),
+          )
+        : (json['mediaUrl']?.toString().isNotEmpty == true
+              ? [json['mediaUrl'].toString()]
+              : const <String>[]);
+
     return ConversationLastMessageModel(
       id: json['id'] ?? '',
       senderId: json['senderId'] ?? '',
       type: json['type']?.toString() ?? 'text',
       text: json['text'],
-      mediaUrl: json['mediaUrl'],
+      mediaUrls: parsedMediaUrls,
       mediaType: json['mediaType'],
       isDeleted: json['isDeleted'] ?? false,
       createdAt: json['createdAt'] is Timestamp
@@ -58,7 +70,7 @@ class ConversationLastMessageModel extends Equatable {
       'senderId': senderId,
       'type': type,
       'text': text,
-      'mediaUrl': mediaUrl,
+      'mediaUrls': mediaUrls,
       'mediaType': mediaType,
       'isDeleted': isDeleted,
       'createdAt': createdAt,

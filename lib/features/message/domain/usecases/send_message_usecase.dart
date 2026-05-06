@@ -16,7 +16,7 @@ class SendMessageUsecase extends UseCase<MessageEntity, SendMessageParams> {
   Future<MessageEntity> call(SendMessageParams params) {
     final validatedConversationId = ConversationId(params.conversationId);
     final validatedCurrentUserId = UserId(params.currentUserId);
-    final hasMedia = params.message.mediaUrl?.trim().isNotEmpty == true;
+    final hasMedia = params.message.mediaUrls.isNotEmpty;
     final validatedText = MessageText(
       params.message.text ?? '',
       allowEmpty: hasMedia,
